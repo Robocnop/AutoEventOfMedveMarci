@@ -1,4 +1,5 @@
 using AutoEvent.API;
+using CustomPlayerEffects;
 using UnityEngine;
 using Player = LabApi.Features.Wrappers.Player;
 
@@ -7,7 +8,6 @@ namespace AutoEvent.Games.Deathrun;
 public class PoisonComponent : MonoBehaviour
 {
     private BoxCollider _collider;
-    private Plugin _plugin;
 
     private void Start()
     {
@@ -17,11 +17,12 @@ public class PoisonComponent : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        if (Player.Get(collider.gameObject) is { } player) player.GiveLoadout(_plugin.Config.PoisonLoadouts);
+        LogManager.Debug($"Poison Triggered by {collider.gameObject.name}");
+        if (Player.Get(collider.gameObject) is { } player) player.EnableEffect<CardiacArrest>(1, 15);
     }
 
     public void StartComponent(Plugin plugin)
     {
-        _plugin = plugin;
+        LogManager.Debug("Poison Component started");
     }
 }

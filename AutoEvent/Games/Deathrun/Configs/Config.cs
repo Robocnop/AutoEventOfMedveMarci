@@ -72,13 +72,4 @@ public class Config : EventConfig
             InfiniteAmmo = AmmoMode.InfiniteAmmo
         }
     ];
-
-    [Description("Poison loadouts")]
-    public List<Loadout> PoisonLoadouts { get; set; } =
-    [
-        new()
-        {
-            Effects = [new EffectData { Type = nameof(CardiacArrest), Intensity = 1, Duration = 15 }]
-        }
-    ];
 }
