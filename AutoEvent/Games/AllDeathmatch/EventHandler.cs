@@ -48,4 +48,9 @@ public class EventHandler(Plugin plugin)
     {
         ev.IsAllowed = false;
     }
+    
+    public static void OnCuffing(PlayerCuffingEventArgs ev)
+    {
+        ev.IsAllowed = false;
+    }
 }
