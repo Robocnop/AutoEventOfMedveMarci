@@ -11,7 +11,7 @@ internal class StaminaUsage
     private static void Postfix(Inventory __instance, ref float __result)
     {
         var player = Player.Get(__instance._hub);
-        if (Extensions.InfinityStaminaList.Contains(player.UserId))
+        if (Extensions.InfinityStaminaList.Contains(player.NetworkId))
             __result *= 0;
         __result *= 1;
     }

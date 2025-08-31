@@ -33,8 +33,8 @@ public static class Extensions
         HasAllItems
     }
 
-    public static readonly Dictionary<string, AmmoMode> InfiniteAmmoList = new();
-    public static readonly List<string> InfinityStaminaList = [];
+    public static readonly Dictionary<uint, AmmoMode> InfiniteAmmoList = new();
+    public static readonly List<uint> InfinityStaminaList = [];
 
     public static bool HasLoadout(this Player ply, List<Loadout> loadouts,
         LoadoutCheckMethods checkMethod = LoadoutCheckMethods.HasRole)
@@ -147,8 +147,8 @@ public static class Extensions
         }
         else
         {
-            if (!InfinityStaminaList.Contains(player.UserId))
-                InfinityStaminaList.Add(player.UserId);
+            if (!InfinityStaminaList.Contains(player.NetworkId))
+                InfinityStaminaList.Add(player.NetworkId);
         }
 
         if (loadout.Size != Vector3.one && !flags.HasFlag(LoadoutFlags.IgnoreSize)) player.Scale = loadout.Size;
@@ -165,11 +165,11 @@ public static class Extensions
     public static void GiveInfiniteAmmo(this Player player, AmmoMode ammoMode)
     {
         LogManager.Debug(
-            $"Setting infinite ammo mode for player {player.Nickname} ({player.UserId}) to {ammoMode}");
+            $"Setting infinite ammo mode for player {player.Nickname} ({player.NetworkId}) to {ammoMode}");
         if (ammoMode == AmmoMode.None)
-            InfiniteAmmoList.Remove(player.UserId);
+            InfiniteAmmoList.Remove(player.NetworkId);
         else
-            InfiniteAmmoList[player.UserId] = ammoMode;
+            InfiniteAmmoList[player.NetworkId] = ammoMode;
     }
 
     public static void TeleportEnd()
@@ -181,7 +181,7 @@ public static class Extensions
             player.IsGodModeEnabled = false;
             player.Scale = new Vector3(1, 1, 1);
             player.Position = new Vector3(39.332f, 314.112f, -31.922f);
-            InfinityStaminaList.Remove(player.UserId);
+            InfinityStaminaList.Remove(player.NetworkId);
             player.ClearInventory();
         }
     }

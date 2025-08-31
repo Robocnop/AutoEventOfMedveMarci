@@ -78,7 +78,8 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         {
             player.GiveLoadout(Config.PlayerLoadout);
             player.Position = spawnpoints.RandomItem().transform.position;
-            Extensions.InfinityStaminaList.Add(player.UserId);
+            if (!Extensions.InfinityStaminaList.Contains(player.NetworkId))
+                Extensions.InfinityStaminaList.Add(player.NetworkId);
         }
 
         PlayerDict = new Dictionary<Player, PlayerClass>();

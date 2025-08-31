@@ -2,12 +2,12 @@
 using System.Threading.Tasks;
 using AutoEvent.API;
 using AutoEvent.API.Enums;
+using CustomPlayerEffects;
 using InventorySystem.Items;
 using InventorySystem.Items.Firearms.Modules;
 using LabApi.Events.Arguments.PlayerEvents;
 using LabApi.Events.Arguments.ServerEvents;
 using LabApi.Events.CustomHandlers;
-using UnityEngine;
 
 namespace AutoEvent;
 
@@ -68,7 +68,7 @@ internal class EventHandler : CustomEventsHandler
         if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnoreInfiniteAmmo))
             return;
 
-        if (!Extensions.InfiniteAmmoList.ContainsKey(ev.Player.UserId))
+        if (!Extensions.InfiniteAmmoList.ContainsKey(ev.Player.NetworkId))
             return;
 
         if (ev.FirearmItem.Base.TryGetModule<MagazineModule>(out var module))
@@ -111,17 +111,35 @@ internal class EventHandler : CustomEventsHandler
         base.OnPlayerCuffing(ev);
     }
 
-    public override void OnPlayerDying(PlayerDyingEventArgs ev)
+    public override void OnPlayerDeath(PlayerDeathEventArgs ev)
     {
         if (AutoEvent.EventManager.CurrentEvent is null)
             return;
 
-        if (!ev.IsAllowed)
-            return;
-        LogManager.Debug($"Player {ev.Player.Nickname} ({ev.Player.UserId}) died. Cleaning up event data.");
-        Extensions.InfinityStaminaList.Remove(ev.Player.UserId);
+        LogManager.Debug($"Player {ev.Player.Nickname} ({ev.Player.UserId}, {ev.Player.NetworkId}) died. Cleaning up event data.");
+        Extensions.InfinityStaminaList.Remove(ev.Player.NetworkId);
         ev.Player.GiveInfiniteAmmo(AmmoMode.None);
-        base.OnPlayerDying(ev);
+        base.OnPlayerDeath(ev);
+    }
+
+    public override void OnPlayerChangedSpectator(PlayerChangedSpectatorEventArgs ev)
+    {
+        if (AutoEvent.EventManager.CurrentEvent is null) return;
+        if (ev.NewTarget is null)
+        {
+            ev.Player.DisableEffect<FogControl>();
+            base.OnPlayerChangedSpectator(ev);
+            return;
+        }
+        if (ev.NewTarget.TryGetEffect<FogControl>(out var effect))
+        {
+            ev.Player.EnableEffect<FogControl>(effect.Intensity);
+        }
+        else
+        {
+            ev.Player.DisableEffect<FogControl>();
+        }
+        base.OnPlayerChangedSpectator(ev);
     }
 
     public override void OnServerWaitingForPlayers()
