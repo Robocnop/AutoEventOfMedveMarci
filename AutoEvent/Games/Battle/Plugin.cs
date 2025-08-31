@@ -13,9 +13,10 @@ using Extensions = AutoEvent.API.Extensions;
 
 namespace AutoEvent.Games.Battle;
 
+
+//todo: fix workstations
 public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
 {
-    private List<GameObject> _workstations;
     public override string Name { get; set; } = "Battle";
     public override string Description { get; set; } = "MTF fight against CI in an arena";
     public override string Author { get; set; } = "RisottoMan";
@@ -80,21 +81,14 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
 
     protected override void CountdownFinished()
     {
-        // Once the countdown has ended, we need to destroy the walls, and add workstations.
-        _workstations = [];
         foreach (var gameObject in MapInfo.Map.AttachedBlocks)
             switch (gameObject.name)
             {
                 case "Wall":
                 {
                     NetworkServer.Destroy(gameObject);
-                }
                     break;
-                case "Workstation":
-                {
-                    _workstations.Add(gameObject);
-                }
-                    break;
+                } 
             }
     }
 
@@ -130,15 +124,5 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
             Extensions.ServerBroadcast(
                 Translation.MtfWin.Replace("{time}", $"{EventTime.Minutes:00}:{EventTime.Seconds:00}"),
                 10);
-    }
-
-    protected override void OnCleanup()
-    {
-        // 10 seconds after finishing the round or once the round is stopped, this will be called.
-        // If 10 seconds is too long, you can change PostRoundDelay to make it faster or shorter.
-        // We can clean up extra workstations that we spawned in. 
-        // The map will be cleaned up for us, as well as items, ragdolls, and sound.
-        foreach (var bench in _workstations)
-            Object.Destroy(bench);
     }
 }
