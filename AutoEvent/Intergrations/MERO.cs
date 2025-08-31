@@ -15,10 +15,6 @@ namespace AutoEvent.Intergrations
 
         internal static void TrySetIsDynamiclyDisabled(bool value)
         {
-            foreach (var pair in PluginLoader.Plugins)
-            {
-                LogManager.Debug(pair.Key.Name);
-            }
             LogManager.Debug("Attempting to set MEROptimizer.isDynamiclyDisabled...");
             LogManager.Debug(Assembly.FullName);
             LogManager.Debug(Assembly.GetType("MEROptimizer.Application.MEROptimizer").FullName);
