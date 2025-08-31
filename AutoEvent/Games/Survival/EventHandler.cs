@@ -13,7 +13,11 @@ public class EventHandler(Plugin plugin)
 {
     public void OnHurting(PlayerHurtingEventArgs ev)
     {
-        if (ev.DamageHandler.DeathScreenText == DeathTranslations.Falldown.DeathscreenTranslation) ev.IsAllowed = false;
+        if (ev.DamageHandler.DeathScreenText == DeathTranslations.Falldown.DeathscreenTranslation)
+        {
+            ev.IsAllowed = false;
+            return;
+        }
 
         if (ev.Attacker == null || ev.Player == null)
             return;
@@ -41,9 +45,9 @@ public class EventHandler(Plugin plugin)
         }
 
         if (ev.Player != plugin.FirstZombie) return;
-        ev.IsAllowed = false;
         if (ev.DamageHandler is StandardDamageHandler damageHandler)
             damageHandler.Damage = 1;
+        ev.Attacker.SendHitMarker();
     }
 
     public void OnDying(PlayerDyingEventArgs ev)
