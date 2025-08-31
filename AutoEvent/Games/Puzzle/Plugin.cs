@@ -170,13 +170,26 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 
         // Change the color of those platforms that should fall to magenta
         if (!Config.UseRandomPlatformColors)
+        {
             foreach (var platform in _platforms)
                 platform.GetComponent<PrimitiveObjectToy>().NetworkMaterialColor =
                     _fallingPlatforms.Contains(platform) ? Color.magenta : Color.green;
+            foreach (var colorIndicator in _colorIndicators)
+                colorIndicator.GetComponent<PrimitiveObjectToy>().NetworkMaterialColor = Color.green;
+        }
+        
         else
+        {
+            var selectedColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f);
+            
+            foreach (var colorIndicator in _colorIndicators)
+                colorIndicator.GetComponent<PrimitiveObjectToy>().NetworkMaterialColor = selectedColor;
+            
             foreach (var platform in _platforms)
-                platform.GetComponent<PrimitiveObjectToy>().NetworkMaterialColor = new Color(Random.Range(0f, 1f),
-                    Random.Range(0f, 1f), Random.Range(0f, 1f), 1f);
+                platform.GetComponent<PrimitiveObjectToy>().NetworkMaterialColor =
+                    _fallingPlatforms.Contains(platform) ? new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f) : selectedColor;
+        }
+        
 
         FrameDelayInSeconds = 1;
         _countdown = TimeSpan.FromSeconds(_fallDelay);
