@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using AutoEvent.API.Enums;
+using AutoEvent.Intergrations;
 using Footprinting;
 using InventorySystem;
-using InventorySystem.Items.Firearms;
+using InventorySystem.Items;
 using InventorySystem.Items.Pickups;
 using InventorySystem.Items.ThrowableProjectiles;
 using LabApi.Features.Wrappers;
@@ -124,7 +125,7 @@ public static class Extensions
         if (loadout.Items is not null && loadout.Items.Count > 0 && !flags.HasFlag(LoadoutFlags.IgnoreItems))
             foreach (var item in loadout.Items)
             {
-                if (flags.HasFlag(LoadoutFlags.IgnoreWeapons) && item is Firearm)
+                if (flags.HasFlag(LoadoutFlags.IgnoreWeapons) && item.GetName().Contains("Gun"))
                     continue;
 
                 player.AddItem(item);
@@ -163,21 +164,12 @@ public static class Extensions
 
     public static void GiveInfiniteAmmo(this Player player, AmmoMode ammoMode)
     {
+        LogManager.Debug(
+            $"Setting infinite ammo mode for player {player.Nickname} ({player.UserId}) to {ammoMode}");
         if (ammoMode == AmmoMode.None)
-            if (InfiniteAmmoList is null || InfiniteAmmoList.Count < 1 || !InfiniteAmmoList.Remove(player.UserId))
-                return;
-
-        InfiniteAmmoList[player.UserId] = ammoMode;
-        foreach (ItemType ammoType in Enum.GetValues(typeof(ItemType)))
-        {
-            if (ammoType == ItemType.None)
-                continue;
-
-            if (!nameof(ammoType).Contains("Ammo"))
-                return;
-
-            player.SetAmmo(ammoType, 100);
-        }
+            InfiniteAmmoList.Remove(player.UserId);
+        else
+            InfiniteAmmoList[player.UserId] = ammoMode;
     }
 
     public static void TeleportEnd()
@@ -222,11 +214,14 @@ public static class Extensions
     {
         try
         {
+            Mero.TrySetIsDynamiclyDisabled(true);
+            
             var schematicObject = ObjectSpawner.SpawnSchematic(schematicName, pos, rot, scale);
 
             foreach (var toyBase in schematicObject.AdminToyBases)
                 toyBase.syncInterval = 0;
             
+            Mero.TrySetIsDynamiclyDisabled(false);
             return new MapObject
             {
                 AttachedBlocks = schematicObject.AttachedBlocks.ToList(),

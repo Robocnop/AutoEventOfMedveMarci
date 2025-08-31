@@ -1,4 +1,7 @@
 # AutoEvent
+[![Version](https://img.shields.io/github/v/release/MedveMarci/AutoEvent?&label=Version&color=d500ff)](https://github.com/MedveMarci/AutoEvent/releases/latest) [![LabAPI Version](https://img.shields.io/badge/LabAPI_Version-1.1.1-51f4ff )](https://github.com/northwood-studios/LabAPI/releases/tag/1.1.1) [![SCP:SL Version](https://img.shields.io/badge/SCP:SL_Version-14.1.3-blue?&color=e5b200)](https://store.steampowered.com/app/700330/SCP_Secret_Laboratory/) [![Total Downloads](https://img.shields.io/github/downloads/MedveMarci/AutoEvent/total.svg?label=Total%20Downloads&color=&color=ffbf00)]()<br>
+
+---
 
 ## Allows you to run auto Mini-Games in the game.
 

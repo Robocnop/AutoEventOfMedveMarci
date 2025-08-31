@@ -7,6 +7,7 @@ using InventorySystem.Items.Firearms.Modules;
 using LabApi.Events.Arguments.PlayerEvents;
 using LabApi.Events.Arguments.ServerEvents;
 using LabApi.Events.CustomHandlers;
+using UnityEngine;
 
 namespace AutoEvent;
 
@@ -117,9 +118,9 @@ internal class EventHandler : CustomEventsHandler
 
         if (!ev.IsAllowed)
             return;
-
+        LogManager.Debug($"Player {ev.Player.Nickname} ({ev.Player.UserId}) died. Cleaning up event data.");
         Extensions.InfinityStaminaList.Remove(ev.Player.UserId);
-        Extensions.InfiniteAmmoList.Remove(ev.Player.UserId);
+        ev.Player.GiveInfiniteAmmo(AmmoMode.None);
         base.OnPlayerDying(ev);
     }
 

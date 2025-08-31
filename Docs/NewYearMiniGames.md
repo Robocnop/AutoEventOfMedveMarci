@@ -1,128 +1,109 @@
-# Winter Season Mini-Games
+# Problems :trollface: - *How can I fix my problem?*
 
-### Zombie Infection.
+## 1) You do not have permission to use this command:
 
-#### Zombie infestation. the goal of which is to infect all players.
+![image](https://github.com/user-attachments/assets/b96bbf64-e981-4f9a-8200-eb1aab1b8014)
 
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/Zombie_Winter2.png)
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/ZombieRemake_Winter2.png)
+- Read here how to set permissions for your
+  role: [(Press me)](https://github.com/MedveMarci/AutoEvent/blob/main/Docs/Installation.md)
 
-### Airstrike
+---
 
-#### Grenades begin to spawn on the map.
+## 2) I only have one mini-game. What should I do?
 
-#### Survive to win.
+![image](https://github.com/user-attachments/assets/c40ac4d8-7753-4627-bf39-d514d53c3b98)
 
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/DeathParty-winter.png)
+- You haven't installed ProjectMER, so you have mini-games that won't need the maps.
+- Install the ProjectMER plugin so that the plugin can load
+  maps: [(Github ProjectMER)](https://github.com/Michal78900/ProjectMER/releases/latest)
 
-### SnowBall
+![image](https://github.com/user-attachments/assets/0ed636a3-9d08-4034-bc28-150a6646186b)
 
-#### Both teams have balls.
+- I do not know how to install ProjectMER. What should I do?
 
-#### Your task is to kill the opposite team, the team that stays alive wins.
+![image](https://github.com/user-attachments/assets/6f292d36-b87c-4ab6-aa49-899e4480ea2b)
 
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/Snowball-winter.png)
+---
 
-### Lava
+## 3) ProjectMER was not detected. AutoEvent will not be loaded until you install ProjectMER.
 
-#### The lava begins to rise, climb one of the towers to confront other players.
+- This is the same problem as in point 2.
+- Install ProjectMER so that the plugin can load
+  maps: [(Github ProjectMER)](https://github.com/Michal78900/ProjectMER/releases/latest)
 
-#### Weapons will be scattered around the map.
+![image](https://github.com/user-attachments/assets/b0355d75-31bc-43b8-980d-11d39e8bcc1c)
+---
 
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/Lava-winter.png)
+## 4) You have installed the old version of 'ProjectMER' and cannot run this mini-game
 
-### Tag
+![image](https://github.com/user-attachments/assets/e66573f4-1899-43a7-9724-01d3c9cd97ec)
 
-#### Run and hide from the players, otherwise you yourself will become caught up.
+- It says what it means. You have an old version of ProjectMER. There are new features or a new version of SCP has
+  been released. Therefore, errors appear.
+- Install the new version of ProjectMER so that the plugin can load
+  schematics: [(Github ProjectMER)](https://github.com/Michal78900/ProjectMER/releases/latest)
 
-#### To survive, pass the bat to another player.
+![image](https://github.com/user-attachments/assets/b0355d75-31bc-43b8-980d-11d39e8bcc1c)
 
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/Tag-winter.png)
+- If the problem persists, download the latest release (or testing release)
+  from [(Discord MER)](https://discord.gg/JwAfeSd79u):
+  ![image](https://github.com/user-attachments/assets/224dbb89-4974-4e9c-bc8b-6df4149dda9f)
 
-### Red Light Green Light
+---
 
-#### Red light, Green light. the goal is to run behind Santa Claus, who will simultaneously turn around and watch so that you don’t move.
+## 5) You need to download the map (something) to run this mini-game.
 
-#### When Santa Claus is looking at you you can’t walk, when he’s not looking at you you can.
+![image](https://github.com/user-attachments/assets/1a71fb4f-08b3-4411-a693-25ac9aae26f6)
 
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/GreenLightWinterLight.png)
+- It says what it means. This map is not exist on your server, so the mini-game cannot be run.
+- You need to download *``Schematics.tar.gz``* from
+  the [latest release](https://github.com/MedveMarci/AutoEvent/releases/latest).
 
-### Knives
+![image](https://github.com/user-attachments/assets/469eab25-2f94-4414-87dc-7402a5068aaf)
 
-#### Knife fight between two teams.
+- Unzip *``Schematics.tar.gz``* to ``LabApi/configs/AutoEvent/Schematics`` folder.
 
-#### It's simple! the team that stays alive wins.
+![image](https://github.com/user-attachments/assets/1797ee0b-ed3d-42a5-9fea-546bdf8bca12)
 
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/Knives-winter.png)
+![image](https://github.com/user-attachments/assets/02185f33-dbee-4b56-ae6d-73b7910cd0ef)
+---
 
-### Musical Chairs
+## 6) If you start a mini-game and appear on the map, but something is wrong.
 
-#### Move to the music and don't stop.
+![image](https://github.com/user-attachments/assets/934b43a1-8802-48be-9c95-b84fe25103b9)
 
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/MusicalChair-winter.png)
+- If earlier errors referred to the fact that you did not install something correctly and all responsibility lay with
+  you as a plugin user, now this error refers to me as a plugin developer.
+- Write to the issue detailing the problem:
+  ![image](https://github.com/user-attachments/assets/2a47ffca-c06e-42d1-9516-71d7018abfbd)
+- I will fix the problem as soon as I find some free time.
 
-### Fall Down
+---
 
-#### The map is destroyed. Survive on the remaining blocks.
+## 7) The mini-game (something) is not found:
 
-#### The last player standing is the winner.
+![image](https://github.com/user-attachments/assets/7c828cec-1c5c-4f50-a4d1-9e22ebd961e7)
 
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/FallDown-winter.png)
+- Enter the ev list command in the console:
 
-### Versus
+![image](https://github.com/user-attachments/assets/a25398ca-15d1-452f-b555-7a4ad5522db1)
 
-#### Players are divided into teams. in the center of the map there is a room in which the competition will take place.
+- Find the name of the command in square brackets:
 
-#### To take part you need to go through the door.
+![image](https://github.com/user-attachments/assets/432b6513-ca13-496c-858a-95a7b2b90866)
 
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/Versus-winter.png)
+- Enter this command in ev run:
 
-### Glass
+![image](https://github.com/user-attachments/assets/fff98a27-b4ac-47e4-8610-a05c3f0f40a6)
+---- 
 
-#### Select the correct panel to reach the finish line.
+## Enabling Debug Mode (debug-output.log):
 
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/Glass-winter.png)
+Autoevent has 2 methods of logging debug outputs. By default neither modes of logging are on. They can be enabled with
+their respective config options.
 
-### Puzzle
-
-#### Players appear on the map with colorful platforms that change color.
-
-#### Find a suitable platform based on the color indicated on the walls to survive.
-
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/Puzzle-winter.png)
-
-### Battle
-
-#### MTF fight against CI in an arena
-
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/Battle_Winter.png)
-
-### DeathMatch
-
-#### Team Death-Match on the Shipment map from MW19
-
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/Deathmatch_Winter.png)
-
-### Deathrun
-
-#### Go to the end, avoiding death-activated trap along the way
-
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/Deathrun_Winter.png)
-
-### Football
-
-#### Score 3 goals to win
-
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/Football_Winter.png)
-
-### Spleef
-
-#### Shoot at the platforms and don't fall into the void
-
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/Spleef_Winter.png)
-
-### Survival
-
-#### Humans surviving from zombies
-
-![](https://github.com/KoT0XleB/AutoEvent/blob/main/Photos/Survival_Winter.png)
+- Method 1 - Console logging (`debug`):
+    - Console logging logs all errors to the console directly.
+- Method 2 - Debug File Logging (`auto_log_debug`):
+    - Debug file logging stores all errors to a debug file in the base autoevent directory.
+        - For LabApi: `~/.config/SCP Secret Laboratory/LabApi/configs/AutoEvent/debug-output.log`

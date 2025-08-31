@@ -31,11 +31,11 @@ public class AutoEvent : Plugin<Config>
         "A plugin that allows you to play mini-games in SCP:SL. It includes a variety of games such as Spleef, Lava, Hide and Seek, Knives, and more. Each game has its own unique mechanics and rules, providing a fun and engaging experience for players.";
 
     public override Version Version => new(9, 14, 0);
-    
-    internal const bool PreRelease = false;
+
+    private const bool PreRelease = false;
     public override Version RequiredApiVersion => new(LabApiProperties.CompiledVersion);
 
-    public static string BaseConfigPath { get; private set; }
+    public static string BaseConfigPath { get; private set; } 
 
     public override void Enable()
     {
