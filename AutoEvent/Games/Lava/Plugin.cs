@@ -35,11 +35,13 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
     protected override void RegisterEvents()
     {
         PlayerEvents.Hurting += EventHandler.OnHurting;
+        PlayerEvents.PickedUpItem += EventHandler.OnPickedUpItem;
     }
 
     protected override void UnregisterEvents()
     {
         PlayerEvents.Hurting -= EventHandler.OnHurting;
+        PlayerEvents.PickedUpItem -= EventHandler.OnPickedUpItem;
     }
 
     protected override void OnStart()

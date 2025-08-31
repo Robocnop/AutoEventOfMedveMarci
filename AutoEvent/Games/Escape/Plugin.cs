@@ -90,9 +90,6 @@ public class Plugin : Event<Config, Translation>, IEventSound
                 Translation.BeforeStart.Replace("{name}", Name).Replace("{time}", time.ToString()), 1);
             yield return Timing.WaitForSeconds(1f);
         }
-
-        foreach (var door in DoorVariant.AllDoors.Where(door => door is not ElevatorDoor))
-            door.NetworkTargetState = true;
     }
 
     protected override void OnFinished()
@@ -101,7 +98,7 @@ public class Plugin : Event<Config, Translation>, IEventSound
         {
             player.EnableEffect<Flashed>(1, 1);
 
-            if (player.Zone != FacilityZone.Surface) player.Kill("You failed to escape in time!");
+            if (player.Room?.Name != RoomName.Outside) player.Kill("You failed to escape in time!");
         }
 
         var playerAlive = Player.ReadyList.Count(x => x.IsAlive).ToString();
@@ -111,6 +108,12 @@ public class Plugin : Event<Config, Translation>, IEventSound
     protected override void OnCleanup()
     {
         Warhead.IsLocked = false;
+        foreach (var door in DoorVariant.AllDoors.Where(door => door is not ElevatorDoor))
+        {
+            door.NetworkTargetState = true;
+            door.ServerChangeLock(DoorLockReason.Warhead, true);
+        }
+
         Warhead.Stop();
     }
 }

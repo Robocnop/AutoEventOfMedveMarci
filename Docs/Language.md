@@ -40,4 +40,3 @@ List of available languages:
 ### I found a mistake in the translation, what can I do?
 
 - Go to the selected translation and correct it. We will include the change in the latest release.
-

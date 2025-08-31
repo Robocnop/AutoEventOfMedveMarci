@@ -38,13 +38,16 @@ public class EventHandler(Plugin plugin)
 
         ev.Player.CurrentItem ??= ev.Player.AddItem(plugin.Config.AvailableWeapons.RandomItem());
 
-        Timing.CallDelayed(Timing.WaitForOneFrame, () =>
-        {
-            ev.Player.Position = RandomClass.GetRandomPosition(plugin.MapInfo.Map);
-        });
+        Timing.CallDelayed(Timing.WaitForOneFrame,
+            () => { ev.Player.Position = RandomClass.GetRandomPosition(plugin.MapInfo.Map); });
     }
-    
+
     public static void OnPlacingBlood(PlayerPlacingBloodEventArgs ev)
+    {
+        ev.IsAllowed = false;
+    }
+
+    public static void OnCuffing(PlayerCuffingEventArgs ev)
     {
         ev.IsAllowed = false;
     }

@@ -6,7 +6,7 @@
 
 ##### It's a pretty nice map, where it's nice to run away from zombies, but it's easy to get infected if you're careless.
 
-![](https://github.com/swdmeow/AutoEvent-Exiled/blob/main/Photos/Zombie.png)
+![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Zombie.png)
 
 ### Atomic Escape [escape]
 
@@ -14,7 +14,7 @@
 
 ##### We need to escape from the complex behind SCP-173 before it explodes. There is music in the background that adds to the anxiety.
 
-![](https://github.com/swdmeow/AutoEvent-Exiled/blob/main/Photos/Escape.png)
+![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Escape.png)
 
 ### Cock Fights [versus]
 
@@ -22,7 +22,7 @@
 
 ##### To participate, you need to go through the door.
 
-![](https://github.com/swdmeow/AutoEvent-Exiled/blob/main/Photos/Duel.png)
+![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Duel.png)
 
 ### Knives of Death [knife]
 
@@ -30,7 +30,7 @@
 
 ##### It's very simple! The team that remains last survives.
 
-![](https://github.com/swdmeow/AutoEvent-Exiled/blob/main/Photos/Knife.png)
+![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Knife.png)
 
 ### Simon's Prison [jail]
 
@@ -38,7 +38,7 @@
 
 ##### This mini-game requires an understanding of how to conduct the Jail mode, which is why I find it difficult.
 
-![](https://github.com/swdmeow/AutoEvent-Exiled/blob/main/Photos/Jail.png)
+![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Jail.png)
 
 ### Territory of Death or Deathmatch [deathmatch]
 
@@ -46,7 +46,7 @@
 
 ##### A small closed map with a lot of spawns on it, so the gameplay is cheerful.
 
-![](https://github.com/swdmeow/AutoEvent-Exiled/blob/main/Photos/Deathmatch.png)
+![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Deathmatch.png)
 
 ### Quick Hands or GunGame [gungame]
 
@@ -54,7 +54,7 @@
 
 ##### A small closed map with a lot of spawns on it, so the gameplay is cheerful.
 
-![](https://github.com/swdmeow/AutoEvent-Exiled/blob/main/Photos/GunGame.png)
+![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/GunGame.png)
 
 ### Dead Jump [glass]
 

@@ -12,10 +12,9 @@ public class EventHandler(Plugin plugin)
     // If the ball hits the player, the player will receive damage, and the ball will be destroy
     public void OnScp018Update(Scp018UpdateArgs ev)
     {
-        Collider[] results = [];
-        Physics.OverlapSphereNonAlloc(ev.Projectile.transform.position, ev.Projectile._radius, results);
+        var colliders = Physics.OverlapSphere(ev.Projectile.transform.position, ev.Projectile._radius);
 
-        foreach (var collider in results)
+        foreach (var collider in colliders)
         {
             var player = Player.Get(collider.gameObject);
             if (player == null || ev.Player == player) continue;

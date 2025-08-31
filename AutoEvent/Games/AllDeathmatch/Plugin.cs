@@ -12,13 +12,12 @@ using MEC;
 using Mirror;
 using UnityEngine;
 using Extensions = AutoEvent.API.Extensions;
-using Object = UnityEngine.Object;
 
 namespace AutoEvent.Games.AllDeathmatch;
 
 public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
 {
-    internal Dictionary<string, int> TotalKills;
+    internal Dictionary<uint, int> TotalKills;
     public override string Name { get; set; } = "All Deathmatch";
     public override string Description { get; set; } = "Fight against each other in all deathmatch.";
     public override string Author { get; set; } = "RisottoMan";
@@ -49,6 +48,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
         PlayerEvents.Joined += EventHandler.OnJoined;
         PlayerEvents.Left += EventHandler.OnLeft;
         PlayerEvents.PlacingBlood += EventHandler.OnPlacingBlood;
+        PlayerEvents.Cuffing += EventHandler.OnCuffing;
     }
 
     protected override void UnregisterEvents()
@@ -57,6 +57,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
         PlayerEvents.Joined -= EventHandler.OnJoined;
         PlayerEvents.Left -= EventHandler.OnLeft;
         PlayerEvents.PlacingBlood -= EventHandler.OnPlacingBlood;
+        PlayerEvents.Cuffing -= EventHandler.OnCuffing;
         EventHandler = null;
     }
 
@@ -64,7 +65,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
     {
         Winner = null;
         NeedKills = 0;
-        TotalKills = new Dictionary<string, int>();
+        TotalKills = new Dictionary<uint, int>();
         SpawnList = [];
         NeedKills = Player.ReadyList.Count() switch
         {
@@ -81,7 +82,10 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
             switch (gameObject.name)
             {
                 case "Spawnpoint_Deathmatch": SpawnList.Add(gameObject); break;
-                case "Wall": NetworkServer.Destroy(gameObject);; break;
+                case "Wall":
+                    NetworkServer.Destroy(gameObject);
+                    ;
+                    break;
             }
 
         foreach (var player in Player.ReadyList)
@@ -90,8 +94,8 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
                 LoadoutFlags.ForceInfiniteAmmo | LoadoutFlags.IgnoreGodMode | LoadoutFlags.IgnoreWeapons);
             player.Position = SpawnList.RandomItem().transform.position;
 
-            if (!TotalKills.ContainsKey(player.UserId))
-                TotalKills.Add(player.UserId, 0);
+            if (!TotalKills.ContainsKey(player.NetworkId))
+                TotalKills.Add(player.NetworkId, 0);
         }
     }
 
@@ -143,12 +147,12 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
 
         foreach (var player in Player.ReadyList)
         {
-            if (!TotalKills.ContainsKey(player.UserId))
-                TotalKills.Add(player.UserId, 0);
+            if (!TotalKills.ContainsKey(player.NetworkId))
+                TotalKills.Add(player.NetworkId, 0);
 
-            if (TotalKills[player.UserId] >= NeedKills) Winner = player;
+            if (TotalKills[player.NetworkId] >= NeedKills) Winner = player;
 
-            var playerItem = sortedDict.FirstOrDefault(x => x.Key == player.UserId);
+            var playerItem = sortedDict.FirstOrDefault(x => x.Key == player.NetworkId);
             var playerText = leaderboard + $"<color=#ff0000>You - {playerItem.Value}/{NeedKills} kills</color></size>";
 
             var text = Translation.Cycle.Replace("{name}", Name).Replace("{kills}", playerItem.Value.ToString())
@@ -171,7 +175,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
             else if (Winner != null)
                 text = Translation.WinnerEnd.Replace("{winner}", Winner.Nickname).Replace("{time}", time);
 
-            text = text.Replace("{count}", TotalKills.First(x => x.Key == player.UserId).Value.ToString());
+            text = text.Replace("{count}", TotalKills.First(x => x.Key == player.NetworkId).Value.ToString());
             player.Broadcast(text, 10);
         }
     }

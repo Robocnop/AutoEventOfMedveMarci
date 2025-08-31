@@ -29,4 +29,5 @@ public class Translation : EventTranslation
     public string YouDefused { get; set; } = "<b><color=#42aaff>You defused the bomb</color></b>";
     public static string PickedUpBomb { get; set; } = "You picked up the C4!";
     public static string EquippedBomb { get; set; } = "You're holding the C4!";
+    public string BombDeathReason { get; set; } = "The Bomb exploded.";
 }

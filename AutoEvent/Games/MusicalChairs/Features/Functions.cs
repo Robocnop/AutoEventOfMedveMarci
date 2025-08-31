@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AdminToys;
-using AutoEvent.API;
+using Mirror;
 using UnityEngine;
+using Extensions = AutoEvent.API.Extensions;
 
 namespace AutoEvent.Games.MusicalChairs;
 
@@ -39,7 +39,7 @@ public abstract class Functions
         for (; playerCount <= platforms.Count;)
         {
             var lastPlatform = platforms.Last();
-            Object.Destroy(lastPlatform);
+            NetworkServer.Destroy(lastPlatform);
             platforms.Remove(lastPlatform);
         }
 
@@ -56,7 +56,7 @@ public abstract class Functions
             var z = position.z + radius * Mathf.Sin(radians);
             var pos = new Vector3(x, platforms[i].transform.position.y, z);
 
-            if (platforms[i].TryGetComponent(out PrimitiveObjectToy primitiveObject)) primitiveObject.Position = pos;
+            platforms[i].transform.position = pos;
         }
 
         return platforms;

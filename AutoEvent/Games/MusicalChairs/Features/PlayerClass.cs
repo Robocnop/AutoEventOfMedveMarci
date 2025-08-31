@@ -2,6 +2,5 @@
 
 public class PlayerClass
 {
-    public float Angle { get; set; }
     public bool IsStandUpPlatform { get; set; }
 }

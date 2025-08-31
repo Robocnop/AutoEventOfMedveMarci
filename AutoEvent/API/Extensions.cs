@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using AutoEvent.API.Enums;
+using AutoEvent.Intergrations;
 using Footprinting;
 using InventorySystem;
-using InventorySystem.Items.Firearms;
+using InventorySystem.Items;
 using InventorySystem.Items.Pickups;
 using InventorySystem.Items.ThrowableProjectiles;
 using LabApi.Features.Wrappers;
 using Mirror;
 using PlayerRoles;
 using PlayerRoles.Ragdolls;
-using PlayerStatsSystem;
 using ProjectMER.Features;
 using ProjectMER.Features.Serializable;
 using UnityEngine;
@@ -32,8 +32,8 @@ public static class Extensions
         HasAllItems
     }
 
-    public static readonly Dictionary<string, AmmoMode> InfiniteAmmoList = new();
-    public static readonly List<string> InfinityStaminaList = [];
+    public static readonly Dictionary<uint, AmmoMode> InfiniteAmmoList = new();
+    public static readonly List<uint> InfinityStaminaList = [];
 
     public static bool HasLoadout(this Player ply, List<Loadout> loadouts,
         LoadoutCheckMethods checkMethod = LoadoutCheckMethods.HasRole)
@@ -124,7 +124,7 @@ public static class Extensions
         if (loadout.Items is not null && loadout.Items.Count > 0 && !flags.HasFlag(LoadoutFlags.IgnoreItems))
             foreach (var item in loadout.Items)
             {
-                if (flags.HasFlag(LoadoutFlags.IgnoreWeapons) && item is Firearm)
+                if (flags.HasFlag(LoadoutFlags.IgnoreWeapons) && item.GetName().Contains("Gun"))
                     continue;
 
                 player.AddItem(item);
@@ -142,12 +142,12 @@ public static class Extensions
 
         if (!flags.HasFlag(LoadoutFlags.IgnoreStamina) && loadout.Stamina != 0)
         {
-            player.ReferenceHub.playerStats.GetModule<StaminaStat>().ModifyAmount(loadout.Stamina);
+            player.StaminaRemaining = loadout.Stamina;
         }
         else
         {
-            if (!InfinityStaminaList.Contains(player.UserId))
-                InfinityStaminaList.Add(player.UserId);
+            if (!InfinityStaminaList.Contains(player.NetworkId))
+                InfinityStaminaList.Add(player.NetworkId);
         }
 
         if (loadout.Size != Vector3.one && !flags.HasFlag(LoadoutFlags.IgnoreSize)) player.Scale = loadout.Size;
@@ -163,21 +163,12 @@ public static class Extensions
 
     public static void GiveInfiniteAmmo(this Player player, AmmoMode ammoMode)
     {
+        LogManager.Debug(
+            $"Setting infinite ammo mode for player {player.Nickname} ({player.NetworkId}) to {ammoMode}");
         if (ammoMode == AmmoMode.None)
-            if (InfiniteAmmoList is null || InfiniteAmmoList.Count < 1 || !InfiniteAmmoList.Remove(player.UserId))
-                return;
-
-        InfiniteAmmoList[player.UserId] = ammoMode;
-        foreach (ItemType ammoType in Enum.GetValues(typeof(ItemType)))
-        {
-            if (ammoType == ItemType.None)
-                continue;
-
-            if (!nameof(ammoType).Contains("Ammo"))
-                return;
-
-            player.SetAmmo(ammoType, 100);
-        }
+            InfiniteAmmoList.Remove(player.NetworkId);
+        else
+            InfiniteAmmoList[player.NetworkId] = ammoMode;
     }
 
     public static void TeleportEnd()
@@ -189,7 +180,7 @@ public static class Extensions
             player.IsGodModeEnabled = false;
             player.Scale = new Vector3(1, 1, 1);
             player.Position = new Vector3(39.332f, 314.112f, -31.922f);
-            InfinityStaminaList.Remove(player.UserId);
+            InfinityStaminaList.Remove(player.NetworkId);
             player.ClearInventory();
         }
     }
@@ -222,11 +213,14 @@ public static class Extensions
     {
         try
         {
+            Mero.TrySetIsDynamiclyDisabled(true);
+
             var schematicObject = ObjectSpawner.SpawnSchematic(schematicName, pos, rot, scale);
 
             foreach (var toyBase in schematicObject.AdminToyBases)
                 toyBase.syncInterval = 0;
-            
+
+            Mero.TrySetIsDynamiclyDisabled(false);
             return new MapObject
             {
                 AttachedBlocks = schematicObject.AttachedBlocks.ToList(),
@@ -295,14 +289,14 @@ public static class Extensions
         timeGrenade.PreviousOwner = new Footprint(Player.Host?.ReferenceHub);
         timeGrenade.gameObject.transform.localScale = new Vector3(scale, scale, scale);
         NetworkServer.Spawn(timeGrenade.gameObject);
+        timeGrenade.ServerActivate();
         var grenadeProjectile = (ExplosiveGrenadeProjectile)Pickup.Get(timeGrenade);
         grenadeProjectile.RemainingTime = fuseTime;
         grenadeProjectile.MaxRadius = radius;
-        timeGrenade.ServerActivate();
     }
 
     public static AudioPlayer PlayAudio(string fileName, byte volume, bool isLoop, bool isSpatial = false,
-        float minDistance = 5f, float maxDistance = 5000f)
+        float minDistance = 5f, float maxDistance = 5000f, Vector3 speakerPosition = default)
     {
         if (!AudioClipStorage.AudioClips.ContainsKey(fileName))
         {
@@ -315,10 +309,11 @@ public static class Extensions
             }
         }
 
-        var audioPlayer = AudioPlayer.CreateOrGet("AutoEvent-Global",
+        var audioPlayer = AudioPlayer.CreateOrGet($"AutoEvent-Global-{fileName}",
             onIntialCreation: p =>
             {
-                p.AddSpeaker($"AutoEvent-Main-{fileName}", volume * (AutoEvent.Singleton.Config.Volume / 100f),
+                p.AddSpeaker($"AutoEvent-Main-{fileName}", speakerPosition,
+                    volume * (AutoEvent.Singleton.Config.Volume / 100f),
                     isSpatial, minDistance, maxDistance);
             });
 

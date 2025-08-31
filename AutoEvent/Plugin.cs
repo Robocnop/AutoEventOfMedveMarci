@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using AutoEvent.API;
 using AutoEvent.Loader;
 using HarmonyLib;
@@ -9,15 +11,13 @@ using LabApi.Features;
 using LabApi.Features.Wrappers;
 using LabApi.Loader.Features.Paths;
 using LabApi.Loader.Features.Plugins;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace AutoEvent;
 
 public class AutoEvent : Plugin<Config>
 {
+    private const bool PreRelease = false;
     public static AutoEvent Singleton;
     private static Harmony _harmonyPatch;
     public static EventManager EventManager;
@@ -30,9 +30,7 @@ public class AutoEvent : Plugin<Config>
     public override string Description =>
         "A plugin that allows you to play mini-games in SCP:SL. It includes a variety of games such as Spleef, Lava, Hide and Seek, Knives, and more. Each game has its own unique mechanics and rules, providing a fun and engaging experience for players.";
 
-    public override Version Version => new(9, 14, 0);
-    
-    internal const bool PreRelease = false;
+    public override Version Version => new(9, 14, 1);
     public override Version RequiredApiVersion => new(LabApiProperties.CompiledVersion);
 
     public static string BaseConfigPath { get; private set; }
@@ -142,8 +140,10 @@ public class AutoEvent : Plugin<Config>
             client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
 
             const string repo = "MedveMarci/AutoEvent";
-            var latestStableJson = await client.GetStringAsync($"https://api.github.com/repos/{repo}/releases/latest").ConfigureAwait(false);
-            var allReleasesJson = await client.GetStringAsync($"https://api.github.com/repos/{repo}/releases?per_page=20").ConfigureAwait(false);
+            var latestStableJson = await client.GetStringAsync($"https://api.github.com/repos/{repo}/releases/latest")
+                .ConfigureAwait(false);
+            var allReleasesJson = await client
+                .GetStringAsync($"https://api.github.com/repos/{repo}/releases?per_page=20").ConfigureAwait(false);
 
             var latestStable = JObject.Parse(latestStableJson);
             var all = JArray.Parse(allReleasesJson);
@@ -182,20 +182,19 @@ public class AutoEvent : Plugin<Config>
             var prereleaseNewer = preVer != null && preVer > currentVersion && !outdatedStable;
 
             if (outdatedStable)
-            {
-                LogManager.Info($"A new AutoEvent version is available: {stableTag} (current {currentVersion}). Download: https://github.com/MedveMarci/AutoEvent/releases/latest", ConsoleColor.DarkRed);
-            }
+                LogManager.Info(
+                    $"A new AutoEvent version is available: {stableTag} (current {currentVersion}). Download: https://github.com/MedveMarci/AutoEvent/releases/latest",
+                    ConsoleColor.DarkRed);
             else if (prereleaseNewer)
-            {
-                LogManager.Info($"A newer pre-release is available: {preTag} (current {currentVersion}). Download: https://github.com/MedveMarci/AutoEvent/releases/tag/{preTag}", ConsoleColor.DarkYellow);
-            }
+                LogManager.Info(
+                    $"A newer pre-release is available: {preTag} (current {currentVersion}). Download: https://github.com/MedveMarci/AutoEvent/releases/tag/{preTag}",
+                    ConsoleColor.DarkYellow);
             else
-            {
                 LogManager.Info($"AutoEvent v{currentVersion} is up to date.", ConsoleColor.Blue);
-            }
             if (PreRelease)
-                LogManager.Info("This is a pre-release version. There might be bugs, if you find one, please report it on GitHub or Discord.", ConsoleColor.DarkYellow);
-
+                LogManager.Info(
+                    "This is a pre-release version. There might be bugs, if you find one, please report it on GitHub or Discord.",
+                    ConsoleColor.DarkYellow);
         }
         catch (Exception e)
         {
@@ -212,7 +211,7 @@ public class AutoEvent : Plugin<Config>
             if (t.StartsWith("v", StringComparison.OrdinalIgnoreCase))
                 t = t.Substring(1);
 
-            int cut = t.IndexOfAny(new[] { '-', '+' });
+            var cut = t.IndexOfAny(new[] { '-', '+' });
             if (cut >= 0)
                 t = t.Substring(0, cut);
 

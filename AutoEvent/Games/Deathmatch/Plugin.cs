@@ -41,6 +41,7 @@ public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
         PlayerEvents.Joined += EventHandler.OnJoined;
         PlayerEvents.Dying += EventHandler.OnDying;
         PlayerEvents.PlacingBlood += EventHandler.OnPlacingBlood;
+        PlayerEvents.Cuffing += EventHandler.OnCuffing;
     }
 
     protected override void UnregisterEvents()
@@ -48,6 +49,7 @@ public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
         PlayerEvents.Joined -= EventHandler.OnJoined;
         PlayerEvents.Dying -= EventHandler.OnDying;
         PlayerEvents.PlacingBlood -= EventHandler.OnPlacingBlood;
+        PlayerEvents.Cuffing -= EventHandler.OnCuffing;
         EventHandler = null;
     }
 
