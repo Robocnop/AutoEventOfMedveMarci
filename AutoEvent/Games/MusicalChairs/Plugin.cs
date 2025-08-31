@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoEvent.API;
 using AutoEvent.Interfaces;
+using CustomPlayerEffects;
 using LabApi.Events.Handlers;
 using LabApi.Features.Wrappers;
 using MEC;
@@ -86,7 +87,6 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         foreach (var player in Player.ReadyList)
             PlayerDict.Add(player, new PlayerClass
             {
-                Angle = 0,
                 IsStandUpPlatform = false
             });
     }
@@ -112,6 +112,7 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
     protected override void ProcessFrame()
     {
         var text = string.Empty;
+        LogManager.Debug($"State: {_eventState}, Countdown: {_countdown.TotalSeconds}");
         switch (_eventState)
         {
             case EventState.Waiting: UpdateWaitingState(ref text); break;
@@ -139,7 +140,6 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         // Reset the parameters in the dictionary
         foreach (var value in PlayerDict.Values)
         {
-            value.Angle = 0;
             value.IsStandUpPlatform = false;
         }
 
@@ -158,18 +158,10 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         // Check only alive players
         foreach (var player in Player.ReadyList.Where(r => r.IsAlive))
         {
-            var playerAngle = 180f + Mathf.Rad2Deg * Mathf.Atan2(player.Position.z - MapInfo.Position.z,
-                player.Position.x - MapInfo.Position.x);
-
-            // The player can run in any direction. The main thing is that the angle changes and is not the same
-            if (Mathf.Approximately(PlayerDict[player].Angle, playerAngle))
+            if (player.Velocity == Vector3.zero)
             {
                 Extensions.GrenadeSpawn(player.Position, 0.1f, 0.1f, 0);
                 player.Kill(Translation.StopRunning);
-            }
-            else
-            {
-                PlayerDict[player].Angle = playerAngle;
             }
 
             // If the player touches the platform, it will explode || Layer mask is 0 for primitives
@@ -177,7 +169,6 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
             if (!Platforms.Contains(hit.collider.gameObject))
                 continue;
 
-            if (!hit.collider.GetComponent<PrimitiveObjectToy>()) continue;
             Extensions.GrenadeSpawn(player.Position, 0.1f, 0.1f, 0);
             player.Kill(Translation.TouchAhead);
         }
@@ -221,6 +212,7 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
             if (objectToy.NetworkMaterialColor != Color.black) continue;
             objectToy.NetworkMaterialColor = Color.red;
             playerClass.IsStandUpPlatform = true;
+            player.EnableEffect<Ensnared>();
         }
 
         if (_countdown.TotalSeconds > 0)
@@ -248,10 +240,13 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 
         if (_countdown.TotalSeconds > 0)
             return;
-
+        foreach (var player in Player.ReadyList.Where(p => p.IsAlive))
+        {
+            player.DisableEffect<Ensnared>();
+        }
         foreach (var platform in Platforms)
             platform.GetComponent<PrimitiveObjectToy>().NetworkMaterialColor = Color.yellow;
-
+        
         Extensions.ResumeAudio(SoundInfo.AudioPlayer);
         _countdown = new TimeSpan(0, 0, 3);
         _eventState = 0;

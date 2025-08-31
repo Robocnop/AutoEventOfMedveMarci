@@ -37,7 +37,8 @@ public class Config : EventConfig
 
             Effects =
             [
-                new EffectData { Type = nameof(FogControl), Duration = 0, Intensity = 1 }
+                new EffectData { Type = nameof(FogControl), Duration = 0, Intensity = 1 },
+                new EffectData { Type = nameof(HeavyFooted), Duration = 0, Intensity = 255 }
             ],
 
             Stamina = 0
