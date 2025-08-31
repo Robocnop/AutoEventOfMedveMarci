@@ -25,7 +25,7 @@ public abstract class EventHandler
     {
         if (ev.Item is not FirearmItem firearm2) return;
         if (!firearm2.Base.TryGetModule<MagazineModule>(out var module)) return;
-        ev.Player.SendHint("Reload you weapon!", 5);
+        ev.Player.SendHint("Reload your weapon!", 5);
         ev.Player.AddAmmo(module.AmmoType, (ushort)module.AmmoMax);
         ev.Player.CurrentItem = ev.Item;
     }
