@@ -78,7 +78,6 @@ their respective config options.
 - Method 2 - Debug File Logging (`auto_log_debug`):
     - Debug file logging stores all errors to a debug file in the base autoevent directory.
         - For LabApi: `~/.config/SCP Secret Laboratory/LabApi/configs/AutoEvent/debug-output.log`
-=======
 ![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Glass-winter.png)
 
 ### Puzzle
