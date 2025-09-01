@@ -319,6 +319,7 @@ public static class Extensions
 
         audioPlayer.SendSoundGlobally = true;
         audioPlayer.AddClip(fileName, loop: isLoop);
+        audioPlayer.DestroyWhenAllClipsPlayed = true;
 
         return audioPlayer;
     }

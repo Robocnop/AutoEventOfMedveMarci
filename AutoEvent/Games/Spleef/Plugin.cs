@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace AutoEvent.Games.Spleef;
 
-public class Plugin : Event<Config, Translation>, IEventMap
+public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
 {
     private TimeSpan _countdown;
 
@@ -23,6 +23,12 @@ public class Plugin : Event<Config, Translation>, IEventMap
     public override string CommandName { get; set; } = "spleef";
     protected override FriendlyFireSettings ForceEnableFriendlyFire { get; set; } = FriendlyFireSettings.Disable;
 
+    public SoundInfo SoundInfo { get; set; } = new()
+    {
+        SoundName = "Fall_Guys_Winter_Fallympics.ogg",
+        Volume = 7
+    };
+    
     public MapInfo MapInfo { get; set; } = new()
     {
         MapName = "Spleef",
