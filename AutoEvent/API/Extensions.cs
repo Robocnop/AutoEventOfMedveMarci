@@ -124,7 +124,7 @@ public static class Extensions
         if (loadout.Items is not null && loadout.Items.Count > 0 && !flags.HasFlag(LoadoutFlags.IgnoreItems))
             foreach (var item in loadout.Items)
             {
-                if (flags.HasFlag(LoadoutFlags.IgnoreWeapons) && item.GetName().Contains("Gun"))
+                if (flags.HasFlag(LoadoutFlags.IgnoreWeapons) && item.ToString().Contains("Gun"))
                     continue;
 
                 player.AddItem(item);
@@ -319,6 +319,7 @@ public static class Extensions
 
         audioPlayer.SendSoundGlobally = true;
         audioPlayer.AddClip(fileName, loop: isLoop);
+        audioPlayer.DestroyWhenAllClipsPlayed = true;
 
         return audioPlayer;
     }
