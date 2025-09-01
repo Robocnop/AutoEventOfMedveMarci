@@ -55,7 +55,7 @@ public class Plugin : Event<Config, Translation>, IEventMap
             switch (gameObject.name)
             {
                 case "Spawnpoint": spawnpoint = gameObject; break;
-                case "Platform": gameObject.AddComponent<FallPlatformComponent>(); break; //todo
+                case "Platform": gameObject.AddComponent<FallPlatformComponent>(); break;
             }
 
         var count = Player.ReadyList.Count();

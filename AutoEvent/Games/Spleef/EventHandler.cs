@@ -14,8 +14,11 @@ public class EventHandler(Plugin plugin)
 
         if (!ev.FirearmItem.Base.TryGetModule<HitscanHitregModuleBase>(out var hitreg))
             return;
-
-        foreach (var platform in hitreg.ResultNonAlloc.Obstacles.FirstOrDefault().Hit.transform
-                     .GetComponentsInParent<FallPlatformComponent>()) Object.Destroy(platform);
+        
+        foreach (var obstacle in hitreg.ResultNonAlloc.Obstacles)
+        {
+            if (obstacle.Hit.transform.TryGetComponentInParent<FallPlatformComponent>(out var platform))
+                Object.Destroy(platform);
+        }
     }
 }
