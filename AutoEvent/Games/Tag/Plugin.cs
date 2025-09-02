@@ -10,7 +10,7 @@ using LabApi.Features.Wrappers;
 using MEC;
 using UnityEngine;
 
-namespace AutoEvent.Games.HideAndSeek;
+namespace AutoEvent.Games.Tag;
 
 public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 {

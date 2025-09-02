@@ -7,7 +7,7 @@ using CustomPlayerEffects;
 using PlayerRoles;
 using UnityEngine;
 
-namespace AutoEvent.Games.HideAndSeek;
+namespace AutoEvent.Games.Tag;
 
 public class Config : EventConfig
 {

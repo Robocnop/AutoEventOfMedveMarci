@@ -7,7 +7,7 @@ using LabApi.Events.Arguments.PlayerEvents;
 using LabApi.Features.Wrappers;
 using PlayerStatsSystem;
 
-namespace AutoEvent.Games.HideAndSeek;
+namespace AutoEvent.Games.Tag;
 
 public class EventHandler(Plugin ev)
 {

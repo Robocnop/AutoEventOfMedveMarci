@@ -1,6 +1,6 @@
 ﻿using AutoEvent.Interfaces;
 
-namespace AutoEvent.Games.HideAndSeek;
+namespace AutoEvent.Games.Tag;
 
 public class Translation : EventTranslation
 {

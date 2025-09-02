@@ -1,4 +1,4 @@
-﻿namespace AutoEvent.Games.HideAndSeek;
+﻿namespace AutoEvent.Games.Tag;
 
 internal enum EventState
 {
