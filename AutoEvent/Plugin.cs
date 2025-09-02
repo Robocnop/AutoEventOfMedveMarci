@@ -174,18 +174,10 @@ public class AutoEvent : Plugin<Config>
                             publishedAt = dt;
                     }
 
-                    if (latestPre == null)
+                    if (latestPre == null || publishedAt.HasValue && (!bestPublishedAt.HasValue || publishedAt.Value > bestPublishedAt.Value))
                     {
                         latestPre = rel;
                         bestPublishedAt = publishedAt;
-                    }
-                    else
-                    {
-                        if (publishedAt.HasValue && (!bestPublishedAt.HasValue || publishedAt.Value > bestPublishedAt.Value))
-                        {
-                            latestPre = rel;
-                            bestPublishedAt = publishedAt;
-                        }
                     }
                 }
             }
@@ -217,7 +209,7 @@ public class AutoEvent : Plugin<Config>
         }
         catch (Exception e)
         {
-            LogManager.Debug($"Version check failed.\n{e}");
+            LogManager.Error($"Version check failed.\n{e}");
         }
     }
 
