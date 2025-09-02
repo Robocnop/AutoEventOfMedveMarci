@@ -17,7 +17,7 @@
 [![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Message4.png)](https://github.com/MedveMarci/AutoEvent/blob/main/Docs/Problem.md)
 [![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Message5.png)](https://docs.google.com/document/d/1acRD2O9u4-THUEaXenFLF97Lkqt4uQ0mOEAThVNROJs/)
 [![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Message6.png)](https://github.com/MedveMarci/AutoEvent/blob/main/Docs/Configuration.md)
-<a href='https://discord.gg/5StRGu8EJV'><img src='https://www.allkpop.com/upload/2021/01/content/262046/1611711962-discord-button.png' height="100"></a>
+<a href='https://discord.gg/KmpA8cfaSA'><img src='https://www.allkpop.com/upload/2021/01/content/262046/1611711962-discord-button.png' height="100"></a>
 
 # Credits
 
