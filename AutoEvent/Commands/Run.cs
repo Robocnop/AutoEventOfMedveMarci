@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoEvent.API;
 using AutoEvent.Interfaces;
 using CommandSystem;
@@ -48,6 +49,12 @@ internal class Run : ICommand, IUsageProvider
             Logger.Warn("No map has been specified for this event!");
         else if (!Extensions.IsExistsMap(map.MapInfo.MapName, out response)) return false;
 
+        if (!Player.ReadyList.Any())
+        {
+            response = "There are no players in the server!";
+            return false;
+        }
+        
         Round.IsLocked = true;
         if (!Round.IsRoundStarted)
         {
