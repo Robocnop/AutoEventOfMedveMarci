@@ -4,10 +4,12 @@ using AutoEvent.API;
 using AutoEvent.API.Enums;
 using CustomPlayerEffects;
 using InventorySystem.Items;
+using InventorySystem.Items.Firearms;
 using InventorySystem.Items.Firearms.Modules;
 using LabApi.Events.Arguments.PlayerEvents;
 using LabApi.Events.Arguments.ServerEvents;
 using LabApi.Events.CustomHandlers;
+using LabApi.Features.Wrappers;
 
 namespace AutoEvent;
 
@@ -73,6 +75,11 @@ internal class EventHandler : CustomEventsHandler
 
         if (ev.FirearmItem.Base.TryGetModule<MagazineModule>(out var module))
         {
+            if (ev.FirearmItem is ParticleDisruptorItem particleDisruptor)
+            {
+                particleDisruptor.StoredAmmo = module.AmmoMax;
+                return;
+            }
             var playersAmmo = module.AmmoMax - module.AmmoStored;
             ev.Player.SetAmmo(module.AmmoType, (ushort)playersAmmo);
         }
