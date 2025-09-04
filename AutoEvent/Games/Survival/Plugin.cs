@@ -149,11 +149,15 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         }
         
         foreach (var player in AudioPlayer.AudioPlayerByName.Values)
-        {
             Extensions.StopAudio(player);
-        }
         
         Extensions.PlayAudio(musicName, 7, false);
         Extensions.ServerBroadcast(text, 10);
+    }
+
+    protected override void OnCleanup()
+    {
+        foreach (var player in AudioPlayer.AudioPlayerByName.Values)
+            Extensions.StopAudio(player);
     }
 }
