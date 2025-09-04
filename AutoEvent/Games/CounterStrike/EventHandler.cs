@@ -129,7 +129,7 @@ public class EventHandler(Plugin plugin)
     public void OnPickingUpItem(PlayerPickingUpItemEventArgs ev)
     {
         if (ev.Pickup.Base.ItemId != Bomb.Base.ItemId) return;
-        ev.Player.SendHint(Translation.PickedUpBomb);
+        ev.Player.SendHint(plugin.Translation.PickedUpBomb);
         plugin.BombObject.transform.ResetTransform();
         plugin.BombObject.gameObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         plugin.BombObject.gameObject.transform.parent = ev.Player.GameObject.transform;
@@ -148,7 +148,7 @@ public class EventHandler(Plugin plugin)
         plugin.BombObject.gameObject.transform.localRotation = Quaternion.identity;
     }
 
-    public static void OnChangedItemEvent(PlayerChangedItemEventArgs ev)
+    public void OnChangedItemEvent(PlayerChangedItemEventArgs ev)
     {
         Bomb.PersonalCooldownDuration = 0f;
         Bomb.GlobalCooldownDuration = 0f;
@@ -159,7 +159,7 @@ public class EventHandler(Plugin plugin)
         }
 
         if (ev.NewItem != null && ev.NewItem.Base.ItemId != Bomb.Base.ItemId) return;
-        ev.Player.SendHint(Translation.EquippedBomb);
+        ev.Player.SendHint(plugin.Translation.EquippedBomb);
     }
 
     public static void OnCuffing(PlayerCuffingEventArgs ev)

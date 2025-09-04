@@ -119,6 +119,9 @@ Counter-Strike:
     <i>Бомба обезврежена!</i>
   you_planted: '<b><color=#ff4c5b>Вы заплентили бомбу.</color></b>'
   you_defused: '<b><color=#42aaff>Вы дефузите бомбу.</color></b>'
+  picked_up_bomb: You picked up the C4!
+  equipped_bomb: You're holding the C4!
+  bomb_death_reason: The Bomb exploded.
   hint_cycle: |-
     <size=30><i><b>{name}</b>
     {kills}

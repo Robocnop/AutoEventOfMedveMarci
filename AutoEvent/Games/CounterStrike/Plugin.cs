@@ -53,7 +53,7 @@ public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
         PlayerEvents.UsingItem += _eventHandler.OnUsingItem;
         PlayerEvents.UsedItem += _eventHandler.OnUsedItem;
         PlayerEvents.PickingUpItem += _eventHandler.OnPickingUpItem;
-        PlayerEvents.ChangedItem += EventHandler.OnChangedItemEvent;
+        PlayerEvents.ChangedItem += _eventHandler.OnChangedItemEvent;
         PlayerEvents.CancelledUsingItem += EventHandler.OnCancelledUsingItem;
         PlayerEvents.DroppedItem += _eventHandler.OnDroppedItem;
         PlayerEvents.SearchingPickup += EventHandler.OnSearchingPickup;
@@ -67,7 +67,7 @@ public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
         PlayerEvents.UsedItem -= _eventHandler.OnUsedItem;
         PlayerEvents.PickingUpItem -= _eventHandler.OnPickingUpItem;
         PlayerEvents.CancelledUsingItem -= EventHandler.OnCancelledUsingItem;
-        PlayerEvents.ChangedItem -= EventHandler.OnChangedItemEvent;
+        PlayerEvents.ChangedItem -= _eventHandler.OnChangedItemEvent;
         PlayerEvents.SearchingToy += _eventHandler.OnSearchingToy;
         PlayerEvents.SearchToyAborted += EventHandler.OnSearchToyAborted;
         PlayerEvents.DroppedItem -= _eventHandler.OnDroppedItem;
