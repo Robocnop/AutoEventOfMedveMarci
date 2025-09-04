@@ -262,7 +262,8 @@ public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
 
     protected override void OnCleanup()
     {
-        NetworkServer.Destroy(BombObject.gameObject);
+        if (BombObject.gameObject)
+            NetworkServer.Destroy(BombObject.gameObject);
         BombObject = null;
         EventHandler.Bomb = null;
         base.OnCleanup();
