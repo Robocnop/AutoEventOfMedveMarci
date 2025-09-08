@@ -35,8 +35,7 @@ public class Plugin : Event<Config, Translation>, IEventMap
     public MapInfo MapInfo { get; set; } = new()
     {
         MapName = "Jail",
-        Position = new Vector3(50, 40, 66),
-        IsStatic = false
+        Position = new Vector3(50, 40, 66)
     };
 
     protected override void RegisterEvents()

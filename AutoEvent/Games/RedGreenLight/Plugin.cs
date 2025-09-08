@@ -33,8 +33,7 @@ public class Plugin : Event<Config, Translation>, IEventMap
     public MapInfo MapInfo { get; set; } = new()
     {
         MapName = "RedLight",
-        Position = new Vector3(0f, 40f, 0f),
-        IsStatic = false
+        Position = new Vector3(0f, 40f, 0f)
     };
 
     protected override void RegisterEvents()

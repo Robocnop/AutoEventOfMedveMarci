@@ -16,9 +16,9 @@ public class Config : EventConfig
         AvailableMaps ??= [];
 
         if (AvailableMaps.Count >= 1) return;
-        AvailableMaps.Add(new MapChance(50, new MapInfo("Glass", new Vector3(0, 40f, 0f), null, null, false)));
+        AvailableMaps.Add(new MapChance(50, new MapInfo("Glass", new Vector3(0, 40f, 0f), null, null)));
         AvailableMaps.Add(new MapChance(50,
-            new MapInfo("Glass_Xmas2024", new Vector3(0, 40f, 0f), null, null, false), SeasonFlags.Christmas));
+            new MapInfo("Glass_Xmas2024", new Vector3(0, 40f, 0f)), SeasonFlags.Christmas));
     }
 
     [Description(
