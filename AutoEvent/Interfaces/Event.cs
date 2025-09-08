@@ -360,17 +360,16 @@ namespace AutoEvent.Interfaces
             KillLoop = false;
             _cleanupRun = false;
             AutoEvent.EventManager.CurrentEvent = this;
-            EventTime = new TimeSpan();
+            EventTime = TimeSpan.Zero;
             StartTime = DateTime.UtcNow;
 
             try
             {
-                // todo finish implementation.
                 if (ForceEnableFriendlyFire == FriendlyFireSettings.Enable)
-                    FriendlyFireSystem
-                        .EnableFriendlyFire(); // this.ForceEnableFriendlyFireAutoban == FriendlyFireSettings.Enable);
+                    FriendlyFireSystem.EnableFriendlyFire();
 
-                if (ForceEnableFriendlyFire == FriendlyFireSettings.Disable) FriendlyFireSystem.DisableFriendlyFire();
+                if (ForceEnableFriendlyFire == FriendlyFireSettings.Disable) 
+                    FriendlyFireSystem.DisableFriendlyFire();
 
                 if (ForceEnableFriendlyFireAutoban == FriendlyFireSettings.Enable)
                     FriendlyFireSystem.EnableFriendlyFireDetector();
