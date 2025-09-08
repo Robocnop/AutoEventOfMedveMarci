@@ -27,6 +27,6 @@ internal abstract class LogManager
 
     public static void Error(string message)
     {
-        Logger.Raw($"[ERROR] [{AutoEvent.Singleton.Name}] Details:\nVersion: {AutoEvent.Singleton.Version}\n{(AutoEvent.EventManager.CurrentEvent != null && AutoEvent.EventManager.CurrentEvent.Name == null ? $"Current Event: {AutoEvent.EventManager.CurrentEvent.Name}" : "No Event active.")}\n{(AutoEvent.EventManager.IsMerLoaded ? $"ProjectMER Version: {ProjectMER.ProjectMER.Singleton.Version}" : "ProjectMER is not loaded.")}\n{message}", ConsoleColor.Red);
+        Logger.Raw($"[ERROR] [{AutoEvent.Singleton.Name}] Details:\nVersion: {AutoEvent.Singleton.Version}\n{(AutoEvent.EventManager != null && AutoEvent.EventManager.CurrentEvent != null && AutoEvent.EventManager.CurrentEvent.Name == null ? $"Current Event: {AutoEvent.EventManager.CurrentEvent.Name}" : "No Event active.")}\n{(AutoEvent.EventManager.IsMerLoaded ? $"ProjectMER Version: {ProjectMER.ProjectMER.Singleton.Version}" : "ProjectMER is not loaded.")}\n{message}", ConsoleColor.Red);
     }
 }
