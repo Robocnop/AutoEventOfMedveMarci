@@ -1,8 +1,9 @@
 ﻿using System;
-using AutoEvent.Interfaces;
+using System.Linq;
 using CommandSystem;
 using LabApi.Features.Console;
 using LabApi.Features.Permissions;
+using LabApi.Loader;
 
 namespace AutoEvent.Commands;
 
@@ -36,13 +37,16 @@ public class Volume : ICommand, IUsageProvider
             }
 
             var newVolume = float.Parse(arguments.At(0));
-            if (AutoEvent.EventManager.CurrentEvent is IEventSound eventSound)
+            if (AutoEvent.Singleton.TryLoadConfig<Config>("properties.yml", out var config))
             {
-                eventSound.SoundInfo.AudioPlayer.TryGetSpeaker($"AutoEvent-Main-{eventSound.SoundInfo.SoundName}",
-                    out var speaker);
-                speaker.Volume *= newVolume;
+                config.Volume = newVolume;
+                AutoEvent.Singleton.SaveConfig(config, "properties.yml");
             }
 
+            foreach (var speaker in AudioPlayer.AudioPlayerById.Values.SelectMany(player => player.SpeakersByName.Values))
+            {
+                speaker.Volume *= newVolume;
+            }
             response = "The volume has been set!";
             return true;
         }
