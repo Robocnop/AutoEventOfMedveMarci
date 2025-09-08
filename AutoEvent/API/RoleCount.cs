@@ -32,7 +32,7 @@ public class RoleCount
     [Description("The percentage of players that will be on the team. -1 to ignore.")]
     public float PlayerPercentage { get; set; } = 100;
 
-    public List<Player> GetPlayers(bool alwaysLeaveOnePlayer = true, List<Player>? availablePlayers = null)
+    public List<Player> GetPlayers(bool alwaysLeaveOnePlayer = true, List<Player> availablePlayers = null)
     {
         var percent = Player.ReadyList.Count() * (PlayerPercentage / 100f);
         var players = Mathf.Clamp((int)percent, MinimumPlayers,
