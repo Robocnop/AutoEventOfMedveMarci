@@ -188,23 +188,19 @@ public static class Extensions
 
     public static bool IsExistsMap(string schematicName, out string response)
     {
-        try
+        if (MapUtils.TryGetSchematicDataByName(schematicName, out _))
         {
             response = $"The map {schematicName} exist and can be used.";
             return true;
         }
-        catch (Exception)
-        {
-            // The old version of ProjectMER is installed
-            if (AppDomain.CurrentDomain.GetAssemblies().Any(x => x.FullName.ToLower().Contains("projectmer")))
-            {
-                response = $"You need to download the map {schematicName} to run this mini-game.\n" +
-                           $"Download and install Schematics.tar.gz from the github.";
-                return false;
-            }
-        }
 
-        // The MER is not installed
+        if (AppDomain.CurrentDomain.GetAssemblies().Any(x => x.FullName.ToLower().Contains("projectmer")))
+        {
+            response = $"You need to download the {schematicName} map to run this mini-game.\n" +
+                       $"Download and install Schematics.tar.gz from the github.";
+            return false;
+        }
+        
         response = $"You need to download the 'ProjectMER' to run this mini-game.\n" +
                    $"Read the installation instruction in the github.";
         return false;
