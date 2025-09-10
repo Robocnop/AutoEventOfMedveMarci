@@ -147,10 +147,10 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         {
             text = Translation.SurvivalHumanWinTime;
         }
-        
+
         foreach (var player in AudioPlayer.AudioPlayerByName.Values)
             Extensions.StopAudio(player);
-        
+
         Extensions.PlayAudio(musicName, 7, false);
         Extensions.ServerBroadcast(text, 10);
     }

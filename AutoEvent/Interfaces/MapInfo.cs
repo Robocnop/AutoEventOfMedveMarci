@@ -35,8 +35,7 @@ public class MapInfo
         set => Rotation = value.eulerAngles;
     }
 
-    [Description("The scale of the map.")] 
-    public Vector3 Scale { get; set; } = Vector3.one;
+    [Description("The scale of the map.")] public Vector3 Scale { get; set; } = Vector3.one;
 
     [YamlIgnore] public MapObject Map { get; set; }
 

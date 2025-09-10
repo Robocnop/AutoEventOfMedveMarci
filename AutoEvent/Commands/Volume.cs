@@ -43,10 +43,9 @@ public class Volume : ICommand, IUsageProvider
                 AutoEvent.Singleton.SaveConfig(config, "properties.yml");
             }
 
-            foreach (var speaker in AudioPlayer.AudioPlayerById.Values.SelectMany(player => player.SpeakersByName.Values))
-            {
+            foreach (var speaker in
+                     AudioPlayer.AudioPlayerById.Values.SelectMany(player => player.SpeakersByName.Values))
                 speaker.Volume *= newVolume;
-            }
             response = "The volume has been set!";
             return true;
         }

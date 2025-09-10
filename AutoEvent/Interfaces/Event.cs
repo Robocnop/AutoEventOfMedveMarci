@@ -368,7 +368,7 @@ namespace AutoEvent.Interfaces
                 if (ForceEnableFriendlyFire == FriendlyFireSettings.Enable)
                     FriendlyFireSystem.EnableFriendlyFire();
 
-                if (ForceEnableFriendlyFire == FriendlyFireSettings.Disable) 
+                if (ForceEnableFriendlyFire == FriendlyFireSettings.Disable)
                     FriendlyFireSystem.DisableFriendlyFire();
 
                 if (ForceEnableFriendlyFireAutoban == FriendlyFireSettings.Enable)

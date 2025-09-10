@@ -54,7 +54,7 @@ internal class Run : ICommand, IUsageProvider
             response = "There are no players in the server!";
             return false;
         }
-        
+
         Round.IsLocked = true;
         if (!Round.IsRoundStarted)
         {
