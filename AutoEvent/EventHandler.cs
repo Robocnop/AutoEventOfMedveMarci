@@ -17,7 +17,7 @@ internal class EventHandler : CustomEventsHandler
     public override void OnServerWaveRespawning(WaveRespawningEventArgs ev)
     {
         if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
-        if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnoreRespawnTeam))
+        if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.Default))
             ev.IsAllowed = false;
         base.OnServerWaveRespawning(ev);
     }
@@ -25,7 +25,7 @@ internal class EventHandler : CustomEventsHandler
     public override void OnServerWaveTeamSelecting(WaveTeamSelectingEventArgs ev)
     {
         if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
-        if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnoreRespawnTeam))
+        if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.Default))
             ev.IsAllowed = false;
         base.OnServerWaveTeamSelecting(ev);
     }
@@ -33,7 +33,7 @@ internal class EventHandler : CustomEventsHandler
     public override void OnServerLczDecontaminationStarting(LczDecontaminationStartingEventArgs ev)
     {
         if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
-        if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnoreDecontaminating))
+        if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.Default))
             ev.IsAllowed = false;
         base.OnServerLczDecontaminationStarting(ev);
     }
@@ -54,6 +54,14 @@ internal class EventHandler : CustomEventsHandler
         base.OnPlayerSpawningRagdoll(ev);
     }
 
+    public override void OnPlayerPlacingBlood(PlayerPlacingBloodEventArgs ev)
+    {
+        if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
+        if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnoreBloodDecal))
+            ev.IsAllowed = false;
+        base.OnPlayerPlacingBlood(ev);
+    }
+
     public override void OnServerPickupCreated(PickupCreatedEventArgs ev)
     {
         if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
@@ -66,8 +74,6 @@ internal class EventHandler : CustomEventsHandler
     public override void OnPlayerShootingWeapon(PlayerShootingWeaponEventArgs ev)
     {
         if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
-        if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnoreInfiniteAmmo))
-            return;
 
         if (!Extensions.InfiniteAmmoList.TryGetValue(ev.Player.NetworkId, out var ammoMode))
             return;

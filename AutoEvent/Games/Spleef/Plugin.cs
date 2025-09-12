@@ -22,6 +22,8 @@ public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
     public override string Author { get; set; } = "Redforce04 (created logic code) && RisottoMan (modified map)";
     public override string CommandName { get; set; } = "spleef";
     protected override FriendlyFireSettings ForceEnableFriendlyFire { get; set; } = FriendlyFireSettings.Disable;
+    public override EventFlags EventHandlerSettings { get; set; } = EventFlags.IgnoreRagdoll;
+
 
     public MapInfo MapInfo { get; set; } = new()
     {

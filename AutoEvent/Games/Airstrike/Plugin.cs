@@ -24,6 +24,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
     public override string Author { get; set; } = "RisottoMan";
     public override string CommandName { get; set; } = "airstrike";
     protected override FriendlyFireSettings ForceEnableFriendlyFire { get; set; } = FriendlyFireSettings.Enable;
+    public override EventFlags EventHandlerSettings { get; set; } = EventFlags.IgnoreRagdoll;
     protected override FriendlyFireSettings ForceEnableFriendlyFireAutoban { get; set; } = FriendlyFireSettings.Disable;
     private EventHandler EventHandler { get; set; }
     public int Stage { get; private set; }

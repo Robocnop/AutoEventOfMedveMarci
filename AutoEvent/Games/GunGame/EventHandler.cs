@@ -82,9 +82,4 @@ public class EventHandler
         player.ClearItems();
         player.CurrentItem ??= player.AddItem(itemType);
     }
-
-    public static void OnPlacingBlood(PlayerPlacingBloodEventArgs ev)
-    {
-        ev.IsAllowed = false;
-    }
 }

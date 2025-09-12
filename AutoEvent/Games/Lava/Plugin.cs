@@ -18,6 +18,8 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
     public override string Author { get; set; } = "RisottoMan";
     public override string CommandName { get; set; } = "lava";
     protected override FriendlyFireSettings ForceEnableFriendlyFire { get; set; } = FriendlyFireSettings.Enable;
+    public override EventFlags EventHandlerSettings { get; set; } = EventFlags.IgnoreRagdoll | EventFlags.IgnoreHandcuffing | EventFlags.IgnoreBulletHole | EventFlags.IgnoreBloodDecal;
+
 
     public MapInfo MapInfo { get; set; } = new()
     {

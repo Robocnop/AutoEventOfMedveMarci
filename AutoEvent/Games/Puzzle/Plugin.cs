@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoEvent.API;
+using AutoEvent.API.Enums;
 using AutoEvent.Interfaces;
 using LabApi.Features.Wrappers;
 using MEC;
@@ -28,6 +29,8 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
     public override string Description { get; set; } = "Get up the fastest on the right color";
     public override string Author { get; set; } = "RisottoMan && Redforce";
     public override string CommandName { get; set; } = "puzzle";
+    public override EventFlags EventHandlerSettings { get; set; } = EventFlags.IgnoreRagdoll;
+
 
     public MapInfo MapInfo { get; set; } = new()
     {

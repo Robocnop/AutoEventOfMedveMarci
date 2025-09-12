@@ -25,6 +25,9 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
     private EventHandler EventHandler { get; set; }
     public bool IsChristmasUpdate { get; set; }
     public bool IsHalloweenUpdate { get; set; }
+    
+    public override EventFlags EventHandlerSettings { get; set; } = EventFlags.IgnoreRagdoll;
+
 
     public MapInfo MapInfo { get; set; } = new()
     {
