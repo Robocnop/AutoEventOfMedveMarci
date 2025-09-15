@@ -119,9 +119,9 @@ Counter-Strike:
     <i>炸弹已被拆除</i>
   you_planted: '<b><color=#ff4c5b>你放置了炸弹</color></b>'
   you_defused: '<b><color=#42aaff>你拆除了炸弹</color></b>'
-  picked_up_bomb: You picked up the C4!
-  equipped_bomb: You're holding the C4!
-  bomb_death_reason: The Bomb exploded.
+  picked_up_bomb: 你捡起了炸弹!
+  equipped_bomb: 你正在拿着炸弹!
+  bomb_death_reason: 炸弹爆炸了
   hint_cycle: |-
     <size=30><i><b>{name}</b>
     {kills}
