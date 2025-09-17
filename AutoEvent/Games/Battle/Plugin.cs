@@ -33,7 +33,6 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
     public SoundInfo SoundInfo { get; set; } = new()
     {
         SoundName = "MetalGearSolid.ogg",
-        Volume = 10,
         Loop = false
     };
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using AutoEvent.Interfaces;
 using CommandSystem;
 using LabApi.Features.Console;
 using LabApi.Features.Permissions;
@@ -26,7 +25,7 @@ public class Volume : ICommand, IUsageProvider
             if (arguments.Count != 1)
             {
                 response =
-                    $"The current volume is {AutoEvent.MusicVolume}%. Please specify the new volume from 0% - 200% to set it!";
+                    $"The current volume is {AutoEvent.MusicVolume}%.";
                 return false;
             }
 

@@ -37,8 +37,7 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 
     public SoundInfo SoundInfo { get; set; } = new()
     {
-        SoundName = "Zombie_Run.ogg",
-        Volume = 15
+        SoundName = "Zombie_Run.ogg"
     };
 
     protected override void RegisterEvents()

@@ -325,7 +325,7 @@ public static class Extensions
         grenadeProjectile.Base._playerDamageOverDistance = new AnimationCurve(new Keyframe(grenadeProjectile.MaxRadius, 200));
     }
 
-    public static AudioPlayer PlayAudio(string fileName, byte volume, bool isLoop, bool isSpatial = false,
+    public static AudioPlayer PlayAudio(string fileName, bool isLoop = false, bool isSpatial = false,
         float minDistance = 5f, float maxDistance = 5000f, Vector3 speakerPosition = default)
     {
         if (!AudioClipStorage.AudioClips.ContainsKey(fileName))
@@ -343,7 +343,7 @@ public static class Extensions
             onIntialCreation: p =>
             {
                 p.AddSpeaker($"AutoEvent-Main-{fileName}", speakerPosition,
-                    volume * (AutoEvent.MusicVolume / 100f),
+                    AutoEvent.MusicVolume / 100f,
                     isSpatial, minDistance, maxDistance);
             });
 

@@ -40,7 +40,6 @@ public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
     public SoundInfo SoundInfo { get; set; } = new()
     {
         SoundName = "Survival.ogg",
-        Volume = 10,
         Loop = false
     };
 
@@ -231,22 +230,22 @@ public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
             }
 
             text = Translation.PlantedWin;
-            Extensions.PlayAudio("TBombWin.ogg", 15, false);
+            Extensions.PlayAudio("TBombWin.ogg");
         }
         else if (BombState == BombState.Defused)
         {
             text = Translation.DefusedWin;
-            Extensions.PlayAudio("CTWin.ogg", 10, false);
+            Extensions.PlayAudio("CTWin.ogg");
         }
         else if (tCount == 0 && ctCount > 0)
         {
             text = Translation.CounterWin;
-            Extensions.PlayAudio("CTWin.ogg", 10, false);
+            Extensions.PlayAudio("CTWin.ogg");
         }
         else if (ctCount == 0 && tCount > 0)
         {
             text = Translation.TerroristWin;
-            Extensions.PlayAudio("TWin.ogg", 15, false);
+            Extensions.PlayAudio("TWin.ogg");
         }
         else if (ctCount == 0 && tCount == 0)
         {

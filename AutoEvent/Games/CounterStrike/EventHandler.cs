@@ -53,7 +53,7 @@ public class EventHandler(Plugin plugin)
 
         ev.Player.EnableEffect<Ensnared>(255);
         ev.Player.EnableEffect<HeavyFooted>(255);
-        _defuseAudio = Extensions.PlayAudio("BombDefusing.ogg", 100, false, true, 20, 30, ev.Player.Position);
+        _defuseAudio = Extensions.PlayAudio("BombDefusing.ogg", false, true, 20, 30, ev.Player.Position);
     }
 
     public static void OnUsingItem(PlayerUsingItemEventArgs ev)
@@ -78,7 +78,7 @@ public class EventHandler(Plugin plugin)
         ev.UsableItem.MaxCancellableDuration = 20f;
         ev.Player.EnableEffect<Ensnared>(255);
         ev.Player.EnableEffect<HeavyFooted>(255);
-        _plantAudio = Extensions.PlayAudio("BombPlanting.ogg", 100, false, true, 20, 30, ev.Player.Position);
+        _plantAudio = Extensions.PlayAudio("BombPlanting.ogg", false, true, 20, 30, ev.Player.Position);
         if (AudioClipStorage.AudioClips.ContainsKey("TBombWin.ogg")) return;
         var filePath = Path.Combine(AutoEvent.Singleton.Config.MusicDirectoryPath, "TBombWin.ogg");
         LogManager.Debug($"[PlayAudio] File path: {filePath}");
@@ -100,7 +100,7 @@ public class EventHandler(Plugin plugin)
         plugin.BombObject.transform.parent = null;
         plugin.BombObject.transform.ResetTransform();
         plugin.BombObject.transform.position = ev.Player.Position + new Vector3(0f, -1f, -0.75f);
-        _bombAudio = Extensions.PlayAudio("BombPlanted.ogg", 100, false, true, 20, 50, ev.Player.Position);
+        _bombAudio = Extensions.PlayAudio("BombPlanted.ogg", false, true, 20, 50, ev.Player.Position);
         ev.Player.SendHint(plugin.Translation.YouPlanted);
         ev.Player.DisableEffect<Ensnared>();
         ev.Player.DisableEffect<HeavyFooted>();

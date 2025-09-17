@@ -34,8 +34,7 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 
     public SoundInfo SoundInfo { get; set; } = new()
     {
-        SoundName = "ClassicMusic.ogg",
-        Volume = 5
+        SoundName = "ClassicMusic.ogg"
     };
 
     protected override void RegisterEvents()

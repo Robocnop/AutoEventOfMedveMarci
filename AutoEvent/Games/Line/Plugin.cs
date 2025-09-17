@@ -27,8 +27,7 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 
     public SoundInfo SoundInfo { get; set; } = new()
     {
-        SoundName = "LineLite.ogg",
-        Volume = 10
+        SoundName = "LineLite.ogg"
     };
 
     protected override void OnStart()

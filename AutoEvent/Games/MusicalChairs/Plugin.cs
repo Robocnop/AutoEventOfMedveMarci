@@ -38,7 +38,6 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
     public SoundInfo SoundInfo { get; set; } = new()
     {
         SoundName = "MusicalChairs.ogg",
-        Volume = 10,
         Loop = false
     };
 
