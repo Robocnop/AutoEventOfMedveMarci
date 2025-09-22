@@ -23,7 +23,13 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
     public override string Author { get; set; } = "RisottoMan";
     public override string CommandName { get; set; } = "dm";
     protected override FriendlyFireSettings ForceEnableFriendlyFire { get; set; } = FriendlyFireSettings.Enable;
-    public override EventFlags EventHandlerSettings { get; set; } = EventFlags.IgnoreDroppingItem;
+
+    public override EventFlags EventHandlerSettings { get; set; } = EventFlags.IgnoreRagdoll |
+                                                                    EventFlags.IgnoreHandcuffing |
+                                                                    EventFlags.IgnoreBulletHole |
+                                                                    EventFlags.IgnoreBloodDecal |
+                                                                    EventFlags.IgnoreDroppingItem;
+
     private EventHandler EventHandler { get; set; }
     private int NeedKills { get; set; }
     private Player Winner { get; set; }
@@ -37,8 +43,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
 
     public SoundInfo SoundInfo { get; set; } = new()
     {
-        SoundName = "ExecDeathmatch.ogg",
-        Volume = 10
+        SoundName = "ExecDeathmatch.ogg"
     };
 
     protected override void RegisterEvents()

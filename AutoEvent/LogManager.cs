@@ -5,19 +5,19 @@ namespace AutoEvent;
 
 internal abstract class LogManager
 {
-    public static bool DebugEnabled => AutoEvent.Singleton.Config.Debug;
+    public static bool DebugEnabled => AutoEvent.Singleton?.Config?.Debug == true;
 
     public static void Debug(string message)
     {
         if (!DebugEnabled)
             return;
 
-        Logger.Raw($"[DEBUG] [{AutoEvent.Singleton.Name}] {message}", ConsoleColor.Green);
+        Logger.Raw($"[DEBUG] [{AutoEvent.Singleton?.Name ?? "AutoEvent"}] {message}", ConsoleColor.Green);
     }
 
     public static void Info(string message, ConsoleColor color = ConsoleColor.Cyan)
     {
-        Logger.Raw($"[INFO] [{AutoEvent.Singleton.Name}] {message}", color);
+        Logger.Raw($"[INFO] [{AutoEvent.Singleton?.Name ?? "AutoEvent"}] {message}", color);
     }
 
     public static void Warn(string message)
@@ -27,6 +27,23 @@ internal abstract class LogManager
 
     public static void Error(string message)
     {
-        Logger.Raw($"[ERROR] [{AutoEvent.Singleton.Name}] Details:\nVersion: {AutoEvent.Singleton.Version}\n{(AutoEvent.EventManager.CurrentEvent != null && AutoEvent.EventManager.CurrentEvent.Name == null ? $"Current Event: {AutoEvent.EventManager.CurrentEvent.Name}" : "No Event active.")}\n{(AutoEvent.EventManager.IsMerLoaded ? $"ProjectMER Version: {ProjectMER.ProjectMER.Singleton.Version}" : "ProjectMER is not loaded.")}\n{message}", ConsoleColor.Red);
+        var plugin = AutoEvent.Singleton;
+        var eventManager = AutoEvent.EventManager;
+
+        var name = plugin?.Name ?? "AutoEvent";
+        var version = plugin?.Version.ToString() ?? "Unknown";
+
+        var eventInfo = "No Event active.";
+        var currentEvent = eventManager?.CurrentEvent;
+        if (currentEvent != null && !string.IsNullOrWhiteSpace(currentEvent.Name))
+            eventInfo = $"Current Event: {currentEvent.Name}";
+
+        var merInfo = eventManager?.IsMerLoaded == true && ProjectMER.ProjectMER.Singleton != null
+            ? $"ProjectMER Version: {ProjectMER.ProjectMER.Singleton.Version}"
+            : "ProjectMER is not loaded.";
+
+        Logger.Raw(
+            $"[ERROR] [{name}] Details:\nVersion: {version}\n{eventInfo}\n{merInfo}\n{message}",
+            ConsoleColor.Red);
     }
 }

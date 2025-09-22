@@ -38,7 +38,6 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
     public SoundInfo SoundInfo { get; set; } = new()
     {
         SoundName = "MusicalChairs.ogg",
-        Volume = 10,
         Loop = false
     };
 
@@ -176,7 +175,7 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         foreach (var platform in Platforms)
             platform.GetComponent<PrimitiveObjectToy>().NetworkMaterialColor = Color.black;
 
-        Extensions.PauseAudio(SoundInfo.AudioPlayer);
+        SoundInfo.AudioPlayer.PauseAudio();
         _countdown = new TimeSpan(0, 0, 3);
         _eventState++;
     }
@@ -241,7 +240,7 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         foreach (var platform in Platforms)
             platform.GetComponent<PrimitiveObjectToy>().NetworkMaterialColor = Color.yellow;
 
-        Extensions.ResumeAudio(SoundInfo.AudioPlayer);
+        SoundInfo.AudioPlayer.ResumeAudio();
         _countdown = new TimeSpan(0, 0, 3);
         _eventState = 0;
     }

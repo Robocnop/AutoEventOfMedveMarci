@@ -30,8 +30,7 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 
     public SoundInfo SoundInfo { get; set; } = new()
     {
-        SoundName = "Football.ogg",
-        Volume = 5
+        SoundName = "Football.ogg"
     };
 
     protected override void OnStart()

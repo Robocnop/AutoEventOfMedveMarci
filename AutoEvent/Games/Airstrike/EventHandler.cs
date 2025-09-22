@@ -28,10 +28,10 @@ public class EventHandler(Plugin plugin)
         });
     }
 
-    public void OnPlayerHurting(PlayerHurtingEventArgs ev)
+    public static void OnPlayerHurting(PlayerHurtingEventArgs ev)
     {
         if (ev.DamageHandler is not ExplosionDamageHandler) return;
         ev.IsAllowed = false;
-        ev.Player.Damage(plugin.Stage != 5 ? 10 : 100, "Grenade");
+        ev.Player.Damage(10, "Grenade");
     }
 }

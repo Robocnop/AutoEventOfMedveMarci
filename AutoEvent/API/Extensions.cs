@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using AdminToys;
 using AutoEvent.API.Enums;
 using AutoEvent.Intergrations;
 using Footprinting;
@@ -13,7 +15,9 @@ using Mirror;
 using PlayerRoles;
 using PlayerRoles.Ragdolls;
 using ProjectMER.Features;
+using ProjectMER.Features.Objects;
 using ProjectMER.Features.Serializable;
+using ProjectMER.Features.Serializable.Schematics;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using PrimitiveObjectToy = AdminToys.PrimitiveObjectToy;
@@ -33,6 +37,7 @@ public static class Extensions
 
     public static readonly Dictionary<uint, AmmoMode> InfiniteAmmoList = new();
     public static readonly List<uint> InfinityStaminaList = [];
+    private static readonly ConcurrentDictionary<ulong, float> InteractableToys = new();
 
     public static bool HasLoadout(this Player ply, List<Loadout> loadouts,
         LoadoutCheckMethods checkMethod = LoadoutCheckMethods.HasRole)
@@ -186,26 +191,44 @@ public static class Extensions
 
     public static bool IsExistsMap(string schematicName, out string response)
     {
-        try
+        if (MapUtils.TryGetSchematicDataByName(schematicName, out _))
         {
             response = $"The map {schematicName} exist and can be used.";
             return true;
         }
-        catch (Exception)
+
+        if (AppDomain.CurrentDomain.GetAssemblies().Any(x => x.FullName.ToLower().Contains("projectmer")))
         {
-            // The old version of ProjectMER is installed
-            if (AppDomain.CurrentDomain.GetAssemblies().Any(x => x.FullName.ToLower().Contains("projectmer")))
-            {
-                response = $"You need to download the map {schematicName} to run this mini-game.\n" +
-                           $"Download and install Schematics.tar.gz from the github.";
-                return false;
-            }
+            response = $"You need to download the {schematicName} map to run this mini-game.\n" +
+                       $"Download and install Schematics.tar.gz from the github.";
+            return false;
         }
 
-        // The MER is not installed
         response = $"You need to download the 'ProjectMER' to run this mini-game.\n" +
                    $"Read the installation instruction in the github.";
         return false;
+    }
+
+
+    public static SchematicObject LoadSchematic(this SerializableSchematic serializableSchematic)
+    {
+        Mero.TrySetIsDynamiclyDisabled(true);
+
+        if (!ObjectSpawner.TrySpawnSchematic(serializableSchematic, out var schematicObject))
+        {
+            AutoEvent.EventManager.CurrentEvent.StopEvent();
+
+            foreach (var pl in Player.ReadyList) pl.SetRole(RoleTypeId.Spectator);
+            LogManager.Error($"The map {serializableSchematic.SchematicName} could not be loaded. Delete and re-download the schematics.");
+            return null;
+        }
+
+        foreach (var toyBase in schematicObject.AdminToyBases)
+            toyBase.syncInterval = 0;
+
+        Mero.TrySetIsDynamiclyDisabled(false);
+
+        return schematicObject;
     }
 
     public static MapObject LoadMap(string schematicName, Vector3 pos, Quaternion rot, Vector3 scale)
@@ -214,7 +237,15 @@ public static class Extensions
         {
             Mero.TrySetIsDynamiclyDisabled(true);
 
-            var schematicObject = ObjectSpawner.SpawnSchematic(schematicName, pos, rot, scale);
+            if (!ObjectSpawner.TrySpawnSchematic(schematicName, pos, rot, scale, out var schematicObject))
+            {
+                AutoEvent.EventManager.CurrentEvent.StopEvent();
+
+                foreach (var pl in Player.ReadyList) pl.SetRole(RoleTypeId.Spectator);
+                LogManager.Error(
+                    $"The map {schematicName} could not be loaded because it was not found. Delete and re-download the schematics.");
+                return null;
+            }
 
             foreach (var toyBase in schematicObject.AdminToyBases)
                 toyBase.syncInterval = 0;
@@ -252,7 +283,7 @@ public static class Extensions
 
     public static void UnLoadMap(MapObject mapObject)
     {
-        mapObject.Destroy();
+        mapObject?.Destroy();
     }
 
     public static void CleanUpAll()
@@ -271,13 +302,13 @@ public static class Extensions
         Server.SendBroadcast(text, time, global::Broadcast.BroadcastFlags.Normal, true);
     }
 
-    public static void Broadcast(this Player player, string text, ushort time)
+    public static void Broadcast(this Player player, string text, ushort time = 3)
     {
         player.SendBroadcast(text, time, global::Broadcast.BroadcastFlags.Normal, true);
     }
 
 
-    public static void GrenadeSpawn(Vector3 pos, float scale = 1f, float fuseTime = 1f, float radius = 1f)
+    public static void GrenadeSpawn(Vector3 pos, float scale = 1f, float fuseTime = 1f, float radius = 5f)
     {
         if (!InventoryItemLoader.TryGetItem(ItemType.GrenadeHE, out ThrowableItem result))
             return;
@@ -292,9 +323,11 @@ public static class Extensions
         var grenadeProjectile = (ExplosiveGrenadeProjectile)Pickup.Get(timeGrenade);
         grenadeProjectile.RemainingTime = fuseTime;
         grenadeProjectile.MaxRadius = radius;
+        grenadeProjectile.Base._playerDamageOverDistance =
+            new AnimationCurve(new Keyframe(grenadeProjectile.MaxRadius, 200));
     }
 
-    public static AudioPlayer PlayAudio(string fileName, byte volume, bool isLoop, bool isSpatial = false,
+    public static AudioPlayer PlayAudio(string fileName, bool isLoop = false, bool isSpatial = false,
         float minDistance = 5f, float maxDistance = 5000f, Vector3 speakerPosition = default)
     {
         if (!AudioClipStorage.AudioClips.ContainsKey(fileName))
@@ -312,7 +345,7 @@ public static class Extensions
             onIntialCreation: p =>
             {
                 p.AddSpeaker($"AutoEvent-Main-{fileName}", speakerPosition,
-                    volume * (AutoEvent.Singleton.Config.Volume / 100f),
+                    AutoEvent.MusicVolume / 100f,
                     isSpatial, minDistance, maxDistance);
             });
 
@@ -323,7 +356,7 @@ public static class Extensions
         return audioPlayer;
     }
 
-    public static void PlayPlayerAudio(AudioPlayer audioPlayer, Player player, string fileName, byte volume)
+    public static void PlayPlayerAudio(this AudioPlayer audioPlayer, Player player, string fileName, byte volume)
     {
         if (audioPlayer is null)
         {
@@ -347,7 +380,7 @@ public static class Extensions
         audioPlayer.AddClip(fileName);
     }
 
-    public static void PauseAudio(AudioPlayer audioPlayer)
+    public static void PauseAudio(this AudioPlayer audioPlayer)
     {
         if (audioPlayer is null)
         {
@@ -359,7 +392,7 @@ public static class Extensions
         if (audioPlayer.TryGetClip(clipId, out var clip)) clip.IsPaused = true;
     }
 
-    public static void ResumeAudio(AudioPlayer audioPlayer)
+    public static void ResumeAudio(this AudioPlayer audioPlayer)
     {
         if (audioPlayer is null)
         {
@@ -371,7 +404,7 @@ public static class Extensions
         if (audioPlayer.TryGetClip(clipId, out var clip)) clip.IsPaused = false;
     }
 
-    public static void StopAudio(AudioPlayer audioPlayer)
+    public static void StopAudio(this AudioPlayer audioPlayer)
     {
         if (audioPlayer is null)
         {
@@ -381,5 +414,31 @@ public static class Extensions
 
         audioPlayer.RemoveAllClips();
         audioPlayer.Destroy();
+    }
+
+    private static ulong Key(this InvisibleInteractableToy toy, uint playerNetId)
+    {
+        return ((ulong)toy.netIdentity.netId << 32) | playerNetId;
+    }
+
+    public static void SetInteractableToy(this InvisibleInteractableToy toy, Player player, float duration)
+    {
+        if (toy == null || player == null) return;
+        InteractableToys[Key(toy, player.NetworkId)] = duration;
+    }
+
+    public static bool TryGetInteractableToy(this InvisibleInteractableToy toy, ReferenceHub hub, out float duration)
+    {
+        duration = 0;
+        if (toy == null || hub == null) return false;
+        return InteractableToys.TryGetValue(Key(toy, hub.networkIdentity.netId), out duration);
+    }
+
+    public static void ClearInteractableToy(this InvisibleInteractableToy toy)
+    {
+        if (toy == null) return;
+        var toyId = toy.netIdentity.netId;
+        foreach (var k in InteractableToys.Keys.Where(k => k >> 32 == toyId))
+            InteractableToys.TryRemove(k, out _);
     }
 }

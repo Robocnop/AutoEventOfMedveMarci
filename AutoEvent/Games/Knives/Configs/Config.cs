@@ -32,7 +32,7 @@ public class Config : EventConfig
 
             Effects =
             [
-                new EffectData { Type = nameof(FogControl), Duration = 0, Intensity = 3 }
+                new EffectData { Type = nameof(FogControl), Duration = 0, Intensity = 1 }
             ]
         }
     ];

@@ -47,6 +47,9 @@ public enum AmmoMode
 {
     [Description("Ammo will be normal.")] None = 0,
 
+    [Description("Player will not be able to reload.")]
+    NoReloadInfiniteAmmo = 1,
+
     [Description("Player will be able to reload regardless of if there is ammo in their inventory.")]
     InfiniteAmmo = 2
 }

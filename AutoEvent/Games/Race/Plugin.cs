@@ -31,7 +31,6 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
     public SoundInfo SoundInfo { get; set; } = new()
     {
         SoundName = "FinishWay.ogg",
-        Volume = 8,
         Loop = false,
         StartAutomatically = false
     };

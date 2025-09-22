@@ -33,8 +33,7 @@ public class Plugin : Event<Config, Translation>, IEventMap
     public MapInfo MapInfo { get; set; } = new()
     {
         MapName = "RedLight",
-        Position = new Vector3(0f, 40f, 0f),
-        IsStatic = false
+        Position = new Vector3(0f, 40f, 0f)
     };
 
     protected override void RegisterEvents()
@@ -141,7 +140,7 @@ public class Plugin : Event<Config, Translation>, IEventMap
         if (_countdown > 0)
             return;
 
-        Extensions.PlayAudio("RedLight.ogg", 10, false);
+        Extensions.PlayAudio("RedLight.ogg");
         _animator?.Play("RedLightAnimation");
         _countdown = Random.Range(4, 8);
         _eventState++;
@@ -192,7 +191,7 @@ public class Plugin : Event<Config, Translation>, IEventMap
         if (_countdown > 0)
             return;
 
-        Extensions.PlayAudio("GreenLight.ogg", 10, false);
+        Extensions.PlayAudio("GreenLight.ogg");
         _animator?.Play("GreenLightAnimation");
         _countdown = Random.Range(1.5f, 4f);
         _eventState++;

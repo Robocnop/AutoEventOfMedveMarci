@@ -23,6 +23,10 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
     public override string CommandName { get; set; } = "tag";
     protected override FriendlyFireSettings ForceEnableFriendlyFire { get; set; } = FriendlyFireSettings.Enable;
 
+    public override EventFlags EventHandlerSettings { get; set; } =
+        EventFlags.IgnoreRagdoll | EventFlags.IgnoreHandcuffing;
+
+
     public MapInfo MapInfo { get; set; } = new()
     {
         MapName = "HideAndSeek",
@@ -31,21 +35,20 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 
     public SoundInfo SoundInfo { get; set; } = new()
     {
-        SoundName = "HideAndSeek.ogg",
-        Volume = 5
+        SoundName = "HideAndSeek.ogg"
     };
 
     protected override void RegisterEvents()
     {
         _eventHandler = new EventHandler(this);
         PlayerEvents.Hurting += _eventHandler.OnHurting;
-        PlayerEvents.ProcessingJailbirdMessage += _eventHandler.OnJailbirdCharge;
+        PlayerEvents.ProcessingJailbirdMessage += _eventHandler.OnProcessingJailbirdMessage;
     }
 
     protected override void UnregisterEvents()
     {
         PlayerEvents.Hurting -= _eventHandler.OnHurting;
-        PlayerEvents.ProcessingJailbirdMessage -= _eventHandler.OnJailbirdCharge;
+        PlayerEvents.ProcessingJailbirdMessage -= _eventHandler.OnProcessingJailbirdMessage;
         _eventHandler = null;
     }
 

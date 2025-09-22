@@ -133,8 +133,7 @@ namespace AutoEvent.Interfaces
                                                          $"{(s.SoundInfo.StartAutomatically ? "true" : "false")}" : "false")}");
             if (this is IEventSound sound && !string.IsNullOrEmpty(sound.SoundInfo.SoundName) &&
                 (!checkIfAutomatic || sound.SoundInfo.StartAutomatically))
-                sound.SoundInfo.AudioPlayer = Extensions.PlayAudio(sound.SoundInfo.SoundName, sound.SoundInfo.Volume,
-                    sound.SoundInfo.Loop);
+                sound.SoundInfo.AudioPlayer = Extensions.PlayAudio(sound.SoundInfo.SoundName, sound.SoundInfo.Loop);
         }
 
         /// <summary>
@@ -146,7 +145,7 @@ namespace AutoEvent.Interfaces
             if (this is IEventSound sound &&
                 !string.IsNullOrEmpty(sound.SoundInfo.SoundName) &&
                 sound.SoundInfo.AudioPlayer != null)
-                Extensions.StopAudio(sound.SoundInfo.AudioPlayer);
+                sound.SoundInfo.AudioPlayer.StopAudio();
         }
 
         /// <summary>
@@ -292,39 +291,35 @@ namespace AutoEvent.Interfaces
             if (InternalConfig.AvailableMaps.Count(r => r.SeasonFlag == seasonFlags) == 0) seasonFlags = 0;
 
             List<MapChance> maps = [];
-            foreach (var map in InternalConfig.AvailableMaps)
-                if (map.SeasonFlag == seasonFlags)
-                    maps.Add(map);
+            maps.AddRange(InternalConfig.AvailableMaps.Where(map => map.SeasonFlag == seasonFlags));
 
-            if (this is IEventMap eventMap)
+            if (this is not IEventMap eventMap) return;
+            var spawnAutomatically = eventMap.MapInfo.SpawnAutomatically;
+            if (maps.Count == 1)
             {
-                var spawnAutomatically = eventMap.MapInfo.SpawnAutomatically;
-                if (maps.Count == 1)
+                eventMap.MapInfo = maps[0].Map;
+                eventMap.MapInfo.SpawnAutomatically = spawnAutomatically;
+                goto Message;
+            }
+
+            foreach (var mapItem in maps.Where(x => x.Chance <= 0))
+                mapItem.Chance = 1;
+
+            var totalChance = maps.Sum(x => x.Chance);
+
+            for (var i = 0; i < maps.Count - 1; i++)
+                if (Random.Range(0, totalChance) <= maps[i].Chance)
                 {
-                    eventMap.MapInfo = maps[0].Map;
+                    eventMap.MapInfo = maps[i].Map;
                     eventMap.MapInfo.SpawnAutomatically = spawnAutomatically;
                     goto Message;
                 }
 
-                foreach (var mapItem in maps.Where(x => x.Chance <= 0))
-                    mapItem.Chance = 1;
+            eventMap.MapInfo = maps[maps.Count - 1].Map;
+            eventMap.MapInfo.SpawnAutomatically = spawnAutomatically;
 
-                var totalChance = maps.Sum(x => x.Chance);
-
-                for (var i = 0; i < maps.Count - 1; i++)
-                    if (Random.Range(0, totalChance) <= maps[i].Chance)
-                    {
-                        eventMap.MapInfo = maps[i].Map;
-                        eventMap.MapInfo.SpawnAutomatically = spawnAutomatically;
-                        goto Message;
-                    }
-
-                eventMap.MapInfo = maps[maps.Count - 1].Map;
-                eventMap.MapInfo.SpawnAutomatically = spawnAutomatically;
-
-                Message:
-                LogManager.Debug($"[{Name}] Map {eventMap.MapInfo.MapName} selected.");
-            }
+            Message:
+            LogManager.Debug($"[{Name}] Map {eventMap.MapInfo.MapName} selected.");
         }
 
         /// <summary>
@@ -360,17 +355,16 @@ namespace AutoEvent.Interfaces
             KillLoop = false;
             _cleanupRun = false;
             AutoEvent.EventManager.CurrentEvent = this;
-            EventTime = new TimeSpan();
+            EventTime = TimeSpan.Zero;
             StartTime = DateTime.UtcNow;
 
             try
             {
-                // todo finish implementation.
                 if (ForceEnableFriendlyFire == FriendlyFireSettings.Enable)
-                    FriendlyFireSystem
-                        .EnableFriendlyFire(); // this.ForceEnableFriendlyFireAutoban == FriendlyFireSettings.Enable);
+                    FriendlyFireSystem.EnableFriendlyFire();
 
-                if (ForceEnableFriendlyFire == FriendlyFireSettings.Disable) FriendlyFireSystem.DisableFriendlyFire();
+                if (ForceEnableFriendlyFire == FriendlyFireSettings.Disable)
+                    FriendlyFireSystem.DisableFriendlyFire();
 
                 if (ForceEnableFriendlyFireAutoban == FriendlyFireSettings.Enable)
                     FriendlyFireSystem.EnableFriendlyFireDetector();

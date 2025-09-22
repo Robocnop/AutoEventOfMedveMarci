@@ -19,6 +19,12 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
     public override string CommandName { get; set; } = "lava";
     protected override FriendlyFireSettings ForceEnableFriendlyFire { get; set; } = FriendlyFireSettings.Enable;
 
+    public override EventFlags EventHandlerSettings { get; set; } = EventFlags.IgnoreRagdoll |
+                                                                    EventFlags.IgnoreHandcuffing |
+                                                                    EventFlags.IgnoreBulletHole |
+                                                                    EventFlags.IgnoreBloodDecal;
+
+
     public MapInfo MapInfo { get; set; } = new()
     {
         MapName = "Lava",
@@ -28,7 +34,6 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
     public SoundInfo SoundInfo { get; set; } = new()
     {
         SoundName = "Lava.ogg",
-        Volume = 8,
         Loop = false
     };
 

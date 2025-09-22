@@ -22,17 +22,18 @@ public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
     public override string Author { get; set; } = "Redforce04 (created logic code) && RisottoMan (modified map)";
     public override string CommandName { get; set; } = "spleef";
     protected override FriendlyFireSettings ForceEnableFriendlyFire { get; set; } = FriendlyFireSettings.Disable;
+    public override EventFlags EventHandlerSettings { get; set; } = EventFlags.IgnoreRagdoll;
 
-    public SoundInfo SoundInfo { get; set; } = new()
-    {
-        SoundName = "Fall_Guys_Winter_Fallympics.ogg",
-        Volume = 7
-    };
-    
+
     public MapInfo MapInfo { get; set; } = new()
     {
         MapName = "Spleef",
         Position = new Vector3(0f, 40f, 0f)
+    };
+
+    public SoundInfo SoundInfo { get; set; } = new()
+    {
+        SoundName = "Fall_Guys_Winter_Fallympics.ogg"
     };
 
     protected override void RegisterEvents()

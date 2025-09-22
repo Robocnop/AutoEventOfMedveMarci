@@ -24,6 +24,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
     public override string Author { get; set; } = "RisottoMan";
     public override string CommandName { get; set; } = "airstrike";
     protected override FriendlyFireSettings ForceEnableFriendlyFire { get; set; } = FriendlyFireSettings.Enable;
+    public override EventFlags EventHandlerSettings { get; set; } = EventFlags.IgnoreRagdoll;
     protected override FriendlyFireSettings ForceEnableFriendlyFireAutoban { get; set; } = FriendlyFireSettings.Disable;
     private EventHandler EventHandler { get; set; }
     public int Stage { get; private set; }
@@ -36,8 +37,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
 
     public SoundInfo SoundInfo { get; set; } = new()
     {
-        SoundName = "DeathParty.ogg",
-        Volume = 5
+        SoundName = "DeathParty.ogg"
     };
 
     protected override void RegisterEvents()
@@ -107,18 +107,19 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
     private IEnumerator<float> GrenadeCoroutine()
     {
         Stage = 1;
-        var fuse = 10f;
+        const float fuse = 2f;
         var height = 20f;
-        float count = 20;
-        var timing = 1f;
-        float scale = 4;
-        var radius = MapInfo.Map.AttachedBlocks.First(x => x.name == "Arena").transform.localScale.x / 2 - 6f;
+        float count = 50;
+        var timing = 0.5f;
+        float scale = 1;
+        float grenadeRadius = 5;
+        const int radius = 15;
         while (Player.ReadyList.Count(r => r.IsAlive) > (Config.LastPlayerAliveWins ? 1 : 0) && Stage <= Config.Rounds)
         {
             if (KillLoop) yield break;
 
             LogManager.Debug(
-                $"Stage: {Stage}/{Config.Rounds}. Radius: {radius}, Scale: {scale}, Count: {count}, Timing: {timing}, Height: {height}, Fuse: {fuse}, Target: {Config.TargetPlayers}");
+                $"Stage: {Stage}/{Config.Rounds}. Radius: {radius}, Grenade Radius: {grenadeRadius} Scale: {scale}, Count: {count}, Timing: {timing}, Height: {height}, Fuse: {fuse}, Target: {Config.TargetPlayers}");
 
             // Not the last round.
             if (Stage != Config.Rounds)
@@ -141,26 +142,25 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
                             LogManager.Error($"Caught an error while targeting a player.\n{e}");
                         }
 
-                    Extensions.GrenadeSpawn(pos, scale, fuse, scale);
+                    Extensions.GrenadeSpawn(pos, scale, fuse, grenadeRadius);
                     yield return Timing.WaitForSeconds(timing);
                 }
             }
             else // last round.
             {
                 var pos = MapInfo.Map.Position + new Vector3(Random.Range(-10, 10), 20, Random.Range(-10, 10));
-                Extensions.GrenadeSpawn(pos, 75, 10, 0);
+                Extensions.GrenadeSpawn(pos, 75, 5, 0);
             }
 
             yield return Timing.WaitForSeconds(15f);
             Stage++;
 
             // Defaults: 
-            count += 30; //20,  50,  80,  110, [ignored last round] 1
-            timing -= 0.3f; //1.0, 0.7, 0.4, 0.1, [ignored last round] 10
+            count += 10; //50,  60,  70,  80, [ignored last round] 1
+            timing += 0.2f; //0.5, 0.7, 0.9, 1.1, [ignored last round] 5
             height -= 5f; //20,  15,  10,  5,   [ignored last round] 20
-            fuse -= 2f; //10,  8,   6,   4,   [ignored last round] 10
-            scale -= 1; //4, 3, 2, 1,   [ignored last round] 75
-            radius += 7f; //4,   11,  18,  25   [ignored last round] 10
+            scale += 1; //1, 2, 3, 4   [ignored last round] 75
+            grenadeRadius += 0.5f; //5, 5.5, 6, 6.5   [ignored last round] 0
         }
 
         LogManager.Debug("Finished Grenade Coroutine.");

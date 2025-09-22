@@ -40,22 +40,24 @@
         <DebugType>embedded</DebugType>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Costura.Fody" Version="5.8.0-alpha0098">
+        <PackageReference Include="Costura.Fody" Version="6.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Fody" Version="6.8.0">
+        <PackageReference Include="Fody" Version="6.9.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Lib.Harmony" Version="2.4.0"/>
+        <PackageReference Include="Lib.Harmony" Version="2.4.1"/>
         <PackageReference Include="NVorbis" Version="0.10.5"/>
-        <PackageReference Include="System.Text.Json" Version="9.0.8" />
+        <PackageReference Include="System.Net.Http" Version="4.3.4"/>
+        <PackageReference Include="System.Text.Json" Version="9.0.9"/>
     </ItemGroup>
     <ItemGroup>
         <Reference Include="AudioPlayerApi" HintPath="$(LABAPI_DEPENDENCIES)\AudioPlayerApi.dll"/>
         <Reference Include="CedModV3" HintPath="$(LABAPI_PLUGINS)\CedModV3.dll"/>
         <Reference Include="LabApi" HintPath="$(SL_REFERENCES)\LabApi.dll"/>
+        <Reference Include="LabApiExtensions" HintPath="$(LABAPI_DEPENDENCIES)\LabApiExtensions.dll"/>
         <Reference Include="YamlDotNet" HintPath="$(SL_REFERENCES)\YamlDotNet.dll"/>
         <Reference Include="ProjectMER" HintPath="$(LABAPI_PLUGINS)\ProjectMER.dll"/>
         <Reference Include="Assembly-CSharp" HintPath="$(SL_REFERENCES)\Assembly-CSharp-Publicized.dll"/>

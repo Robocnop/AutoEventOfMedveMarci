@@ -5,6 +5,7 @@
             0Harmony
             NVorbis
             System.Memory
+            LabApiExtensions
         </IncludeAssemblies>
     </Costura>
 </Weavers>

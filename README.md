@@ -1,6 +1,6 @@
 # AutoEvent
 
-[![Version](https://img.shields.io/github/v/release/MedveMarci/AutoEvent?&label=Version&color=d500ff)](https://github.com/MedveMarci/AutoEvent/releases/latest) [![LabAPI Version](https://img.shields.io/badge/LabAPI_Version-1.1.1-51f4ff )](https://github.com/northwood-studios/LabAPI/releases/tag/1.1.1) [![SCP:SL Version](https://img.shields.io/badge/SCP:SL_Version-14.1.3-blue?&color=e5b200)](https://store.steampowered.com/app/700330/SCP_Secret_Laboratory/) [![Total Downloads](https://img.shields.io/github/downloads/MedveMarci/AutoEvent/total.svg?label=Total%20Downloads&color=&color=ffbf00)]()<br>
+[![Version](https://img.shields.io/github/v/release/MedveMarci/AutoEvent?&label=Version&color=d500ff)](https://github.com/MedveMarci/AutoEvent/releases/latest) [![LabAPI Version](https://img.shields.io/badge/LabAPI_Version-1.1.2-51f4ff )](https://github.com/northwood-studios/LabAPI/releases/tag/1.1.2) [![SCP:SL Version](https://img.shields.io/badge/SCP:SL_Version-14.1.4-blue?&color=e5b200)](https://store.steampowered.com/app/700330/SCP_Secret_Laboratory/) [![Total Downloads](https://img.shields.io/github/downloads/MedveMarci/AutoEvent/total.svg?label=Total%20Downloads&color=&color=ffbf00)]()<br>
 
 ---
 
@@ -17,6 +17,7 @@
 [![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Message4.png)](https://github.com/MedveMarci/AutoEvent/blob/main/Docs/Problem.md)
 [![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Message5.png)](https://docs.google.com/document/d/1acRD2O9u4-THUEaXenFLF97Lkqt4uQ0mOEAThVNROJs/)
 [![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Message6.png)](https://github.com/MedveMarci/AutoEvent/blob/main/Docs/Configuration.md)
+
 <a href='https://discord.gg/KmpA8cfaSA'><img src='https://www.allkpop.com/upload/2021/01/content/262046/1611711962-discord-button.png' height="100"></a>
 
 # Credits

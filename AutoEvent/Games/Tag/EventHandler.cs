@@ -61,9 +61,9 @@ public class EventHandler(Plugin ev)
         player.CurrentItem ??= player.AddItem(Plugin.Config.TaggerWeapon);
     }
 
-    public void OnJailbirdCharge(PlayerProcessingJailbirdMessageEventArgs ev)
+    public void OnProcessingJailbirdMessage(PlayerProcessingJailbirdMessageEventArgs ev)
     {
-        if (ev.Message == JailbirdMessageType.ChargeStarted)
-            ev.IsAllowed = Plugin.Config.JailbirdCanCharge;
+        if (ev.Message == JailbirdMessageType.ChargeLoadTriggered)
+            ev.IsAllowed = false;
     }
 }

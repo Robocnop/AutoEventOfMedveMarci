@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoEvent.API;
+using AutoEvent.API.Enums;
 using AutoEvent.Interfaces;
 using LabApi.Events.Handlers;
 using LabApi.Features.Wrappers;
@@ -23,6 +24,10 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
     public override string CommandName { get; set; } = "zombie2";
     private EventHandler EventHandler { get; set; }
 
+    public override EventFlags EventHandlerSettings { get; set; } =
+        EventFlags.IgnoreRagdoll | EventFlags.IgnoreBulletHole;
+
+
     public MapInfo MapInfo { get; set; } = new()
     {
         MapName = "Survival",
@@ -32,7 +37,6 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
     public SoundInfo SoundInfo { get; set; } = new()
     {
         SoundName = "Survival.ogg",
-        Volume = 10,
         Loop = false
     };
 
@@ -78,14 +82,14 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 
     protected override void CountdownFinished()
     {
-        Extensions.PlayAudio("Zombie2.ogg", 7, true);
+        Extensions.PlayAudio("Zombie2.ogg", true);
 
         var players = Config.Zombies.GetPlayers();
         foreach (var player in players)
         {
             LogManager.Debug($"Making player {player.Nickname} a zombie.");
             player.GiveLoadout(Config.ZombieLoadouts);
-            Extensions.PlayPlayerAudio(SoundInfo.AudioPlayer, player, Config.ZombieScreams.RandomItem(), 15);
+            SoundInfo.AudioPlayer.PlayPlayerAudio(player, Config.ZombieScreams.RandomItem(), 15);
             if (Player.ReadyList.Count(r => r.IsSCP) != 1) continue;
             if (FirstZombie is not null)
                 continue;
@@ -147,13 +151,17 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         {
             text = Translation.SurvivalHumanWinTime;
         }
-        
+
         foreach (var player in AudioPlayer.AudioPlayerByName.Values)
-        {
-            Extensions.StopAudio(player);
-        }
-        
-        Extensions.PlayAudio(musicName, 7, false);
+            player.StopAudio();
+
+        Extensions.PlayAudio(musicName);
         Extensions.ServerBroadcast(text, 10);
+    }
+
+    protected override void OnCleanup()
+    {
+        foreach (var player in AudioPlayer.AudioPlayerByName.Values)
+            player.StopAudio();
     }
 }

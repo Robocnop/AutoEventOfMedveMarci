@@ -5,8 +5,9 @@ using AutoEvent.API;
 using AutoEvent.Interfaces;
 using LabApi.Features.Wrappers;
 using MEC;
+using Mirror;
 using UnityEngine;
-using Object = UnityEngine.Object;
+using Extensions = AutoEvent.API.Extensions;
 
 
 namespace AutoEvent.Games.Line;
@@ -27,8 +28,7 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 
     public SoundInfo SoundInfo { get; set; } = new()
     {
-        SoundName = "LineLite.ogg",
-        Volume = 10
+        SoundName = "LineLite.ogg"
     };
 
     protected override void OnStart()
@@ -53,13 +53,16 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 
     protected override void CountdownFinished()
     {
-        foreach (var block in MapInfo.Map.AttachedBlocks)
+        if (MapInfo.Map?.AttachedBlocks == null)
+            return;
+
+        foreach (var block in MapInfo.Map.AttachedBlocks.Where(block => block != null))
             switch (block.name)
             {
                 case "DeadZone": block.AddComponent<LineComponent>().Init(this, ObstacleType.MiniWalls); break;
                 case "DeadWall": block.AddComponent<LineComponent>().Init(this, ObstacleType.Wall); break;
                 case "Line": block.AddComponent<LineComponent>().Init(this, ObstacleType.Ground); break;
-                case "Shield": Object.Destroy(block); break;
+                case "Shield": NetworkServer.Destroy(block); break;
             }
     }
 

@@ -41,8 +41,7 @@ public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
 
     public SoundInfo SoundInfo { get; set; } = new()
     {
-        SoundName = "Fall_Guys_Winter_Fallympics.ogg",
-        Volume = 7
+        SoundName = "Fall_Guys_Winter_Fallympics.ogg"
     };
 
     protected override void RegisterEvents()

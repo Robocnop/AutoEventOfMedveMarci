@@ -81,7 +81,7 @@ public class EventHandler(Plugin plugin)
     {
         player.GiveLoadout(plugin.Config.ZombieLoadouts);
         player.Position = plugin.SpawnList.RandomItem().transform.position;
-        Extensions.PlayPlayerAudio(plugin.SoundInfo.AudioPlayer, player, plugin.Config.ZombieScreams.RandomItem(),
+        plugin.SoundInfo.AudioPlayer.PlayPlayerAudio(player, plugin.Config.ZombieScreams.RandomItem(),
             15);
     }
 }

@@ -11,14 +11,12 @@ public class MapInfo
     {
     }
 
-    public MapInfo(string mapName, Vector3 position, Vector3? rotation = null, Vector3? scale = null,
-        bool? isStatic = true)
+    public MapInfo(string mapName, Vector3 position, Vector3? rotation = null, Vector3? scale = null)
     {
         MapName = mapName;
         Position = position;
         Scale = scale ?? Vector3.one;
         Rotation = rotation ?? Vector3.zero;
-        IsStatic = isStatic ?? true;
     }
 
     [Description("The name of the map schematic.")]
@@ -38,9 +36,6 @@ public class MapInfo
     }
 
     [Description("The scale of the map.")] public Vector3 Scale { get; set; } = Vector3.one;
-
-    [Description("Whether the object needs to be optimized.")]
-    public bool IsStatic { get; set; } = true;
 
     [YamlIgnore] public MapObject Map { get; set; }
 

@@ -29,7 +29,11 @@ public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
     public override string Author { get; set; } = "RisottoMan";
     public override string CommandName { get; set; } = "cs";
     protected override FriendlyFireSettings ForceEnableFriendlyFire { get; set; } = FriendlyFireSettings.Disable;
-    public override EventFlags EventHandlerSettings { get; set; } = EventFlags.Default | EventFlags.IgnoreDroppingItem;
+
+    public override EventFlags EventHandlerSettings { get; set; } = EventFlags.IgnoreRagdoll |
+                                                                    EventFlags.IgnoreHandcuffing |
+                                                                    EventFlags.IgnoreBulletHole |
+                                                                    EventFlags.IgnoreBloodDecal;
 
     public MapInfo MapInfo { get; set; } = new()
     {
@@ -40,7 +44,6 @@ public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
     public SoundInfo SoundInfo { get; set; } = new()
     {
         SoundName = "Survival.ogg",
-        Volume = 10,
         Loop = false
     };
 
@@ -48,9 +51,9 @@ public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
     {
         _eventHandler = new EventHandler(this);
         PlayerEvents.SearchedToy += _eventHandler.OnSearchedToy;
-        PlayerEvents.SearchingToy += _eventHandler.OnSearchingToy;
+        PlayerEvents.SearchingToy += EventHandler.OnSearchingToy;
         PlayerEvents.SearchToyAborted += EventHandler.OnSearchToyAborted;
-        PlayerEvents.UsingItem += _eventHandler.OnUsingItem;
+        PlayerEvents.UsingItem += EventHandler.OnUsingItem;
         PlayerEvents.UsedItem += _eventHandler.OnUsedItem;
         PlayerEvents.PickingUpItem += _eventHandler.OnPickingUpItem;
         PlayerEvents.ChangedItem += _eventHandler.OnChangedItemEvent;
@@ -63,12 +66,12 @@ public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
     protected override void UnregisterEvents()
     {
         PlayerEvents.SearchedToy -= _eventHandler.OnSearchedToy;
-        PlayerEvents.UsingItem -= _eventHandler.OnUsingItem;
+        PlayerEvents.UsingItem -= EventHandler.OnUsingItem;
         PlayerEvents.UsedItem -= _eventHandler.OnUsedItem;
         PlayerEvents.PickingUpItem -= _eventHandler.OnPickingUpItem;
         PlayerEvents.CancelledUsingItem -= EventHandler.OnCancelledUsingItem;
         PlayerEvents.ChangedItem -= _eventHandler.OnChangedItemEvent;
-        PlayerEvents.SearchingToy += _eventHandler.OnSearchingToy;
+        PlayerEvents.SearchingToy += EventHandler.OnSearchingToy;
         PlayerEvents.SearchToyAborted += EventHandler.OnSearchToyAborted;
         PlayerEvents.DroppedItem -= _eventHandler.OnDroppedItem;
         PlayerEvents.SearchingPickup -= EventHandler.OnSearchingPickup;
@@ -231,22 +234,22 @@ public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
             }
 
             text = Translation.PlantedWin;
-            Extensions.PlayAudio("TBombWin.ogg", 15, false);
+            Extensions.PlayAudio("TBombWin.ogg");
         }
         else if (BombState == BombState.Defused)
         {
             text = Translation.DefusedWin;
-            Extensions.PlayAudio("CTWin.ogg", 10, false);
+            Extensions.PlayAudio("CTWin.ogg");
         }
         else if (tCount == 0 && ctCount > 0)
         {
             text = Translation.CounterWin;
-            Extensions.PlayAudio("CTWin.ogg", 10, false);
+            Extensions.PlayAudio("CTWin.ogg");
         }
         else if (ctCount == 0 && tCount > 0)
         {
             text = Translation.TerroristWin;
-            Extensions.PlayAudio("TWin.ogg", 15, false);
+            Extensions.PlayAudio("TWin.ogg");
         }
         else if (ctCount == 0 && tCount == 0)
         {
@@ -262,7 +265,8 @@ public class Plugin : Event<Config, Translation>, IEventMap, IEventSound
 
     protected override void OnCleanup()
     {
-        NetworkServer.Destroy(BombObject.gameObject);
+        if (BombObject.gameObject)
+            NetworkServer.Destroy(BombObject.gameObject);
         BombObject = null;
         EventHandler.Bomb = null;
         base.OnCleanup();

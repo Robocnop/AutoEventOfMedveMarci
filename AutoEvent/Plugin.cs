@@ -17,11 +17,12 @@ namespace AutoEvent;
 
 public class AutoEvent : Plugin<Config>
 {
-    private const bool PreRelease = false;
+    private const bool PreRelease = true;
     public static AutoEvent Singleton;
     private static Harmony _harmonyPatch;
     public static EventManager EventManager;
     private static EventHandler _eventHandler;
+    internal static float MusicVolume;
     public override string Name => "AutoEvent";
 
     public override string Author =>
@@ -30,7 +31,7 @@ public class AutoEvent : Plugin<Config>
     public override string Description =>
         "A plugin that allows you to play mini-games in SCP:SL. It includes a variety of games such as Spleef, Lava, Hide and Seek, Knives, and more. Each game has its own unique mechanics and rules, providing a fun and engaging experience for players.";
 
-    public override Version Version => new(9, 14, 4);
+    public override Version Version => new(9, 15, 0);
     public override Version RequiredApiVersion => new(LabApiProperties.CompiledVersion);
 
     public static string BaseConfigPath { get; private set; }
@@ -82,7 +83,7 @@ public class AutoEvent : Plugin<Config>
             _eventHandler = new EventHandler();
             CustomHandlersManager.RegisterEventsHandler(_eventHandler);
             ConfigManager.LoadConfigsAndTranslations();
-
+            MusicVolume = Config.Volume;
             LogManager.Info("The mini-games are loaded.");
         }
         catch (Exception e)
@@ -100,18 +101,6 @@ public class AutoEvent : Plugin<Config>
         catch (Exception e)
         {
             LogManager.Error($"An error has occured while trying to create a new directory.\nPath: {path}\n{e}");
-        }
-    }
-
-    private static void DeleteDirectoryAndFiles(string path)
-    {
-        try
-        {
-            if (Directory.Exists(path)) Directory.Delete(path, true);
-        }
-        catch (Exception e)
-        {
-            LogManager.Error($"An error has occured while trying to delete a directory.\nPath: {path}\n{e}");
         }
     }
 
@@ -160,10 +149,12 @@ public class AutoEvent : Plugin<Config>
                 {
                     if (rel.ValueKind != JsonValueKind.Object) continue;
 
-                    bool draft = rel.TryGetProperty("draft", out var draftProp) && draftProp.ValueKind == JsonValueKind.True;
+                    var draft = rel.TryGetProperty("draft", out var draftProp) &&
+                                draftProp.ValueKind == JsonValueKind.True;
                     if (draft) continue;
 
-                    bool prerelease = rel.TryGetProperty("prerelease", out var preProp) && preProp.ValueKind == JsonValueKind.True;
+                    var prerelease = rel.TryGetProperty("prerelease", out var preProp) &&
+                                     preProp.ValueKind == JsonValueKind.True;
                     if (!prerelease) continue;
 
                     DateTime? publishedAt = null;
@@ -174,7 +165,8 @@ public class AutoEvent : Plugin<Config>
                             publishedAt = dt;
                     }
 
-                    if (latestPre == null || publishedAt.HasValue && (!bestPublishedAt.HasValue || publishedAt.Value > bestPublishedAt.Value))
+                    if (latestPre == null || (publishedAt.HasValue &&
+                                              (!bestPublishedAt.HasValue || publishedAt.Value > bestPublishedAt.Value)))
                     {
                         latestPre = rel;
                         bestPublishedAt = publishedAt;
@@ -201,7 +193,9 @@ public class AutoEvent : Plugin<Config>
                     $"A newer pre-release is available: {preTag} (current {currentVersion}). Download: https://github.com/MedveMarci/{Singleton.Name}/releases/tag/{preTag}",
                     ConsoleColor.DarkYellow);
             else
-                LogManager.Info($"Thanks for using {Singleton.Name} v{currentVersion}. To get support and latest news, join to my Discord Server: https://discord.gg/KmpA8cfaSA", ConsoleColor.Blue);
+                LogManager.Info(
+                    $"Thanks for using {Singleton.Name} v{currentVersion}. To get support and latest news, join to my Discord Server: https://discord.gg/KmpA8cfaSA",
+                    ConsoleColor.Blue);
             if (PreRelease)
                 LogManager.Info(
                     "This is a pre-release version. There might be bugs, if you find one, please report it on GitHub or Discord.",

@@ -26,6 +26,9 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
     public bool IsChristmasUpdate { get; set; }
     public bool IsHalloweenUpdate { get; set; }
 
+    public override EventFlags EventHandlerSettings { get; set; } = EventFlags.IgnoreRagdoll;
+
+
     public MapInfo MapInfo { get; set; } = new()
     {
         MapName = "Zombie",
@@ -34,8 +37,7 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 
     public SoundInfo SoundInfo { get; set; } = new()
     {
-        SoundName = "Zombie_Run.ogg",
-        Volume = 15
+        SoundName = "Zombie_Run.ogg"
     };
 
     protected override void RegisterEvents()
@@ -114,7 +116,7 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
             player.GiveLoadout(Config.ZombieLoadouts);
         }
 
-        Extensions.PlayPlayerAudio(SoundInfo.AudioPlayer, player, Config.ZombieScreams.RandomItem(), 15);
+        SoundInfo.AudioPlayer.PlayPlayerAudio(player, Config.ZombieScreams.RandomItem(), 15);
     }
 
     protected override bool IsRoundDone()

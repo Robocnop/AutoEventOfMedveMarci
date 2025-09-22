@@ -54,13 +54,29 @@ internal class Run : ICommand, IUsageProvider
             response = "There are no players in the server!";
             return false;
         }
-        
+
+        if (ev.CommandName == "amongus")
+        {
+            var playerList = Player.ReadyList;
+
+            var ignored = AutoEvent.Singleton.Config?.IgnoredRoles;
+            if (ignored is { Count: > 0 })
+                playerList = playerList.Where(x => !ignored.Contains(x.Role));
+
+            if (playerList.Count() > Misc.AllowedColors.Count)
+            {
+                response = "There are too many players in the server! The max player count for Among Us is " +
+                           Misc.AllowedColors.Count;
+                return false;
+            }
+        }
+
         Round.IsLocked = true;
         if (!Round.IsRoundStarted)
         {
             Round.Start();
 
-            Timing.CallDelayed(2f, () =>
+            Timing.CallDelayed(1f, () =>
             {
                 foreach (var player in Player.ReadyList)
                     player.ClearInventory();

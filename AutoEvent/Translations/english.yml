@@ -36,6 +36,21 @@ All Deathmatch:
   name: 'All Deathmatch'
   description: 'Fight against each other in all deathmatch.'
   command_name: 'dm'
+Among Us:
+  killed_by_impostor: 'You were killed by an Impostor!'
+  kill_cooldown: 'You can\'t kill for another {time} seconds!'
+  too_far: 'You are too far away to kill!'
+  voting_info: |-
+    You can vote by writing .vote <color> to the ClientConsole which you can open with ~ by default.
+    You can get the colors by opening the PlayerList with N.
+    {time} seconds remaining.
+  meeting_called: 'A meeting has been called by {player}!'
+  death_body_reported: 'A death body has been found by {player}!'
+  emergency_meetings_reached: 'You can\'t call any more emergency meetings!'
+  meeting_cooldown: 'You can\'t call a meeting for another {time} seconds!'
+  name: 'Among Us'
+  description: 'The Impostor is among us.'
+  command_name: 'amongus'
 Atomic Escape:
   before_start: |-
     {name}
@@ -122,9 +137,6 @@ Counter-Strike:
   picked_up_bomb: You picked up the C4!
   equipped_bomb: You're holding the C4!
   bomb_death_reason: The Bomb exploded.
-  hint_cycle: |-
-    <size=30><i><b>{name}</b>
-    {kills}
   name: 'Counter-Strike'
   description: 'Fight between terrorists and counter-terrorists'
   command_name: 'cs'

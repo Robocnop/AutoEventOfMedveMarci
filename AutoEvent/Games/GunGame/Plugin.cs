@@ -19,6 +19,12 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
     public override string Author { get; set; } = "RisottoMan/code & xleb.ik/map";
     public override string CommandName { get; set; } = "gungame";
     protected override FriendlyFireSettings ForceEnableFriendlyFire { get; set; } = FriendlyFireSettings.Enable;
+
+    public override EventFlags EventHandlerSettings { get; set; } = EventFlags.IgnoreRagdoll |
+                                                                    EventFlags.IgnoreHandcuffing |
+                                                                    EventFlags.IgnoreBulletHole |
+                                                                    EventFlags.IgnoreBloodDecal;
+
     private EventHandler EventHandler { get; set; }
     internal List<Vector3> SpawnPoints { get; private set; }
     internal Dictionary<Player, Stats> PlayerStats { get; set; }
@@ -31,8 +37,7 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 
     public SoundInfo SoundInfo { get; set; } = new()
     {
-        SoundName = "ClassicMusic.ogg",
-        Volume = 5
+        SoundName = "ClassicMusic.ogg"
     };
 
     protected override void RegisterEvents()
@@ -41,14 +46,12 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 
         EventHandler = new EventHandler(this);
         PlayerEvents.Dying += EventHandler.OnDying;
-        PlayerEvents.PlacingBlood += EventHandler.OnPlacingBlood;
         PlayerEvents.Joined += EventHandler.OnJoined;
     }
 
     protected override void UnregisterEvents()
     {
         PlayerEvents.Dying -= EventHandler.OnDying;
-        PlayerEvents.PlacingBlood -= EventHandler.OnPlacingBlood;
         PlayerEvents.Joined -= EventHandler.OnJoined;
         EventHandler = null;
     }
