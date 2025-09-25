@@ -160,7 +160,13 @@ public class EventHandler(Plugin plugin)
             NetworkServer.Destroy(skin);
             plugin.PlayerSkins[ev.Player.NetworkId] = deathSkin.gameObject;
         }
-
+        
+        if (plugin.Crewmates.Contains(ev.Player))
+            plugin.Crewmates.Remove(ev.Player);
+        
+        if (plugin.Impostors.Contains(ev.Player))
+            plugin.Impostors.Remove(ev.Player);
+        
         ev.Player.Kill(plugin.Translation.KilledByImpostor);
         TaskManager.ClearForPlayers([ev.Player]);
         plugin.KillCooldowns[ev.Attacker] = DateTime.UtcNow.AddSeconds(plugin.Config.KillCooldown);
@@ -283,9 +289,8 @@ public class EventHandler(Plugin plugin)
     public void OnPlayerLeft(PlayerLeftEventArgs ev)
     {
         if (plugin.Crewmates.Contains(ev.Player))
-        {
             plugin.Crewmates.Remove(ev.Player);
-        }
+        
         else if (plugin.Impostors.Contains(ev.Player))
         {
             plugin.Impostors.Remove(ev.Player);
