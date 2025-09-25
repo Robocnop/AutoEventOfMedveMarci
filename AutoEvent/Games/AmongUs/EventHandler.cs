@@ -191,9 +191,15 @@ public class EventHandler(Plugin plugin)
             animator.Play(vented ? "Vent_Exit" : "Vent_Enter");
 
             if (vented)
+            {
                 VentedPlayers.Remove(ev.Player);
+                ev.Player.DisableEffect<SilentWalk>();
+            }
             else
+            {
                 VentedPlayers.Add(ev.Player);
+                ev.Player.EnableEffect<SilentWalk>(255);
+            }
 
             LogManager.Debug("PlayerPos_" + (vented ? "Exit" : "Enter"));
             var posTf = parent.Find("PlayerPos_" + (vented ? "Exit" : "Enter"));
