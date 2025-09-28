@@ -334,6 +334,12 @@ public static class Extensions
         {
             var filePath = Path.Combine(AutoEvent.Singleton.Config.MusicDirectoryPath, fileName);
             LogManager.Debug($"[PlayAudio] File path: {filePath}");
+            if (!File.Exists(filePath))
+            {
+                LogManager.Debug($"[PlayAudio] The music file {fileName} does not exist at path {filePath}");
+                return null;
+            }
+            
             if (!AudioClipStorage.LoadClip(filePath, fileName))
             {
                 LogManager.Debug($"[PlayAudio] The music file {fileName} was not found for playback");
@@ -362,6 +368,12 @@ public static class Extensions
         {
             var filePath = Path.Combine(AutoEvent.Singleton.Config.MusicDirectoryPath, fileName);
             LogManager.Debug($"[PlayAudio] File path: {filePath}");
+            if (!File.Exists(filePath))
+            {
+                LogManager.Debug($"[PlayAudio] The music file {fileName} does not exist at path {filePath}");
+                return;
+            }
+            
             if (!AudioClipStorage.LoadClip(filePath, fileName))
             {
                 LogManager.Debug($"[PlayAudio] The music file {fileName} was not found for playback");
