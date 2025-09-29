@@ -43,12 +43,13 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
 
     protected override FriendlyFireSettings ForceEnableFriendlyFire { get; set; } = FriendlyFireSettings.Enable;
     internal List<GameObject> SpawnList { get; private set; }
+    private AdminToyBase VentObject { get; set; }
     private Dictionary<string, List<PrimitiveObjectToy>> DoorList { get; set; }
     private List<InvisibleInteractableToy> TaskToyList { get; set; }
     internal Dictionary<uint, GameObject> PlayerSkins { get; private set; }
     internal Dictionary<uint, uint> PlayerVotes { get; private set; }
     internal Dictionary<uint, string> PlayerColors { get; private set; }
-    internal Dictionary<uint, TextToy> PlayerTextToys { get; private set; }
+    private Dictionary<uint, TextToy> PlayerTextToys { get; set; }
     internal InvisibleInteractableToy MeetingButton { get; private set; }
     internal Dictionary<Player, DateTime> KillCooldowns { get; set; } = new();
     internal Dictionary<Player, int> PlayerMeetings { get; set; } = new();
@@ -127,7 +128,8 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
             {
                 TaskToyList ??= [];
                 TaskToyList.Add(invisibleInteractableToy);
-            }
+            } else if (adminToyBase.name == "VentObject")
+                VentObject = adminToyBase;
 
         Impostors = Config.Impostors.GetPlayers();
         var ready = Player.ReadyList.ToList();
@@ -196,6 +198,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
             impostor.DisableEffect<HeavyFooted>();
             impostor.GetEffect<FogControl>()!.Intensity = 3;
             impostor.AddItem(ItemType.GunCOM18);
+            impostor.DestroyNetworkIdentity(VentObject.netIdentity);
             foreach (var invisibleInteractable in TaskToyList) invisibleInteractable.SetFakeIsLocked(impostor, true);
         }
 
