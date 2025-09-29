@@ -156,7 +156,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
             Stage++;
 
             // Defaults: 
-            count += 10; //50,  60,  70,  80, [ignored last round] 1
+            count += 5; //50,  55,  60,  65, [ignored last round] 1
             timing += 0.2f; //0.5, 0.7, 0.9, 1.1, [ignored last round] 5
             height -= 5f; //20,  15,  10,  5,   [ignored last round] 20
             scale += 1; //1, 2, 3, 4   [ignored last round] 75
@@ -184,7 +184,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
             case > 1:
                 Extensions.ServerBroadcast(
                     Translation.MorePlayer
-                        .Replace("{count}", $"{Player.ReadyList.Count()}")
+                        .Replace("{count}", $"{Player.ReadyList.Count(p => p.IsAlive)}")
                         .Replace("{time}", time), 10);
                 break;
             case 1:

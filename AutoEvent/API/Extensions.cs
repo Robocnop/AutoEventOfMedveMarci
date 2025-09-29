@@ -334,6 +334,12 @@ public static class Extensions
         {
             var filePath = Path.Combine(AutoEvent.Singleton.Config.MusicDirectoryPath, fileName);
             LogManager.Debug($"[PlayAudio] File path: {filePath}");
+            if (!File.Exists(filePath))
+            {
+                LogManager.Debug($"[PlayAudio] The music file {fileName} does not exist at path {filePath}");
+                return null;
+            }
+            
             if (!AudioClipStorage.LoadClip(filePath, fileName))
             {
                 LogManager.Debug($"[PlayAudio] The music file {fileName} was not found for playback");
@@ -356,28 +362,38 @@ public static class Extensions
         return audioPlayer;
     }
 
-    public static void PlayPlayerAudio(this AudioPlayer audioPlayer, Player player, string fileName, byte volume)
+    public static void PlayPlayerAudio(Player player, string fileName, bool isLoop = false)
     {
-        if (audioPlayer is null)
-        {
-            LogManager.Debug("[PlayPlayerAudio] The AudioPlayer is null");
-            return;
-        }
-
-        if (player is null) LogManager.Debug("[PlayPlayerAudio] The player is null");
-
         if (!AudioClipStorage.AudioClips.ContainsKey(fileName))
         {
             var filePath = Path.Combine(AutoEvent.Singleton.Config.MusicDirectoryPath, fileName);
-            LogManager.Debug($"[PlayPlayerAudio] File path: {filePath}");
+            LogManager.Debug($"[PlayAudio] File path: {filePath}");
+            if (!File.Exists(filePath))
+            {
+                LogManager.Debug($"[PlayAudio] The music file {fileName} does not exist at path {filePath}");
+                return;
+            }
+            
             if (!AudioClipStorage.LoadClip(filePath, fileName))
             {
-                LogManager.Debug($"[PlayPlayerAudio] The music file {fileName} was not found for playback");
+                LogManager.Debug($"[PlayAudio] The music file {fileName} was not found for playback");
                 return;
             }
         }
 
-        audioPlayer.AddClip(fileName);
+        var audioPlayer = AudioPlayer.CreateOrGet($"AutoEvent-{player.NetworkId}-{fileName}",
+            condition: hub =>
+            {
+                var playerHub = Player.Get(hub);
+                return playerHub.NetworkId == player.NetworkId;
+            },
+            onIntialCreation: p =>
+            {
+                p.AddSpeaker("AutoEvent-Main-{player.NetworkId}-{fileName}", isSpatial: false, maxDistance: 5000f);
+            });
+
+        audioPlayer.AddClip(fileName, loop: isLoop);
+        audioPlayer.DestroyWhenAllClipsPlayed = true;
     }
 
     public static void PauseAudio(this AudioPlayer audioPlayer)

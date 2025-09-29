@@ -36,6 +36,7 @@ All Deathmatch:
   name: 'Serbest Ölüm Maçı'
   description: 'Herkesin birbirine karşı olduğu bir ölüm maçında savaşın.'
   command_name: 'dm'
+
 Atomic Escape:
   before_start: |-
     {name}

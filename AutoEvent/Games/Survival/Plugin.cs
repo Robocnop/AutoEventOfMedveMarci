@@ -89,7 +89,7 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         {
             LogManager.Debug($"Making player {player.Nickname} a zombie.");
             player.GiveLoadout(Config.ZombieLoadouts);
-            SoundInfo.AudioPlayer.PlayPlayerAudio(player, Config.ZombieScreams.RandomItem(), 15);
+            Extensions.PlayPlayerAudio(player, Config.ZombieScreams.RandomItem());
             if (Player.ReadyList.Count(r => r.IsSCP) != 1) continue;
             if (FirstZombie is not null)
                 continue;

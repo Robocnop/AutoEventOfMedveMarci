@@ -36,6 +36,29 @@ All Deathmatch:
   name: 'Alle-gegen-Alle Deathmatch'
   description: 'Kämpft im Alle-gegen-Alle Deathmatch gegeneinander.'
   command_name: 'dm'
+Among Us:
+  starting_event: |-
+    <b>{name}</b>
+    There are {time} seconds before the game starts. Selecting the <color=red><b>Impostors</b></color>.
+  you_are_impostor: 'You are the <color=red>Impostor</color>!'
+  you_are_crewmate: 'You are a <color=#00FFFF>Crewmate</color>!'
+  impostor_win: '<color=red>Impostors</color> have won!'
+  crewmate_win: '<color=#00FFFF>Crewmates</color> have won!'
+  killed_by_impostor: 'You were killed by an Impostor!'
+  kill_cooldown: 'You can''t kill for another {time} seconds!'
+  too_far: 'You are too far away to kill!'
+  voting_info: |-
+    {reason}
+    You can vote by writing .vote <color> to the ClientConsole which you can open with ~ by default.
+    You can get the colors by opening the PlayerList with N.
+    {time} seconds remaining.
+  meeting_called: 'A meeting has been called by {player}!'
+  death_body_reported: '<color=red>{deadPlayer}</color>''s body found by <color=yellow>{reportedPlayer}</color>!'
+  emergency_meetings_reached: 'You can''t call any more emergency meetings!'
+  meeting_cooldown: 'You can''t call a meeting for another {time} seconds!'
+  name: 'Among Us'
+  description: 'The Impostor is among us.'
+  command_name: 'amongus'
 Atomic Escape:
   before_start: |-
     {name}

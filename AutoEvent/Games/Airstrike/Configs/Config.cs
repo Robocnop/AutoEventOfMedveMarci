@@ -18,7 +18,7 @@ public class Config : EventConfig
 
         if (AvailableMaps.Count >= 1) return;
         AvailableMaps.Add(new MapChance(50, new MapInfo("DeathParty", new Vector3(0f, 40f, 0f))));
-        AvailableMaps.Add(new MapChance(50, new MapInfo("DeathParty_PresidentFinny", new Vector3(0f, 40f, 0f))));
+        AvailableMaps.Add(new MapChance(50, new MapInfo("DeathParty_PresidentFinny", new Vector3(0, 40f, 0f))));
         AvailableMaps.Add(new MapChance(50, new MapInfo("DeathParty_Xmas2024", new Vector3(0f, 40f, 0f)),
             SeasonFlags.Christmas));
     }

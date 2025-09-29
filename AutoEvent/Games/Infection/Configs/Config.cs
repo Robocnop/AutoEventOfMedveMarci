@@ -17,7 +17,7 @@ public class Config : EventConfig
         if (AvailableMaps.Count >= 1) return;
         AvailableMaps.Add(new MapChance(50, new MapInfo("Zombie", new Vector3(0, 40f, 0f))));
         AvailableMaps.Add(new MapChance(50, new MapInfo("ZombieRework", new Vector3(0, 40f, 0f))));
-        //AvailableMaps.Add(new MapChance(50, new MapInfo("Zombie_PresidentFinny", new Vector3(0, 40f, 0f))));
+        AvailableMaps.Add(new MapChance(50, new MapInfo("Zombie_PresidentFinny", new Vector3(0, 40f, 0f))));
         AvailableMaps.Add(new MapChance(50, new MapInfo("Zombie_Xmas2024", new Vector3(0, 40f, 0f)),
             SeasonFlags.Christmas));
         AvailableMaps.Add(new MapChance(50, new MapInfo("ZombieRework_Xmas2024", new Vector3(0, 40f, 0f)),

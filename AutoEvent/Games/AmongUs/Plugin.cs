@@ -43,12 +43,13 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
 
     protected override FriendlyFireSettings ForceEnableFriendlyFire { get; set; } = FriendlyFireSettings.Enable;
     internal List<GameObject> SpawnList { get; private set; }
+    private AdminToyBase VentObject { get; set; }
     private Dictionary<string, List<PrimitiveObjectToy>> DoorList { get; set; }
     private List<InvisibleInteractableToy> TaskToyList { get; set; }
     internal Dictionary<uint, GameObject> PlayerSkins { get; private set; }
     internal Dictionary<uint, uint> PlayerVotes { get; private set; }
     internal Dictionary<uint, string> PlayerColors { get; private set; }
-    internal Dictionary<uint, TextToy> PlayerTextToys { get; private set; }
+    private Dictionary<uint, TextToy> PlayerTextToys { get; set; }
     internal InvisibleInteractableToy MeetingButton { get; private set; }
     internal Dictionary<Player, DateTime> KillCooldowns { get; set; } = new();
     internal Dictionary<Player, int> PlayerMeetings { get; set; } = new();
@@ -127,9 +128,10 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
             {
                 TaskToyList ??= [];
                 TaskToyList.Add(invisibleInteractableToy);
-            }
+            } else if (adminToyBase.name == "VentObject")
+                VentObject = adminToyBase;
 
-        Impostors = Config.Impostors.GetPlayers();
+        Impostors = Player.ReadyList.Where(p => !p.IsDummy).ToList();//Config.Impostors.GetPlayers();
         var ready = Player.ReadyList.ToList();
         Crewmates = ready.Except(Impostors).ToList();
 
@@ -196,6 +198,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
             impostor.DisableEffect<HeavyFooted>();
             impostor.GetEffect<FogControl>()!.Intensity = 3;
             impostor.AddItem(ItemType.GunCOM18);
+            impostor.DestroyNetworkIdentity(VentObject.netIdentity);
             foreach (var invisibleInteractable in TaskToyList) invisibleInteractable.SetFakeIsLocked(impostor, true);
         }
 
@@ -210,17 +213,30 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
         CreateTasksForPlayers(Crewmates);
     }
 
-    internal IEnumerator<float> BroadcastVotingCountdown()
+    internal IEnumerator<float> BroadcastVotingCountdown(string reason = "")
     {
-        for (var time = Config.VotingTime; time > 0; time--)
+        var time = Config.VotingTime;
+        var shortened = false;
+        LogManager.Debug("reason: " + reason);
+        while (time > 0)
         {
-            foreach (var crewmate in Crewmates)
-                crewmate.Broadcast(
-                    Translation.VotingInfo.Replace("{time}", time.ToString(CultureInfo.InvariantCulture)));
-            foreach (var impostor in Impostors)
-                impostor.Broadcast(
-                    Translation.VotingInfo.Replace("{time}", time.ToString(CultureInfo.InvariantCulture)));
+            var playersCount = Impostors.Count(p => p.IsAlive) + Crewmates.Count(p => p.IsAlive);
+
+            if (!shortened && playersCount > 0 && PlayerVotes.Count >= playersCount && time > 5)
+            {
+                time = 5;
+                shortened = true;
+            }
+            
+            foreach (var player in Player.ReadyList.Where(p => Impostors.Contains(p) || Crewmates.Contains(p)))
+            {
+                player.Broadcast(
+                    Translation.VotingInfo.Replace("{reason}", reason).Replace("{time}",
+                        time.ToString(CultureInfo.InvariantCulture)));
+            }
+
             yield return Timing.WaitForSeconds(1f);
+            time--;
         }
 
         Instance.MeetingCalled = false;
@@ -232,31 +248,34 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
             .ToList();
         LogManager.Debug(
             $"Max votes count: {maxVotes.Count}, max votes: {(maxVotes.Count > 0 ? maxVotes[0].Count : 0)}");
-        if (maxVotes.Count == 0)
+        switch (maxVotes.Count)
         {
-            Extensions.ServerBroadcast("No one was voted out.", 5);
-        }
-        else if (maxVotes.Count > 1 && maxVotes[0].Count == maxVotes[1].Count)
-        {
-            Extensions.ServerBroadcast("It's a tie! No one was voted out.", 5);
-        }
-        else
-        {
-            var votedOut = Player.Get(maxVotes[0].Id);
-            if (votedOut != null)
+            case 0:
+                Extensions.ServerBroadcast("No one was voted out.", 5);
+                break;
+            case > 1 when maxVotes[0].Count == maxVotes[1].Count:
+                Extensions.ServerBroadcast("It's a tie! No one was voted out.", 5);
+                break;
+            default:
             {
-                votedOut.Kill("Voted out");
-                votedOut.DisplayName = string.Empty;
-                TaskManager.ClearForPlayers([votedOut]);
+                var votedOut = Player.Get(maxVotes[0].Id);
+                if (votedOut != null)
+                {
+                    votedOut.Kill("Voted out");
+                    votedOut.DisplayName = string.Empty;
+                    TaskManager.ClearForPlayers([votedOut]);
 
-                if (PlayerSkins.TryGetValue(votedOut.NetworkId, out var skin))
-                    NetworkServer.Destroy(skin);
-                PlayerSkins.Remove(votedOut.NetworkId);
-                PlayerColors.Remove(votedOut.NetworkId);
-                Impostors.Remove(votedOut);
-                Crewmates.Remove(votedOut);
-                KillCooldowns.Remove(votedOut);
-                Extensions.ServerBroadcast($"{votedOut.Nickname} was voted out.", 5);
+                    if (PlayerSkins.TryGetValue(votedOut.NetworkId, out var skin))
+                        NetworkServer.Destroy(skin);
+                    PlayerSkins.Remove(votedOut.NetworkId);
+                    PlayerColors.Remove(votedOut.NetworkId);
+                    Impostors.Remove(votedOut);
+                    Crewmates.Remove(votedOut);
+                    KillCooldowns.Remove(votedOut);
+                    Extensions.ServerBroadcast($"{votedOut.Nickname} was voted out.", 5);
+                }
+
+                break;
             }
         }
 
@@ -268,8 +287,13 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
         foreach (var skin in PlayerSkins.Values.Where(skin => skin.name == "DeathSkin"))
             NetworkServer.Destroy(skin);
 
+        foreach (var player in Player.ReadyList)
+        {
+            if (Impostors.Contains(player)) 
+                player.AddItem(ItemType.GunCOM18);
 
-        foreach (var player in Player.ReadyList) player.DisableEffect<Ensnared>();
+            player.DisableEffect<Ensnared>();
+        }
     }
 
     protected override void ProcessFrame()
@@ -408,9 +432,8 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
         foreach (var skin in PlayerSkins.Values)
             NetworkServer.Destroy(skin);
 
-        foreach (var textToy in PlayerTextToys.Values)
-            textToy?.Destroy();
-
+        foreach (var textToy in PlayerTextToys.Values.Where(textToy => textToy != null))
+            textToy.Destroy();
 
         PlayerSkins.Clear();
         PlayerVotes.Clear();
@@ -497,7 +520,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
         }
     }
 
-    private static Misc.PlayerInfoColorTypes? GetColorTypeByHex(string hex)
+    internal static Misc.PlayerInfoColorTypes? GetColorTypeByHex(string hex)
     {
         foreach (var pair in
                  Misc.AllowedColors.Where(pair => pair.Value.Equals(hex, StringComparison.OrdinalIgnoreCase)))
