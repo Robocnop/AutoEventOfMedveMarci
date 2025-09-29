@@ -144,9 +144,6 @@ Counter-Strike:
   picked_up_bomb: 你捡起了炸弹!
   equipped_bomb: 你正在拿着炸弹!
   bomb_death_reason: 炸弹爆炸了
-  hint_cycle: |-
-    <size=30><i><b>{name}</b>
-    {kills}
   name: '反恐精英'
   description: '反恐精英与恐怖分子之间的对抗'
   command_name: 'cs'
