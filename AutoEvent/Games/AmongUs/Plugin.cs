@@ -272,7 +272,10 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
                     Impostors.Remove(votedOut);
                     Crewmates.Remove(votedOut);
                     KillCooldowns.Remove(votedOut);
-                    Extensions.ServerBroadcast($"{votedOut.Nickname} was voted out.", 5);
+                    Extensions.ServerBroadcast(
+                        Config.ConfirmEjects
+                            ? $"{votedOut.Nickname} was {(Impostors.Contains(votedOut) ? "an Impostor" : "not an Impostor")}."
+                            : $"{votedOut.Nickname} was voted out.", 5);
                 }
 
                 break;

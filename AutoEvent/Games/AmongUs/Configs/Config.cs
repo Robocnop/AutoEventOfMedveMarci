@@ -34,7 +34,7 @@ public class Config : EventConfig
     public int EmergencyCooldown { get; set; } = 0;
     public float VotingTime { get; set; } = 120f;
     public bool AnonymousVotes { get; set; } = false;
-    public bool ConfirmEjects { get; set; } = false;
+    public bool ConfirmEjects { get; set; } = true;
 
     public int CommonTasks { get; set; } = 1;
     public int LongTasks { get; set; } = 1;
