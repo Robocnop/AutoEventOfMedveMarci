@@ -39,7 +39,7 @@ All Deathmatch:
 Among Us:
   starting_event: |-
     <b>{name}</b>
-    游戏将在 {time} 秒后开始。正在选择 <color=red><b>内鬼</b></color>
+    游戏将在 {time} 秒后开始 正在选择 <color=red><b>内鬼</b></color>
   you_are_impostor: '你是 <color=red>内鬼</color>！'
   you_are_crewmate: '你是 <color=#00FFFF>船员</color>！'
   impostor_win: '<color=red>内鬼</color> 获胜了！'
