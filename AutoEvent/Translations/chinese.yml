@@ -39,7 +39,7 @@ All Deathmatch:
 Among Us:
   starting_event: |-
     <b>{name}</b>
-    游戏将在 {time} 秒后开始。正在选择 <color=red><b>内鬼</b></color>。
+    游戏将在 {time} 秒后开始 正在选择 <color=red><b>内鬼</b></color>
   you_are_impostor: '你是 <color=red>内鬼</color>！'
   you_are_crewmate: '你是 <color=#00FFFF>船员</color>！'
   impostor_win: '<color=red>内鬼</color> 获胜了！'
@@ -49,14 +49,14 @@ Among Us:
   too_far: '你离得太远，无法进行击杀！'
   voting_info: |-
     {reason}
-    你可以输入 .vote <color> 来进行投票，默认情况下可通过 ~ 打开控制台。
-    剩余 {time} 秒。
+    你可以输入 .vote <color> 来进行投票，默认情况下可通过 ~ 打开控制台
+    剩余 {time} 秒
   meeting_called: '{player} 发起了一次紧急会议！'
   death_body_reported: '<color=red>{deadPlayer}</color> 的尸体被 <color=yellow>{reportedPlayer}</color> 发现！'
   emergency_meetings_reached: '你不能再召集紧急会议了！'
   meeting_cooldown: '你需要再等待 {time} 秒才能召集会议！'
   name: 'Among Us'
-  description: '内鬼就在我们之中。'
+  description: '内鬼就在我们之中'
   command_name: 'amongus'
 Atomic Escape:
   before_start: |-
