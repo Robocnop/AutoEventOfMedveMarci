@@ -50,7 +50,6 @@ Among Us:
   voting_info: |-
     {reason}
     A szavazáshoz írd be a .vote <color> parancsot a ClientConsole-ba, amit alapból a ~ gombbal nyithatsz meg.
-    A színeket a játékoslistában (N) találod.
     Még {time} másodperc maradt.
   meeting_called: '{player} összehívta a megbeszélést!'
   death_body_reported: '<color=red>{deadPlayer}</color> holttestét <color=yellow>{reportedPlayer}</color> találta meg!'

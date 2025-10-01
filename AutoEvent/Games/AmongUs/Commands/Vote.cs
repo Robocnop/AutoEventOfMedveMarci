@@ -48,14 +48,30 @@ internal class Vote : ICommand, IUsageProvider
 
         var colorName = arguments.At(0);
 
+        if (string.Equals(colorName, "none", StringComparison.OrdinalIgnoreCase))
+        {
+            Plugin.Instance.PlayerVotes[player.NetworkId] = 0;
+            response = "You voted for no one.";
+            return true;
+        }
+        
         if (!Enum.TryParse(colorName, true, out Misc.PlayerInfoColorTypes colorType) ||
             !Misc.AllowedColors.TryGetValue(colorType, out var colorHex))
         {
             response = "Invalid color.";
             return false;
         }
+        LogManager.Debug(colorHex);
 
-        var votedPlayer = Player.Get(Plugin.Instance.PlayerColors.First(p => p.Value == colorHex).Key);
+        var valueColor = (from playerColor in Plugin.Instance.PlayerColors where playerColor.Value.Equals(colorHex, StringComparison.OrdinalIgnoreCase) select playerColor.Key).FirstOrDefault();
+
+        if (valueColor == 0)
+        {
+            response = "The player with that color was not found.";
+            return false;
+        }
+        
+        var votedPlayer = Player.Get(valueColor);
         if (votedPlayer == null)
         {
             response = "The player with that color was not found.";
@@ -69,7 +85,7 @@ internal class Vote : ICommand, IUsageProvider
         }
 
         Plugin.Instance.PlayerVotes[player.NetworkId] = votedPlayer.NetworkId;
-        response = $"You voted for {votedPlayer.Nickname} ({votedPlayer.GroupColor}).";
+        response = $"You voted for {votedPlayer.Nickname} ({Plugin.GetColorTypeByHex(colorHex)}).";
         return true;
     }
 

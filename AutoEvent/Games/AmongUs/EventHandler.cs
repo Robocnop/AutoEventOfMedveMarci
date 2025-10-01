@@ -261,8 +261,8 @@ public class EventHandler(Plugin plugin)
                 var direction = Plugin.Instance.MeetingButton.transform.position - player.Position;
                 player.Rotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
             }
-
-            Timing.RunCoroutine(plugin.BroadcastVotingCountdown(plugin.Translation.MeetingCalled), "BroadcastVotingCountdown");
+            if (!plugin.PlayerColors.TryGetValue(ev.Player.NetworkId, out var color)) return;
+            Timing.RunCoroutine(plugin.BroadcastVotingCountdown(plugin.Translation.MeetingCalled.Replace("{player}", $"<color={color}>{ev.Player.Nickname} {Plugin.GetColorTypeByHex(color)}</color>")), "BroadcastVotingCountdown");
         }
 
         if (ev.Interactable.GameObject.name == "ReportBody")

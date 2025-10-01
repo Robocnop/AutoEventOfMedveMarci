@@ -98,7 +98,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
         PlayerVotes = new Dictionary<uint, uint>();
         PlayerColors = new Dictionary<uint, string>();
         PlayerTextToys = new Dictionary<uint, TextToy>();
-        Instance.MeetingCalled = false;
+        MeetingCalled = false;
         MeetingCooldown = Config.EmergencyCooldown;
 
         foreach (var adminToyBase in MapInfo.Map.AdminToyBases)
@@ -174,6 +174,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
 
             var colorType = GetColorTypeByHex(hex);
             if (colorType != null) player.DisplayName = player.Nickname + " " + colorType;
+            LogManager.Debug(hex);
             PlayerColors[player.NetworkId] = hex;
             PlayerSkins[player.NetworkId] = skin.gameObject;
         }
@@ -239,9 +240,9 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
             time--;
         }
 
-        Instance.MeetingCalled = false;
+        MeetingCalled = false;
         Extensions.ServerBroadcast("Voting ended", 5);
-        var maxVotes = Instance.PlayerVotes.Values
+        var maxVotes = PlayerVotes.Values
             .GroupBy(v => v)
             .OrderByDescending(g => g.Count())
             .Select(g => new { Id = g.Key, Count = g.Count() })
@@ -258,6 +259,11 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
                 break;
             default:
             {
+                if (maxVotes[0].Id == 0)
+                {
+                    Extensions.ServerBroadcast("No one was voted out.", 5);
+                    break;
+                }
                 var votedOut = Player.Get(maxVotes[0].Id);
                 if (votedOut != null)
                 {
@@ -301,7 +307,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
 
     protected override void ProcessFrame()
     {
-        if (Instance.MeetingCalled)
+        if (MeetingCalled)
         {
             foreach (var player in Crewmates)
             {
