@@ -349,7 +349,7 @@ Red Light Green Light:
     <color=green>胜利者: {winner}</color>
   red_light: '<color=red>不许动！</color>'
   green_light: '<color=green>快跑！</color>'
-  red_lose: '<color=red>你闯红灯了！</color>'
+  red_lose: '<color=red>你动了！</color>'
   no_time: '<color=red>你没能及时到达终点！</color>'
   hint: '<color=green>按 <color=yellow>[Alt]</color> 推动其他玩家</color>'
   hint_wait: '<color=red>稍等片刻</color>'
