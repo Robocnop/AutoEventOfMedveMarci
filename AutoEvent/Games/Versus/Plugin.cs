@@ -92,8 +92,6 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
             }
 
             count++;
-
-            player.CurrentItem ??= player.AddItem(ItemType.Jailbird);
         }
     }
 
@@ -134,8 +132,15 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         else if (Scientist is null)
             text = Translation.ScientistNull.Replace("{classd}", ClassD.Nickname);
         else
+        {
+            if (Scientist.Items.All(item => item.Type != ItemType.Jailbird))
+                Scientist.CurrentItem ??= Scientist.AddItem(ItemType.Jailbird);
+            if (ClassD.Items.All(item => item.Type == ItemType.Jailbird))
+                ClassD.CurrentItem ??= ClassD.AddItem(ItemType.Jailbird);
+            
             text = Translation.PlayersDuel.Replace("{scientist}", Scientist.Nickname)
                 .Replace("{classd}", ClassD.Nickname);
+        }
 
         Extensions.ServerBroadcast(text.Replace("{name}", Name).Replace("{remain}", $"{_countdown.TotalSeconds}"), 1);
     }
@@ -202,6 +207,7 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 
         End:
         chosenPlayer.Position = _teleports.ElementAt(value).transform.position;
+        chosenPlayer.Heal(100);
         _eventState = EventState.Waiting;
         return chosenPlayer;
     }

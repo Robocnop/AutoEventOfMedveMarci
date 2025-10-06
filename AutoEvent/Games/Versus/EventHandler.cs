@@ -10,9 +10,20 @@ public class EventHandler(Plugin plugin)
     {
         ev.Player.ClearInventory();
 
-        if (ev.Player == plugin.ClassD) plugin.ClassD = null;
+        if (ev.Player == plugin.ClassD)
+        {
+            plugin.ClassD = null;
+            plugin.Scientist.CurrentItem = null;
+            plugin.Scientist.RemoveItem(ItemType.Jailbird);
+            return;
+        }
 
-        if (ev.Player == plugin.Scientist) plugin.Scientist = null;
+        if (ev.Player == plugin.Scientist)
+        {
+            plugin.Scientist = null;
+            plugin.ClassD.CurrentItem = null;
+            plugin.ClassD.RemoveItem(ItemType.Jailbird);
+        }
     }
 
     public void OnProcessingJailbirdMessage(PlayerProcessingJailbirdMessageEventArgs ev)
