@@ -356,7 +356,11 @@ public class EventHandler(Plugin plugin)
             plugin.KillCooldowns.Remove(ev.Player);
             VentedPlayers.Remove(ev.Player);
         }
-
+        if (plugin.PlayerTextToys.TryGetValue(ev.Player.NetworkId, out var textToy))
+        {
+            textToy.Destroy();
+            plugin.PlayerTextToys.Remove(ev.Player.NetworkId);
+        }
         TaskManager.ClearForPlayers([ev.Player]);
         if (plugin.PlayerSkins.TryGetValue(ev.Player.NetworkId, out var skin))
             NetworkServer.Destroy(skin);

@@ -49,7 +49,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
     internal Dictionary<uint, GameObject> PlayerSkins { get; private set; }
     internal Dictionary<uint, uint> PlayerVotes { get; private set; }
     internal Dictionary<uint, string> PlayerColors { get; private set; }
-    private Dictionary<uint, TextToy> PlayerTextToys { get; set; }
+    internal Dictionary<uint, TextToy> PlayerTextToys { get; set; }
     internal InvisibleInteractableToy MeetingButton { get; private set; }
     internal Dictionary<Player, DateTime> KillCooldowns { get; set; } = new();
     internal Dictionary<Player, int> PlayerMeetings { get; set; } = new();
