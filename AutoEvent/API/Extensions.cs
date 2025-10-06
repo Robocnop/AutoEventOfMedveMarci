@@ -219,7 +219,7 @@ public static class Extensions
             AutoEvent.EventManager.CurrentEvent.StopEvent();
 
             foreach (var pl in Player.ReadyList) pl.SetRole(RoleTypeId.Spectator);
-            LogManager.Error($"The map {serializableSchematic.SchematicName} could not be loaded. Delete and re-download the schematics.");
+            LogManager.Error($"The schematic {serializableSchematic.SchematicName} could not be loaded. Delete and re-download the schematics.");
             return null;
         }
 
