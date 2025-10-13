@@ -23,4 +23,18 @@ public class Translation : EventTranslation
     public string DeathBodyReported { get; set; } = "{deadPlayer}'s body found by {reportedPlayer}!";
     public string EmergencyMeetingsReached { get; set; } = "You can't call any more emergency meetings!";
     public string MeetingCooldown { get; set; } = "You can't call a meeting for another {time} seconds!";
+    
+    public string CalibrateDistributor { get; set; } = "Calibrate Distributor";
+    public string CharCourse { get; set; } = "Chart Course";
+    public string CleanO2Filter { get; set; } = "Clean O2 Filter";
+    public string EmptyChute { get; set; } = "Empty Chute";
+    public string PrimeShields { get; set; } = "Prime Shields";
+    public string StartReactor { get; set; } = "Start Reactor";
+    public string SubmitScan { get; set; } = "Submit Scan";
+    public string FixWiring { get; set; } = "Fix Wiring";
+    public string AlignEngineOutput { get; set; } = "Align Engine Output";
+    public string DivertPowerto { get; set; } = "Divert Power to %roomName%";
+    public string AcceptDivertPower { get; set; } = "Accept Divert Power";
+    public string DownloadData { get; set; } = "Download Data";
+    public string UploadData { get; set; } = "Upload Data";
 }
