@@ -8,6 +8,7 @@ using AutoEvent.API;
 using AutoEvent.API.Enums;
 using AutoEvent.Games.AmongUs.Configs;
 using AutoEvent.Games.AmongUs.Features;
+using AutoEvent.Games.AmongUs.Skeld;
 using AutoEvent.Interfaces;
 using CustomPlayerEffects;
 using LabApi.Events.Handlers;
@@ -27,11 +28,13 @@ namespace AutoEvent.Games.AmongUs;
 
 public class Plugin : Event<Configs.Config, Translation>, IEventMap
 {
+    internal readonly List<Player> Muted = [];
     private EventHandler _eventHandler;
     internal List<Player> Crewmates = [];
     internal List<Player> Impostors = [];
     internal bool MeetingCalled;
     internal int MeetingCooldown;
+    private Dictionary<string, List<Task>> GeneratedTasks { get; set; }
     public override string Name { get; set; } = "Among Us";
     public override string Description { get; set; } = "The Impostor is among us.";
     public override string Author { get; set; } = "MedveMarci";
@@ -87,6 +90,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
     protected override void OnStart()
     {
         Instance = this;
+        GenerateTasks();
         Impostors.Clear();
         Crewmates.Clear();
         TaskManager.ClearForPlayers(Player.ReadyList);
@@ -128,8 +132,11 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
             {
                 TaskToyList ??= [];
                 TaskToyList.Add(invisibleInteractableToy);
-            } else if (adminToyBase.name == "VentObject")
+            }
+            else if (adminToyBase.name == "VentObject")
+            {
                 VentObject = adminToyBase;
+            }
 
         Impostors = Config.Impostors.GetPlayers();
         var ready = Player.ReadyList.ToList();
@@ -214,13 +221,47 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
         CreateTasksForPlayers(Crewmates);
     }
 
-    internal IEnumerator<float> BroadcastVotingCountdown(string reason = "")
+    internal IEnumerator<float> BroadcastVotingCountdown(string reason = "", Player starter = null)
     {
         var time = Config.VotingTime;
+        var discussionTime = Config.DiscussionTime;
         var shortened = false;
         LogManager.Debug("reason: " + reason);
+        foreach (var player in Player.ReadyList.Where(p => Impostors.Contains(p) || Crewmates.Contains(p)))
+        {
+            if (player == starter)
+                continue;
+
+            if (Muted.Contains(player)) continue;
+            Muted.Add(player);
+            player.Mute();
+        }
+
         while (time > 0)
         {
+            if (discussionTime > 0)
+            {
+                foreach (var player in Player.ReadyList.Where(p => Impostors.Contains(p) || Crewmates.Contains(p)))
+                    player.Broadcast(
+                        Translation.DiscussionInfo.Replace("{reason}", reason).Replace("{time}",
+                            discussionTime.ToString(CultureInfo.InvariantCulture)));
+                yield return Timing.WaitForSeconds(1f);
+                discussionTime--;
+                continue;
+            }
+            
+            if (discussionTime == 0)
+            {
+                LogManager.Debug("Unmuting players");
+                foreach (var player in Muted)
+                {
+                    player.Unmute(true);
+                    player.Unmute(false);
+                }
+                Muted.Clear();
+                discussionTime--;
+            }
+
             var playersCount = Impostors.Count(p => p.IsAlive) + Crewmates.Count(p => p.IsAlive);
 
             if (!shortened && playersCount > 0 && PlayerVotes.Count >= playersCount && time > 5)
@@ -228,13 +269,11 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
                 time = 5;
                 shortened = true;
             }
-            
+
             foreach (var player in Player.ReadyList.Where(p => Impostors.Contains(p) || Crewmates.Contains(p)))
-            {
                 player.Broadcast(
                     Translation.VotingInfo.Replace("{reason}", reason).Replace("{time}",
                         time.ToString(CultureInfo.InvariantCulture)));
-            }
 
             yield return Timing.WaitForSeconds(1f);
             time--;
@@ -249,7 +288,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
             .ToList();
         LogManager.Debug(
             $"Max votes count: {maxVotes.Count}, max votes: {(maxVotes.Count > 0 ? maxVotes[0].Count : 0)}");
-        
+
         switch (maxVotes.Count)
         {
             case 0:
@@ -265,13 +304,14 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
                     Extensions.ServerBroadcast("No one was voted out.", 5);
                     break;
                 }
+
                 var votedOut = Player.Get(maxVotes[0].Id);
                 if (votedOut != null)
                 {
                     votedOut.Kill("Voted out");
                     votedOut.DisplayName = string.Empty;
                     TaskManager.ClearForPlayers([votedOut]);
-                    
+
                     PlayerColors.Remove(votedOut.NetworkId);
                     Impostors.Remove(votedOut);
                     Crewmates.Remove(votedOut);
@@ -281,6 +321,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
                             ? $"{votedOut.Nickname} was {(Impostors.Contains(votedOut) ? "an Impostor" : "not an Impostor")}."
                             : $"{votedOut.Nickname} was voted out.", 5);
                 }
+
                 break;
             }
         }
@@ -292,11 +333,12 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
         LogManager.Debug("Voting ended, cleared votes and text toys");
         foreach (var player in Player.ReadyList)
         {
-            if (Impostors.Contains(player)) 
+            if (Impostors.Contains(player))
                 player.AddItem(ItemType.GunCOM18);
 
             player.DisableEffect<Ensnared>();
         }
+
         foreach (var pair in PlayerSkins)
         {
             LogManager.Debug($"Checking skin for {pair.Key} name: {pair.Value.name}");
@@ -380,7 +422,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
                     var currentStage = mt.StageTasks.FirstOrDefault(s => !s.IsDone) ?? mt.StageTasks.Last();
                     var currentIndex = isCompleted ? max : done;
 
-                    var description = mt.Description.Replace("%roomName%", mt.RoomName.ToString());
+                    var description = mt.Description.Replace("{roomName}", mt.RoomName.ToString());
                     var mainLine = $"{mt.RoomName} ({currentIndex}/{max}): {description}";
                     var stageLine = $"{currentStage.RoomName} ({currentIndex}/{max}): {currentStage.Description}";
 
@@ -459,6 +501,13 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
         Crewmates.Clear();
         KillCooldowns.Clear();
         PlayerMeetings.Clear();
+        GeneratedTasks.Clear();
+        foreach (var player in Muted.Where(player => player != null))
+        {
+            player.Unmute(true);
+            player.Unmute(false);
+        }
+        Muted.Clear();
         TaskManager.ClearForPlayers(Player.ReadyList);
         Server.ClearBroadcasts();
         Timing.KillCoroutines("BroadcastVotingCountdown");
@@ -472,7 +521,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
         var maxCommon = Config.CommonTasks;
         var maxLong = Config.LongTasks;
         var isVisual = Config.VisualTasks;
-        var tasks = Config.Tasks[MapInfo.MapName];
+        var tasks = GeneratedTasks[MapInfo.MapName];
         if (tasks == null || tasks.Count == 0) return;
 
         foreach (var player in players)
@@ -539,5 +588,258 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
                  Misc.AllowedColors.Where(pair => pair.Value.Equals(hex, StringComparison.OrdinalIgnoreCase)))
             return pair.Key;
         return null;
+    }
+
+    private void GenerateTasks()
+    {
+        GeneratedTasks = new Dictionary<string, List<Task>>
+        {
+            {
+                "Skeld",
+                [
+                    new Task
+                    {
+                        Name = TaskName.CalibrateDistributor, RoomName = RoomName.Electrical, Type = TaskType.Short,
+                        Description = Instance.Translation.CalibrateDistributor
+                    },
+                    new Task
+                    {
+                        Name = TaskName.ChartCourse, RoomName = RoomName.Navigation, Type = TaskType.Short,
+                        Description = Instance.Translation.CharCourse
+                    },
+                    new Task
+                    {
+                        Name = TaskName.CleanO2Filter, RoomName = RoomName.O2, Type = TaskType.Short,
+                        Description = Instance.Translation.CleanO2Filter
+                    },
+                    new Task
+                    {
+                        Name = TaskName.StartReactor, RoomName = RoomName.Reactor, Type = TaskType.Long,
+                        Description = Instance.Translation.StartReactor
+                    },
+                    /*new Task
+                    {
+                        Name = TaskName.EmptyChute, RoomName = RoomName.O2, Type = TaskType.Long, IsVisual = true,
+                        Description = Plugin.Instance.Translation.EmptyChute
+                    },
+                    new Task
+                    {
+                        Name = TaskName.EmptyChute, RoomName = RoomName.Storage, Type = TaskType.Long, IsVisual = true,
+                        Description = Plugin.Instance.Translation.EmptyChute
+                    },
+                    new Task {
+                        Name = Skeld.TaskName.InspectSample, RoomName = Skeld.RoomName.MedBay, Type = TaskType.Long,
+                        Description = "Inspect Sample"
+                    },
+                    new Task
+                    {
+                        Name = TaskName.PrimeShields, RoomName = RoomName.Shields, Type = TaskType.Common, IsVisual = true,
+                        Description = Plugin.Instance.Translation.PrimeShields
+                    },
+                    new Task
+                    {
+                        Name = TaskName.SubmitScan, RoomName = RoomName.MedBay, Type = TaskType.Long, IsVisual = true,
+                        Description = Plugin.Instance.Translation.SubmitScan
+                    },*/
+                    new Task
+                    {
+                        Name = TaskName.FixWiring,
+                        RoomName = RoomName.Electrical,
+                        Type = TaskType.Common,
+                        Description = Instance.Translation.FixWiring,
+                        MaxStageTask = 3,
+                        StageTasks =
+                        [
+                            new StageTask
+                            {
+                                Name = TaskName.FixWiring, RoomName = RoomName.Storage, Type = TaskType.Common,
+                                Description = Instance.Translation.FixWiring
+                            },
+                            new StageTask
+                            {
+                                Name = TaskName.FixWiring, RoomName = RoomName.Admin, Type = TaskType.Common,
+                                Description = Instance.Translation.FixWiring
+                            },
+                            new StageTask
+                            {
+                                Name = TaskName.FixWiring, RoomName = RoomName.Navigation, Type = TaskType.Common,
+                                Description = Instance.Translation.FixWiring
+                            },
+                            new StageTask
+                            {
+                                Name = TaskName.FixWiring, RoomName = RoomName.Cafeteria, Type = TaskType.Common,
+                                Description = Instance.Translation.FixWiring
+                            },
+                            new StageTask
+                            {
+                                Name = TaskName.FixWiring, RoomName = RoomName.Security, Type = TaskType.Common,
+                                Description = Instance.Translation.FixWiring
+                            }
+                        ]
+                    },
+                    new Task
+                    {
+                        Name = TaskName.AlignEngineOutput,
+                        RoomName = RoomName.UpperEngine,
+                        Type = TaskType.Long,
+                        Description = Instance.Translation.AlignEngineOutput,
+                        StageTasks =
+                        [
+                            new StageTask
+                            {
+                                Name = TaskName.AlignEngineOutput, RoomName = RoomName.LowerEngine,
+                                Type = TaskType.Long,
+                                Description = Instance.Translation.AlignEngineOutput
+                            }
+                        ]
+                    },
+                    new Task
+                    {
+                        Name = TaskName.AlignEngineOutput,
+                        RoomName = RoomName.LowerEngine,
+                        Type = TaskType.Long,
+                        Description = Instance.Translation.AlignEngineOutput,
+                        StageTasks =
+                        [
+                            new StageTask
+                            {
+                                Name = TaskName.AlignEngineOutput, RoomName = RoomName.UpperEngine,
+                                Type = TaskType.Long,
+                                Description = Instance.Translation.AlignEngineOutput
+                            }
+                        ]
+                    },
+                    new Task
+                    {
+                        Name = TaskName.DivertPower,
+                        RoomName = RoomName.Electrical,
+                        Type = TaskType.Short,
+                        Description = Instance.Translation.DivertPowerTo,
+                        StageTasks =
+                        [
+                            new StageTask
+                            {
+                                Name = TaskName.AcceptDivertedPower, RoomName = RoomName.Communications,
+                                Type = TaskType.Short, Description = Instance.Translation.AcceptDivertPower
+                            },
+                            new StageTask
+                            {
+                                Name = TaskName.AcceptDivertedPower, RoomName = RoomName.LowerEngine,
+                                Type = TaskType.Short,
+                                Description = Instance.Translation.AcceptDivertPower
+                            },
+                            new StageTask
+                            {
+                                Name = TaskName.AcceptDivertedPower, RoomName = RoomName.Navigation,
+                                Type = TaskType.Short,
+                                Description = Instance.Translation.AcceptDivertPower
+                            },
+                            new StageTask
+                            {
+                                Name = TaskName.AcceptDivertedPower, RoomName = RoomName.O2, Type = TaskType.Short,
+                                Description = Instance.Translation.AcceptDivertPower
+                            },
+                            new StageTask
+                            {
+                                Name = TaskName.AcceptDivertedPower, RoomName = RoomName.Security,
+                                Type = TaskType.Short,
+                                Description = Instance.Translation.AcceptDivertPower
+                            },
+                            new StageTask
+                            {
+                                Name = TaskName.AcceptDivertedPower, RoomName = RoomName.Shields, Type = TaskType.Short,
+                                Description = Instance.Translation.AcceptDivertPower
+                            },
+                            new StageTask
+                            {
+                                Name = TaskName.AcceptDivertedPower, RoomName = RoomName.UpperEngine,
+                                Type = TaskType.Short,
+                                Description = Instance.Translation.AcceptDivertPower
+                            },
+                            new StageTask
+                            {
+                                Name = TaskName.AcceptDivertedPower, RoomName = RoomName.Weapons, Type = TaskType.Short,
+                                Description = Instance.Translation.AcceptDivertPower
+                            }
+                        ]
+                    },
+                    new Task
+                    {
+                        Name = TaskName.UploadData,
+                        RoomName = RoomName.Cafeteria,
+                        Type = TaskType.Long,
+                        Description = Instance.Translation.DownloadData,
+                        StageTasks =
+                        [
+                            new StageTask
+                            {
+                                Name = TaskName.UploadData, RoomName = RoomName.Admin, Type = TaskType.Long,
+                                Description = Instance.Translation.UploadData
+                            }
+                        ]
+                    },
+                    new Task
+                    {
+                        Name = TaskName.UploadData,
+                        RoomName = RoomName.Communications,
+                        Type = TaskType.Long,
+                        Description = Instance.Translation.DownloadData,
+                        StageTasks =
+                        [
+                            new StageTask
+                            {
+                                Name = TaskName.UploadData, RoomName = RoomName.Admin, Type = TaskType.Long,
+                                Description = Instance.Translation.UploadData
+                            }
+                        ]
+                    },
+                    new Task
+                    {
+                        Name = TaskName.UploadData,
+                        RoomName = RoomName.Electrical,
+                        Type = TaskType.Long,
+                        Description = Instance.Translation.DownloadData,
+                        StageTasks =
+                        [
+                            new StageTask
+                            {
+                                Name = TaskName.UploadData, RoomName = RoomName.Admin, Type = TaskType.Long,
+                                Description = Instance.Translation.UploadData
+                            }
+                        ]
+                    },
+                    new Task
+                    {
+                        Name = TaskName.UploadData,
+                        RoomName = RoomName.Navigation,
+                        Type = TaskType.Long,
+                        Description = Instance.Translation.DownloadData,
+                        StageTasks =
+                        [
+                            new StageTask
+                            {
+                                Name = TaskName.UploadData, RoomName = RoomName.Admin, Type = TaskType.Long,
+                                Description = Instance.Translation.UploadData
+                            }
+                        ]
+                    },
+                    new Task
+                    {
+                        Name = TaskName.AcceptDivertedPower,
+                        RoomName = RoomName.Weapons,
+                        Type = TaskType.Long,
+                        Description = Instance.Translation.DownloadData,
+                        StageTasks =
+                        [
+                            new StageTask
+                            {
+                                Name = TaskName.UploadData, RoomName = RoomName.Admin, Type = TaskType.Long,
+                                Description = Instance.Translation.UploadData
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
     }
 }

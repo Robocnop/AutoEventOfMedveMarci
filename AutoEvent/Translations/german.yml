@@ -13,7 +13,7 @@ Airstrike Party:
     <color=#ffc0cb>{time}</color>
   all_die: |-
     <color=red>Death Party</color>
-    <color=yellow>Niemand hat überlebt.(((</color>
+    <color=yellow>Niemand hat überlebt. :(((</color>
     <color=#ffc0cb>{time}</color>
   name: 'Luftangriff-Party'
   description: 'Überlebe, während Luftangriffe von oben herabregnen.'
@@ -55,10 +55,23 @@ Among Us:
   death_body_reported: '<color=red>{deadPlayer}</color>''s Leiche wurde von <color=yellow>{reportedPlayer}</color> gefunden!'
   emergency_meetings_reached: 'Du kannst keine weitere Notfall-Sitzungen anfordern!'
   meeting_cooldown: 'Du kannst keine Sitzung für {time} Sekunden anfordern!'
+  calibrate_distributor: 'Calibrate Distributor'
+  chart_course: 'Chart Course'
+  clean_o2_filter: 'Clean O2 Filter'
+  empty_chute: 'Empty Chute'
+  prime_shields: 'Prime Shields'
+  start_reactor: 'Start Reactor'
+  submit_scan: 'Submit Scan'
+  fix_wiring: 'Fix Wiring'
+  align_engine_output: 'Align Engine Output'
+  divert_power_to: 'Divert Power to {roomName}'
+  accept_divert_power: 'Accept Divert Power'
+  download_data: 'Download Data'
+  upload_data: 'Upload Data'
   name: 'Among Us'
   description: 'The Impostor is among us.'
   command_name: 'amongus'
-Atomic Escape:
+Nuke Run:
   before_start: |-
     {name}
     Bereite dich darauf vor, aus der Einrichtung zu fliehen, bevor sie explodiert!

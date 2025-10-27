@@ -55,10 +55,23 @@ Among Us:
   death_body_reported: '<color=red>{deadPlayer}</color> holttestét <color=yellow>{reportedPlayer}</color> találta meg!'
   emergency_meetings_reached: 'Már nem hívhatsz több vészmegbeszélést!'
   meeting_cooldown: 'Még {time} másodpercig nem hívhatsz megbeszélést!'
+  calibrate_distributor: 'Calibrate Distributor'
+  chart_course: 'Chart Course'
+  clean_o2_filter: 'Clean O2 Filter'
+  empty_chute: 'Empty Chute'
+  prime_shields: 'Prime Shields'
+  start_reactor: 'Start Reactor'
+  submit_scan: 'Submit Scan'
+  fix_wiring: 'Fix Wiring'
+  align_engine_output: 'Align Engine Output'
+  divert_power_to: 'Divert Power to {roomName}'
+  accept_divert_power: 'Accept Divert Power'
+  download_data: 'Download Data'
+  upload_data: 'Upload Data'
   name: 'Among Us'
   description: 'Az Impostor köztünk van.'
   command_name: 'amongus'
-Atomic Escape:
+Nuke Run:
   before_start: |-
     {name}
     Készülj fel a menekülésre a létesítményből, mielőtt felrobban!

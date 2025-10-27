@@ -13,7 +13,7 @@ Airstrike Party:
     <color=#ffc0cb>{time}</color>
   all_die: |-
     <color=red>Death Party</color>
-    <color=yellow>ไม่มีใครรอด(((</color>
+    <color=yellow>ไม่มีใครรอด :(((</color>
     <color=#ffc0cb>{time}</color>
   name: 'ระเบิดจากฟากฟ้า'
   description: 'เอาชีวิตรอดจากระเบิดที่หล่นมาจากฟากฟ้า'
@@ -49,17 +49,33 @@ Among Us:
   too_far: 'You are too far away to kill!'
   voting_info: |-
     {reason}
-    You can vote by writing .vote <color> to the ClientConsole which you can open with ~ by default.
-    You can get the colors by opening the PlayerList with N.
+    You can vote by writing .vote <color> to the Console which you can open with ~ by default.
     {time} seconds remaining.
+  discussion_info: |-
+    {reason}
+    Discussion time! You can't chat with other players.
+    {time} seconds remaining, soon you will can speak and vote.
   meeting_called: 'A meeting has been called by {player}!'
   death_body_reported: '<color=red>{deadPlayer}</color>''s body found by <color=yellow>{reportedPlayer}</color>!'
   emergency_meetings_reached: 'You can''t call any more emergency meetings!'
   meeting_cooldown: 'You can''t call a meeting for another {time} seconds!'
+  calibrate_distributor: 'Calibrate Distributor'
+  chart_course: 'Chart Course'
+  clean_o2_filter: 'Clean O2 Filter'
+  empty_chute: 'Empty Chute'
+  prime_shields: 'Prime Shields'
+  start_reactor: 'Start Reactor'
+  submit_scan: 'Submit Scan'
+  fix_wiring: 'Fix Wiring'
+  align_engine_output: 'Align Engine Output'
+  divert_power_to: 'Divert Power to {roomName}'
+  accept_divert_power: 'Accept Divert Power'
+  download_data: 'Download Data'
+  upload_data: 'Upload Data'
   name: 'Among Us'
   description: 'The Impostor is among us.'
   command_name: 'amongus'
-Atomic Escape:
+Nuke Run:
   before_start: |-
     {name}
     เตรียมวิ่งหนีเอาตัวรอดออกจากสถาบันก่อนที่นี้จะระเบิด

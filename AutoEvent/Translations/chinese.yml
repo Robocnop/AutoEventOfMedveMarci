@@ -51,14 +51,31 @@ Among Us:
     {reason}
     你可以输入 .vote <color> 来进行投票，默认情况下可通过 ~ 打开控制台
     剩余 {time} 秒
+  discussion_info: |-
+    {reason}
+    Discussion time! You can't chat with other players.
+    {time} seconds remaining, soon you will can speak and vote.
   meeting_called: '{player} 发起了一次紧急会议！'
   death_body_reported: '<color=red>{deadPlayer}</color> 的尸体被 <color=yellow>{reportedPlayer}</color> 发现！'
   emergency_meetings_reached: '你不能再召集紧急会议了！'
   meeting_cooldown: '你需要再等待 {time} 秒才能召集会议！'
+  calibrate_distributor: 'Calibrate Distributor'
+  chart_course: 'Chart Course'
+  clean_o2_filter: 'Clean O2 Filter'
+  empty_chute: 'Empty Chute'
+  prime_shields: 'Prime Shields'
+  start_reactor: 'Start Reactor'
+  submit_scan: 'Submit Scan'
+  fix_wiring: 'Fix Wiring'
+  align_engine_output: 'Align Engine Output'
+  divert_power_to: 'Divert Power to {roomName}'
+  accept_divert_power: 'Accept Divert Power'
+  download_data: 'Download Data'
+  upload_data: 'Upload Data'
   name: 'Among Us'
   description: '内鬼就在我们之中'
   command_name: 'amongus'
-Atomic Escape:
+Nuke Run:
   before_start: |-
     {name}
     准备从即将爆炸的设施中逃离！

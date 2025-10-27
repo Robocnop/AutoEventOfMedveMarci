@@ -272,7 +272,7 @@ public class EventHandler(Plugin plugin)
                 player.Rotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
             }
             if (!plugin.PlayerColors.TryGetValue(ev.Player.NetworkId, out var color)) return;
-            Timing.RunCoroutine(plugin.BroadcastVotingCountdown(plugin.Translation.MeetingCalled.Replace("{player}", $"<color={color}>{ev.Player.Nickname} {Plugin.GetColorTypeByHex(color)}</color>")), "BroadcastVotingCountdown");
+            Timing.RunCoroutine(plugin.BroadcastVotingCountdown(plugin.Translation.MeetingCalled.Replace("{player}", $"<color={color}>{ev.Player.Nickname} {Plugin.GetColorTypeByHex(color)}</color>"), ev.Player), "BroadcastVotingCountdown");
         }
 
         if (ev.Interactable.GameObject.name == "ReportBody")
@@ -321,7 +321,7 @@ public class EventHandler(Plugin plugin)
                 var direction = meetingPos - player.Position;
                 player.Rotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
             }
-            Timing.RunCoroutine(plugin.BroadcastVotingCountdown(plugin.Translation.DeathBodyReported.Replace("{deadPlayer}", $"<color={color}>{deadPlayer.Nickname} {Plugin.GetColorTypeByHex(color)}</color>").Replace("{reportedPlayer}", $"<color={reportedColor}>{ev.Player.Nickname} {Plugin.GetColorTypeByHex(reportedColor)}</color>")), "BroadcastVotingCountdown");
+            Timing.RunCoroutine(plugin.BroadcastVotingCountdown(plugin.Translation.DeathBodyReported.Replace("{deadPlayer}", $"<color={color}>{deadPlayer.Nickname} {Plugin.GetColorTypeByHex(color)}</color>").Replace("{reportedPlayer}", $"<color={reportedColor}>{ev.Player.Nickname} {Plugin.GetColorTypeByHex(reportedColor)}</color>"), ev.Player), "BroadcastVotingCountdown");
         }
     }
 
@@ -349,6 +349,12 @@ public class EventHandler(Plugin plugin)
     {
         if (plugin.Crewmates.Contains(ev.Player))
             plugin.Crewmates.Remove(ev.Player);
+
+        if (plugin.Muted.Contains(ev.Player))
+        {
+            ev.Player.Unmute(true);
+            plugin.Muted.Remove(ev.Player);
+        }
         
         else if (plugin.Impostors.Contains(ev.Player))
         {

@@ -8,11 +8,11 @@
 
 ![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Zombie.png)
 
-### Atomic Escape [escape]
+### Nuke Run [nukerun]
 
-##### Escape from the facility behind SCP-173 at supersonic speed!
+##### Escape from the facility before the Nuke explodes!
 
-##### We need to escape from the complex behind SCP-173 before it explodes. There is music in the background that adds to the anxiety.
+##### We need to escape from the complex before it explodes. There is music in the background that adds to the anxiety.
 
 ![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Escape.png)
 

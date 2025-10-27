@@ -17,7 +17,9 @@ public class Translation : EventTranslation
     public string TooFar { get; set; } = "You are too far away to kill!";
 
     public string VotingInfo { get; set; } =
-        "{reason}\nYou can vote by writing .vote <color> to the Console which you can open with ~ by default.\n{time} seconds remaining.";
+        "{reason}\nYou can vote by writing .vote <color> to the Console which you can open with ~ by default.\n{time} seconds remaining.";    
+    public string DiscussionInfo { get; set; } =
+        "{reason}\nDiscussion time! You can't chat with other players.\n{time} seconds remaining, soon you will can speak and vote.";
 
     public string MeetingCalled { get; set; } = "A meeting has been called by {player}!";
     public string DeathBodyReported { get; set; } = "{deadPlayer}'s body found by {reportedPlayer}!";
@@ -33,7 +35,7 @@ public class Translation : EventTranslation
     public string SubmitScan { get; set; } = "Submit Scan";
     public string FixWiring { get; set; } = "Fix Wiring";
     public string AlignEngineOutput { get; set; } = "Align Engine Output";
-    public string DivertPowerto { get; set; } = "Divert Power to %roomName%";
+    public string DivertPowerTo { get; set; } = "Divert Power to {roomName}";
     public string AcceptDivertPower { get; set; } = "Accept Divert Power";
     public string DownloadData { get; set; } = "Download Data";
     public string UploadData { get; set; } = "Upload Data";
