@@ -28,7 +28,6 @@ public class Config : EventConfig
     public RoleCount Impostors { get; set; } = new() { MinimumPlayers = 1, MaximumPlayers = 3, PlayerPercentage = 10 };
 
     public float KillCooldown { get; set; } = 45f;
-    public float KillDistance { get; set; } = 2f;
 
     public int EmergencyMeetings { get; set; } = 1;
     public int EmergencyCooldown { get; set; } = 10;

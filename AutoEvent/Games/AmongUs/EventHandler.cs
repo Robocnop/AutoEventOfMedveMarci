@@ -133,22 +133,16 @@ public class EventHandler(Plugin plugin)
     {
         if (ev.Attacker == null) return;
         if (ev.DamageHandler is not Scp1509DamageHandler) return;
-        if (plugin.KillCooldowns.TryGetValue(ev.Attacker, out var time))
+        if (plugin.KillCooldowns.TryGetValue(ev.Attacker, out var time) && time > DateTime.UtcNow)
         {
             ev.IsAllowed = false;
-            if (time <= DateTime.UtcNow) return;
-            ev.Player.SendHint(
+            ev.Attacker.SendHint(
                 plugin.Translation.KillCooldown.Replace("{time}", (time - DateTime.UtcNow).Seconds.ToString()));
             return;
         }
         if (plugin.Impostors.Contains(ev.Player)) return;
         if (!plugin.Impostors.Contains(ev.Attacker)) return;
         ev.IsAllowed = false;
-        if (Vector3.Distance(ev.Player.Position, ev.Attacker.Position) > plugin.Config.KillDistance)
-        {
-            ev.Attacker.SendHint(plugin.Translation.TooFar);
-            return;
-        }
 
         if (plugin.PlayerSkins.TryGetValue(ev.Player.NetworkId, out var skin))
         {
