@@ -355,7 +355,8 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
     {
         if (MeetingCalled)
         {
-            foreach (var player in Crewmates)
+            var participants = Crewmates.Concat(Impostors);
+            foreach (var player in participants)
             {
                 if (!PlayerTextToys.TryGetValue(player.NetworkId, out var textToy))
                 {
@@ -367,37 +368,31 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
                 }
 
                 var votes = PlayerVotes.Where(v => v.Value == player.NetworkId).Select(v => v.Key).ToList();
-                var text = votes.Count > 0
-                    ? Config.AnonymousVotes
-                        ? $"{votes.Count} vote{(votes.Count > 1 ? "s" : "")}"
-                        : $"{string.Join(", ", votes.Select(id => Player.Get(id)?.Nickname ?? id.ToString()))}\n{votes.Count} vote{(votes.Count > 1 ? "s" : "")}"
-                    : "No votes";
-                textToy.TextFormat = $"<size=10>{text}</size>";
-                player.SendHint(text, 1f);
-            }
-
-            foreach (var player in Impostors)
-            {
-                if (!PlayerTextToys.TryGetValue(player.NetworkId, out var textToy))
+                string text;
+                if (votes.Count > 0)
                 {
-                    LogManager.Debug($"Creating text toy for {player.Nickname}");
-                    textToy = TextToy.Create(player.GameObject?.transform);
-                    textToy.GameObject.transform.localPosition += new Vector3(0, 2, 0);
-                    textToy.Rotation = Quaternion.Euler(0, 180, 0);
-                    PlayerTextToys[player.NetworkId] = textToy;
-                }
-
-                var votes = PlayerVotes.Where(v => v.Value == player.NetworkId).Select(v => v.Key).ToList();
-                var text = votes.Count > 0
-                    ? Config.AnonymousVotes
+                    text = Config.AnonymousVotes
                         ? $"{votes.Count} vote{(votes.Count > 1 ? "s" : "")}"
-                        : $"{string.Join(", ", votes.Select(id => Player.Get(id)?.Nickname ?? id.ToString()))}\n{votes.Count} vote{(votes.Count > 1 ? "s" : "")}"
-                    : "No votes";
+                        : $"{string.Join(", ", votes.Select(id => Player.Get(id)?.Nickname ?? id.ToString()))}\n{votes.Count} vote{(votes.Count > 1 ? "s" : "")}";
+                }
+                else
+                    text = "No votes";
+
+                var didntVote = Impostors.Concat(Crewmates)
+                    .Where(p => !PlayerVotes.ContainsKey(p.NetworkId) || PlayerVotes[p.NetworkId] == 0)
+                    .ToList();
+                
+                if (didntVote.Count > 0)
+                {
+                    text += "\n\nDidnt vote:\n";
+                    text += string.Join(", ", didntVote.Select(p => PlayerColors.TryGetValue(p.NetworkId, out var hex) ? $"<color={hex}>{p.DisplayName}</color>" : p.DisplayName));
+                }
+                
                 textToy.TextFormat = $"<size=10>{text}</size>";
                 player.SendHint(text, 1f);
-                MeetingCooldown = Config.EmergencyCooldown;
             }
-
+            
+            MeetingCooldown = Config.EmergencyCooldown;
             return;
         }
 
