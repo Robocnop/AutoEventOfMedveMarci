@@ -380,15 +380,16 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
                 var didntVote = Impostors.Concat(Crewmates)
                     .Where(p => !PlayerVotes.ContainsKey(p.NetworkId) || PlayerVotes[p.NetworkId] == 0)
                     .ToList();
-                
+                var hintText = text;
                 if (didntVote.Count > 0)
                 {
-                    text += "\n\nDidnt vote:\n";
-                    text += string.Join(", ", didntVote.Select(p => PlayerColors.TryGetValue(p.NetworkId, out var hex) ? $"<color={hex}>{p.DisplayName}</color>" : p.DisplayName));
+                    hintText += "\n\nDidn't vote:\n";
+                    hintText += string.Join(", ", didntVote.Select(p => PlayerColors.TryGetValue(p.NetworkId, out var hex) ? (
+                        $"<color={hex}>{p.DisplayName}</color>").Replace("*", "") : p.DisplayName.Replace("*", "")));
                 }
                 
                 textToy.TextFormat = $"<size=10>{text}</size>";
-                player.SendHint(text, 1f);
+                player.SendHint(hintText, 1f);
             }
             
             MeetingCooldown = Config.EmergencyCooldown;
