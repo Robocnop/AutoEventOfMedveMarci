@@ -8,10 +8,10 @@ public class Task
     internal TaskName Name { get; init; }
     internal RoomName RoomName { get; init; }
     internal TaskType Type { get; init; }
-    internal bool IsVisual { get; set; }
+    internal bool IsVisual { get; init; }
     internal bool IsDone { get; set; }
     internal string Description { get; init; }
-    internal List<StageTask> StageTasks { get; set; } = [];
+    internal List<StageTask> StageTasks { get; init; } = [];
     internal int MaxStageTask { get; init; } = 1;
 }
 
