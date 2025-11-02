@@ -619,12 +619,12 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
                     },
                     new Task
                     {
-                        Name = TaskName.EmptyChute, RoomName = RoomName.O2, Type = TaskType.Long, IsVisual = true,
+                        Name = TaskName.EmptyChute, RoomName = RoomName.O2, Type = TaskType.Common, IsVisual = true,
                         Description = Instance.Translation.EmptyChute
                     },
                     new Task
                     {
-                        Name = TaskName.EmptyChute, RoomName = RoomName.Storage, Type = TaskType.Long, IsVisual = true,
+                        Name = TaskName.EmptyChute, RoomName = RoomName.Storage, Type = TaskType.Common, IsVisual = true,
                         Description = Instance.Translation.EmptyChute
                     },
                     new Task

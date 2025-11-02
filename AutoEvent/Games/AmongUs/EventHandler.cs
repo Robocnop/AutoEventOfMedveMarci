@@ -58,11 +58,11 @@ public class EventHandler(Plugin plugin)
         if (task is not null)
         {
             LogManager.Debug(
-                $"[OnPlayerSearchedToy] Found regular task '{task.Name}' in '{task.RoomName}' (isDone={task.IsDone})");
+                $"[OnPlayerSearchedToy] Found regular task '{task.Name}' in '{task.RoomName}' (isDone={task.IsDone}, isVisual={task.IsVisual})");
             task.IsDone = true;
             if (task.IsVisual)
             {
-                var animator = ev.Interactable.GameObject.GetComponent<Animator>();
+                var animator = ev.Interactable.Parent?.GetComponent<Animator>();
                 if (animator != null)
                     animator.Play($"{task.Name}Task");
             }

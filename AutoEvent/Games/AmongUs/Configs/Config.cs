@@ -35,12 +35,9 @@ public class Config : EventConfig
     public float DiscussionTime { get; set; } = 45f;
     public bool AnonymousVotes { get; set; } = false;
     public bool ConfirmEjects { get; set; } = true;
+    public bool VisualTasks { get; set; } = true;
 
     public int CommonTasks { get; set; } = 1;
     public int LongTasks { get; set; } = 1;
     public int ShortTasks { get; set; } = 2;
-
-    //todo: Special Tasks, Visual Tasks
-    [YamlIgnore]
-    public bool VisualTasks { get; set; } = true;
 }
