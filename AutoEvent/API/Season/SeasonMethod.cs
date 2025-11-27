@@ -20,16 +20,16 @@ public abstract class SeasonMethod
             Text = "<size=80><color=#42aaff><b>🎄 MERRY CHRISTMAS 🎄</b></color></size>",
             PrimaryColor = "#42aaff",
             SeasonFlag = SeasonFlags.Christmas,
-            FirstDate = new DateTime(2024, 1, 1),
-            LastDate = new DateTime(2024, 1, 10)
+            FirstDate = new DateTime(2024, 1, 23),
+            LastDate = new DateTime(2024, 1, 24)
         },
         new()
         {
             Text = "<size=80><color=#42aaff><b>🎄 HAPPY NEW YEAR 🎄</b></color></size>",
             PrimaryColor = "#77dde7",
             SeasonFlag = SeasonFlags.Christmas,
-            FirstDate = new DateTime(2024, 1, 11),
-            LastDate = new DateTime(2024, 2, 13)
+            FirstDate = new DateTime(2024, 12, 31),
+            LastDate = new DateTime(2024, 1, 1)
         },
         new()
         {
@@ -45,7 +45,7 @@ public abstract class SeasonMethod
             PrimaryColor = "#27A327",
             SeasonFlag = SeasonFlags.AprilFoolDay,
             FirstDate = new DateTime(2024, 4, 1),
-            LastDate = new DateTime(2024, 4, 7)
+            LastDate = new DateTime(2024, 4, 1)
         },
         new()
         {
