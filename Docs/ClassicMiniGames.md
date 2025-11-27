@@ -110,14 +110,6 @@
 
 ##### Avoid it to survive.
 
-![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Line1.png)
-
-### Zombie Escape [zombie3]
-
-##### The T-Virus has taken over an entire island. You have to fly away from this place to survive from the zombies.
-
-##### A very large map to complete from start to finish.
-
 ![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Zombie%20Escape.png)
 
 ### Battle [battle]
@@ -149,14 +141,6 @@
 ##### Grenades begin to appear on the map.
 
 ##### You have to dodge them to win.
-
-![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/DeathParty1.png)
-
-### Boss Battle [boss]
-
-##### The boss appeared on the map. He wants to kill everyone.
-
-##### Kill him faster before he does it for you.
 
 ![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Boss.png)
 
