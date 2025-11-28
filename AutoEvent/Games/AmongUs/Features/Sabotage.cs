@@ -1,6 +1,9 @@
 ﻿using System;
 using AutoEvent.Games.AmongUs.Enums;
+using CustomPlayerEffects;
 using LabApi.Features.Wrappers;
+using MEC;
+using UnityEngine;
 using Color = UnityEngine.Color;
 
 namespace AutoEvent.Games.AmongUs.Features;
@@ -48,8 +51,22 @@ public class Sabotage
             case SabotageType.ReactorMeltdown:
                 break;
             case SabotageType.FixLights:
+                foreach (var crewmate in plugin.Crewmates)
+                {
+                    crewmate.GetEffect<FogControl>()!.Intensity = 5;
+                }
                 break;
             case SabotageType.DoorLockdown:
+                foreach (var door in plugin.DoorList)
+                {
+                    if (!door.TryGetComponent<Animator>(out var animator)) continue;
+                    animator.Play("Door_Close");
+                    Timing.CallDelayed(10f, () =>
+                    {
+                        animator.Play("Door_Open"); 
+                        Deactivate(plugin);
+                    });
+                }
                 break;
             case SabotageType.CommsSabotage:
             case SabotageType.None:

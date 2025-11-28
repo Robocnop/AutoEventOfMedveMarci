@@ -50,9 +50,9 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
     internal List<GameObject> SpawnList { get; private set; }
     private AdminToyBase VentObject { get; set; }
     internal List<LightSourceToy> LightToys { get; private set; } = [];
-    private Dictionary<string, List<PrimitiveObjectToy>> DoorList { get; set; }
+    internal List<PrimitiveObjectToy> DoorList { get; private set; }
     private List<InvisibleInteractableToy> TaskToyList { get; set; }
-    internal ConcurrentDictionary<string, Vector3> TeleportOutList { get; set; }
+    internal ConcurrentDictionary<string, Vector3> TeleportOutList { get; private set; }
     internal InvisibleInteractableToy MeetingButton { get; private set; }
     internal Dictionary<uint, GameObject> PlayerSkins { get; private set; }
     internal Dictionary<uint, uint> PlayerVotes { get; private set; }
@@ -120,7 +120,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
         PlayerMeetings = new Dictionary<Player, int>();
         ImpostorRadioItems = [];
         SpawnList = [];
-        DoorList = new Dictionary<string, List<PrimitiveObjectToy>>();
+        DoorList = [];
         PlayerSkins = new Dictionary<uint, GameObject>();
         PlayerVotes = new Dictionary<uint, uint>();
         PlayerColors = new Dictionary<uint, string>();
@@ -139,10 +139,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
             else if (adminToyBase.name.Contains("Door_") &&
                      adminToyBase.TryGetComponent<PrimitiveObjectToy>(out var door))
             {
-                var roomName = adminToyBase.name.Split('_')[1];
-                if (!DoorList.ContainsKey(roomName))
-                    DoorList.Add(roomName, []);
-                DoorList[roomName].Add(door);
+                DoorList.Add(door);
             }
             else if (adminToyBase.name.Contains("MeetingButton") &&
                      adminToyBase.TryGetComponent<InvisibleInteractableToy>(out var meetingButton))
@@ -178,7 +175,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
             }
         }
 
-        Impostors = Config.Impostors.GetPlayers();
+        Impostors = Config.Impostors.GetPlayers(); // Player.ReadyList.Where(p => !p.IsDummy).ToList();
         var ready = Player.ReadyList.ToList();
         Crewmates = ready.Except(Impostors).ToList();
 
@@ -401,8 +398,8 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
         {
             var skin = pair.Value;
             if (skin == null) continue;
-            LogManager.Debug($"Destroying death skin for {pair.Key}");
-            NetworkServer.Destroy(skin);
+            LogManager.Debug($"Hiding death skin for {pair.Key}");
+            skin.transform.position = new Vector3(0, -1000, 0);
         }
     }
 
@@ -929,12 +926,17 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
                     {
                         Name = "Communications", Type = SabotageType.CommsSabotage, EnabledMeetings = false,
                         IsCritical = false
-                    }
-                    /*new Sabotage
+                    },
+                    new Sabotage
                     {
                         Name = "Lights", Type = SabotageType.FixLights, EnabledMeetings = false,
                         IsCritical = false
                     },
+                    new Sabotage
+                    {
+                        Name = "Door Lockdown", Type = SabotageType.DoorLockdown, EnabledMeetings = true,
+                        IsCritical = false
+                    }/*,
                     new Sabotage
                     {
                         Name = "O2", Type = SabotageType.OxygenDepleted, Duration = 30f, EnabledMeetings = false,
@@ -944,11 +946,6 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap
                     {
                         Name = "Reactor", Type = SabotageType.ReactorMeltdown, Duration = 30f, EnabledMeetings = false,
                         IsCritical = true
-                    },
-                    new Sabotage
-                    {
-                        Name = "Door Lockdown", Type = SabotageType.DoorLockdown, EnabledMeetings = true,
-                        IsCritical = false
                     }*/
                 ]
             }

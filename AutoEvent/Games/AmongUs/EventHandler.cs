@@ -34,7 +34,7 @@ public class EventHandler(Plugin plugin)
         isTeleport = parts[0] == "Teleport";
         isTask = parts[0] == "Task";
         room = parts[1];
-        if (parts.Length < 3) return false;
+        if (parts.Length < 3) return true;
         task = parts[2];
         return true;
     }
@@ -70,11 +70,17 @@ public class EventHandler(Plugin plugin)
         LogManager.Debug($"[OnPlayerSearchedToy] Parsed room='{room}' taskName='{tName ?? "null"}' isSabotage='{isSabotage}' isTask='{isTask}' isTeleport='{isTeleport}'");
 
         if (isSabotage)
-            switch (tName)
+            switch (room)
             {
-                case "Comms":
+                case "Lights":
+                    foreach (var crewmate in plugin.Crewmates)
+                    {
+                        crewmate.GetEffect<FogControl>()!.Intensity = 2;
+                    }
+                    return;
+                default:
+                    LogManager.Debug($"[OnPlayerSearchedToy] {room} sabotage resolved.");
                     plugin.CurrentSabotage.Deactivate(plugin);
-                    LogManager.Debug("[OnPlayerSearchedToy] Comms sabotage resolved.");
                     return;
             }
         
@@ -206,7 +212,7 @@ public class EventHandler(Plugin plugin)
         if (!plugin.Impostors.Contains(ev.Attacker)) return;
         ev.IsAllowed = false;
 
-        if (plugin.PlayerSkins.TryGetValue(ev.Player.NetworkId, out var skin))
+        if (plugin.PlayerSkins.TryGetValue(ev.Player.NetworkId, out var skin) && skin != null)
         {
             var deathSkin = new SerializableSchematic
             {
@@ -240,6 +246,11 @@ public class EventHandler(Plugin plugin)
 
     internal void OnPlayerInteractedToy(PlayerInteractedToyEventArgs ev)
     {
+        if (ev?.Interactable == null || ev.Interactable.GameObject == null)
+        {
+            LogManager.Debug("OnPlayerInteractedToy called with null Interactable or GameObject");
+            return;
+        }
         LogManager.Debug("Interacted with toy: " + ev.Interactable.GameObject.name);
         if (ev.Interactable.GameObject.name.StartsWith("Vent") && plugin.Impostors.Contains(ev.Player))
         {
@@ -326,7 +337,7 @@ public class EventHandler(Plugin plugin)
                 
                 if (!player.IsAlive)
                 {
-                    if (plugin.PlayerSkins.TryGetValue(player.NetworkId, out var skin) && skin.name.Contains("Death"))
+                    if (plugin.PlayerSkins.TryGetValue(player.NetworkId, out var skin) && skin != null && skin.name.Contains("Death"))
                     {
                         skin.transform.position = spawnPos;
                         var skinDirection = meetingPos - skin.transform.position;
@@ -372,7 +383,7 @@ public class EventHandler(Plugin plugin)
                 
                 if (!player.IsAlive)
                 {
-                    if (plugin.PlayerSkins.TryGetValue(player.NetworkId, out var skin) && skin.name.Contains("Death"))
+                    if (plugin.PlayerSkins.TryGetValue(player.NetworkId, out var skin) && skin != null && skin.name.Contains("Death"))
                     {
                         skin.transform.position = spawnPos;
                         var skinDirection = meetingPos - skin.transform.position;
@@ -384,6 +395,7 @@ public class EventHandler(Plugin plugin)
                 player.ClearInventory();
                 player.Position = spawnPos;
                 player.EnableEffect<Ensnared>();
+                player.DisableEffect<Lightweight>();
                 
                 var direction = meetingPos - player.Position;
                 player.Rotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
