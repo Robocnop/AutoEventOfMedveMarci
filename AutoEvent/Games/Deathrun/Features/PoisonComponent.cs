@@ -20,8 +20,9 @@ public class PoisonComponent : MonoBehaviour
         if (Player.Get(collider.gameObject) is { } player) player.EnableEffect<CardiacArrest>(1, 15);
     }
 
-    public void StartComponent(Plugin plugin)
+    private void OnTriggerStay(Collider collider)
     {
-        LogManager.Debug("Poison Component started");
+        LogManager.Debug($"Poison Stay Triggered by {collider.gameObject.name}");
+        if (Player.Get(collider.gameObject) is { } player) player.EnableEffect<CardiacArrest>(1, 15);
     }
 }

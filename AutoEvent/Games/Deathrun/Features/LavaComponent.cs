@@ -1,6 +1,5 @@
-using Footprinting;
+using AutoEvent.API;
 using LabApi.Features.Wrappers;
-using PlayerStatsSystem;
 using UnityEngine;
 
 namespace AutoEvent.Games.Deathrun;
@@ -14,12 +13,26 @@ public class KillComponent : MonoBehaviour
         _collider = gameObject.AddComponent<BoxCollider>();
         _collider.isTrigger = true;
     }
-
+    
     private void OnTriggerEnter(Collider collider)
     {
         if (Player.Get(collider.gameObject) is not { } player) return;
-        if (player.IsAlive)
-            player.Damage(new ExplosionDamageHandler(new Footprint(Player.Host?.ReferenceHub), Vector3.back, 1000,
-                100, ExplosionType.Grenade));
+        LogManager.Debug($"Lava Triggered by {player.Nickname}");
+        if (!player.IsAlive) return;
+        LogManager.Debug("Lava Damage Applied");
+        if (player.IsGodModeEnabled) return;
+        Extensions.GrenadeSpawn(player.Position, 0.1f, 0.1f, 0);
+        player.Kill("Fell into lava");
+    }
+
+    private void OnTriggerStay(Collider collider)
+    {
+        if (Player.Get(collider.gameObject) is not { } player) return;
+        LogManager.Debug($"Lava Stay Triggered by {player.Nickname}");
+        if (!player.IsAlive) return;
+        LogManager.Debug("Lava Stay Damage Applied");
+        if (player.IsGodModeEnabled) return;
+        Extensions.GrenadeSpawn(player.Position, 0.1f, 0.1f, 0);
+        player.Kill("Fell into lava");
     }
 }

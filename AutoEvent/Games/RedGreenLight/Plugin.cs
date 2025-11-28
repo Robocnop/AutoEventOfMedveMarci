@@ -182,10 +182,11 @@ public class Plugin : Event<Config, Translation>, IEventMap
                 Quaternion.Angle(value, player.Camera.rotation) < 10)
 
                 continue;
-
+            
+            _countdown++;
+            if (player.IsGodModeEnabled) continue;
             Extensions.GrenadeSpawn(player.Position, 0.1f, 0.1f, 0);
             player.Kill(Translation.RedLose);
-            _countdown++;
         }
 
         if (_countdown > 0)

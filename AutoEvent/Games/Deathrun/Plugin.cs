@@ -31,11 +31,13 @@ public class Plugin : Event<Config, Translation>, IEventMap
     protected override void RegisterEvents()
     {
         PlayerEvents.InteractedToy += EventHandler.OnPlayerInteractedToy;
+        PlayerEvents.Hurt += EventHandler.OnHurt;
     }
 
     protected override void UnregisterEvents()
     {
         PlayerEvents.InteractedToy -= EventHandler.OnPlayerInteractedToy;
+        PlayerEvents.Hurt -= EventHandler.OnHurt;
     }
 
     protected override void OnStart()
@@ -51,10 +53,9 @@ public class Plugin : Event<Config, Translation>, IEventMap
                 case "KillTrigger": block.AddComponent<KillComponent>(); break;
                 case "ColliderTrigger": block.AddComponent<ColliderComponent>(); break;
                 case "WeaponTrigger": block.AddComponent<WeaponComponent>().StartComponent(this); break;
-                case "PoisonTrigger": block.AddComponent<PoisonComponent>().StartComponent(this); break;
+                case "PoisonTrigger": block.AddComponent<PoisonComponent>(); break;
             }
 
-        // Making a random death-guy and teleport to spawnpoint
         for (var i = 0; Player.ReadyList.Count() / 20 >= i; i++)
         {
             var death = Player.ReadyList.Where(r => r.Role != RoleTypeId.Scientist).ToList().RandomItem();

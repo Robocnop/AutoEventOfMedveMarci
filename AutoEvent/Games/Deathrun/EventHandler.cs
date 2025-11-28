@@ -1,10 +1,16 @@
 using LabApi.Events.Arguments.PlayerEvents;
+using PlayerStatsSystem;
 using UnityEngine;
 
 namespace AutoEvent.Games.Deathrun;
 
 public abstract class EventHandler
 {
+    public static void OnHurt(PlayerHurtEventArgs ev)
+    {
+        if (ev.DamageHandler is ExplosionDamageHandler explosionDamageHandler) explosionDamageHandler.Damage = 0;
+    }
+    
     public static void OnPlayerInteractedToy(PlayerInteractedToyEventArgs ev)
     {
         LogManager.Debug("[Deathrun] click to button");
