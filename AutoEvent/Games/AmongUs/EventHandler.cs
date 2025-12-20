@@ -201,6 +201,7 @@ public class EventHandler(Plugin plugin)
     {
         if (ev.Attacker == null) return;
         if (ev.DamageHandler is not Scp1509DamageHandler) return;
+        ev.IsAllowed = false;
         if (plugin.KillCooldowns.TryGetValue(ev.Attacker, out var time) && time > DateTime.UtcNow)
         {
             ev.IsAllowed = false;
@@ -210,7 +211,6 @@ public class EventHandler(Plugin plugin)
         }
         if (plugin.Impostors.Contains(ev.Player)) return;
         if (!plugin.Impostors.Contains(ev.Attacker)) return;
-        ev.IsAllowed = false;
 
         if (plugin.PlayerSkins.TryGetValue(ev.Player.NetworkId, out var skin) && skin != null)
         {

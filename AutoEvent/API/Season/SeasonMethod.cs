@@ -20,8 +20,8 @@ public abstract class SeasonMethod
             Text = "<size=80><color=#42aaff><b>🎄 MERRY CHRISTMAS 🎄</b></color></size>",
             PrimaryColor = "#42aaff",
             SeasonFlag = SeasonFlags.Christmas,
-            FirstDate = new DateTime(2024, 1, 23),
-            LastDate = new DateTime(2024, 1, 24)
+            FirstDate = new DateTime(2024, 12, 20),
+            LastDate = new DateTime(2024, 12, 24)
         },
         new()
         {
