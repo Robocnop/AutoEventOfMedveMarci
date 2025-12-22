@@ -97,7 +97,7 @@ Nuke Run:
     {name}
     <color=red>{players} Jogadores Fugiram </color>
   name: 'Fuga Atômica'
-  description: 'Fuja da instalação a uma velocidade supersônica!'
+  description: 'Escape the facility before it explodes!'
   command_name: 'escape'
 Battle:
   time_left: '<size=100><color=red>Batalha Começando em {time} </color></size>'

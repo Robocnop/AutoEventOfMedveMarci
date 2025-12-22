@@ -92,8 +92,8 @@ Nuke Run:
   end: |-
     {name}
     <color=red>{players} Spieler sind entkommen</color>
-  name: 'Atomare Flucht'
-  description: 'Entkomme der Einrichtung hinter SCP-173 mit Überschallgeschwindigkeit!'
+  name: 'Nuke Run'
+  description: 'Escape the facility before it explodes!'
   command_name: 'escape'
 Battle:
   time_left: '<size=100><color=red>Die Schlacht beginnt in {time}</color></size>'

@@ -97,7 +97,7 @@ Nuke Run:
     {name}
     <color=red>{players} Player Fuggiti </color>
   name: 'Fuga atomica'
-  description: 'Fuggi dalla struttura come SCP-173 a velocità supersonica!'
+  description: 'Escape the facility before it explodes!'
   command_name: 'escape'
 Battle:
   time_left: '<size=100><color=red>La battaglia inizia in {time} </color></size>'

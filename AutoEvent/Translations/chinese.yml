@@ -97,7 +97,7 @@ Nuke Run:
     {name}
     <color=red>{players} 名玩家成功逃脱 </color>
   name: '花生赛跑'
-  description: '使用超音速花生逃离设施！'
+  description: 'Escape the facility before it explodes!'
   command_name: 'escape'
 Battle:
   time_left: '<size=100><color=red>战斗将在 {time} 后开始 </color></size>'

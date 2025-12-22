@@ -97,7 +97,7 @@ Nuke Run:
     {name}
     <color=red>มี {players} ผู้เล่นหนีออกมาได้ </color>
   name: 'วิ่งหนีเอาตัวรอด'
-  description: 'หนีออกจากสถาบันด้วยการเป็น SCP-173 ด้วยความเร็วสูง'
+  description: 'Escape the facility before it explodes!'
   command_name: 'escape'
 Battle:
   time_left: '<size=100><color=red>จะเริ่มสู้กันในอีก {time} </color></size>'

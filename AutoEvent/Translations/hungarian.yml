@@ -93,7 +93,7 @@ Nuke Run:
     {name}
     <color=red>{players} játékos menekült meg</color>
   name: 'Nuke Run'
-  description: 'Menekülj a létesítményből SCP-173-al'
+  description: 'Juss ki a létesítményből, mielőtt az felrobban!'
   command_name: 'escape'
 Battle:
   time_left: '<size=100><color=red>Csata kezdődik: {time}</color></size>'

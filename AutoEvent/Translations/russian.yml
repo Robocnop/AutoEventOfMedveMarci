@@ -97,7 +97,7 @@ Nuke Run:
     {name}
     <color=red> SCP победили </color>
   name: 'Атомный побег'
-  description: 'Сбегите из комплекса до взрыва боеголовки!'
+  description: 'Escape the facility before it explodes!'
   command_name: 'escape'
 Battle:
   time_left: '<size=100><color=red>Битва начнётся через {time} </color></size>'
