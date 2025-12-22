@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using CommandSystem;
-using LabApi.Features.Console;
 using LabApi.Features.Permissions;
 
 namespace AutoEvent.Commands;
@@ -39,7 +38,17 @@ public class Volume : ICommand, IUsageProvider
             AutoEvent.MusicVolume = newVolume;
             foreach (var speaker in AudioPlayer.AudioPlayerByName.Values.SelectMany(audioPlayer =>
                          audioPlayer.SpeakersByName.Values)) speaker.Volume = AutoEvent.MusicVolume / 100f;
-
+            AutoEvent.Singleton.LoadConfigs();
+            if (AutoEvent.Singleton.Config == null)
+            {
+                response = "Could not save the volume due to an error. This could be a bug.";
+                LogManager.Error("AutoEvent config was null when trying to set volume.");
+                return false;
+            }
+            AutoEvent.Singleton.Config.Volume = newVolume;
+            AutoEvent.Singleton.SaveConfig();
+            AutoEvent.Singleton.LoadConfigs();
+            
             response = "The volume has been set!";
             return true;
         }
@@ -47,8 +56,8 @@ public class Volume : ICommand, IUsageProvider
         {
             response =
                 "Could not set the volume due to an error. This could be a bug. Ensure audio is playing while using this command.";
-            Logger.Warn("An error has occured while trying to set the volume.");
-            Logger.Debug($"{e}");
+            LogManager.Error("An error has occured while trying to set the volume.");
+            LogManager.Error($"{e}");
             return false;
         }
     }
