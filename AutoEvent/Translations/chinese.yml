@@ -1,156 +1,156 @@
 Airstrike Party:
   cycle: |-
-    <color=yellow>小心空袭！快躲开！</color>
-    <color=green>已经过去 {time} 秒</color>
-    <color=red>还剩 {count} 名玩家</color>
+    <color=yellow>躲避空袭！</color>
+    <color=green>已过去 {time} 秒</color>
+    <color=red>剩余 {count} 名玩家</color>
   more_player: |-
     <color=red>死亡派对</color>
-    <color=yellow><color=red>{count}</color> 名玩家生还</color>
+    <color=yellow><color=red>{count}</color> 名玩家幸存</color>
     <color=#ffc0cb>{time}</color>
   one_player: |-
     <color=red>死亡派对</color>
-    <color=yellow>胜利者 - <color=red>{winner}</color></color>
+    <color=yellow>胜者 - <color=red>{winner}</color></color>
     <color=#ffc0cb>{time}</color>
   all_die: |-
     <color=red>死亡派对</color>
-    <color=yellow>无人生还</color>
+    <color=yellow>无人幸存 :(((</color>
     <color=#ffc0cb>{time}</color>
   name: '空袭派对'
-  description: '在不断落下的空袭中生存下来'
+  description: '在空袭从天而降时存活下来'
   command_name: 'airstrike'
 All Deathmatch:
   cycle: |-
     <size=30><i><b>{name}</b>
-    <color=red>你的战绩 - {kills}/{needKills} 击杀</color>
+    <color=red>你 - {kills}/{needKills} 击杀</color>
     回合时间: {time}</i></size>
   no_players: |-
-    <color=red>游戏被管理员结束了
+    <color=red>游戏已被管理员结束
     你的击杀数 {count}</color>
   time_end: |-
-    <color=red>时间到，游戏结束
+    <color=red>时间到 游戏结束
     你的击杀数 {count}</color>
   winner_end: |-
-    <b><color=red>胜利者 - <color=yellow>{winner}</color></color></b>
+    <b><color=red>胜者 - <color=yellow>{winner}</color></color></b>
     你的击杀数 <color=red>{count}</color></color>
-    游戏时长 - <color=#008000>{time}</color></i>
+    游戏时间 - <color=#008000>{time}</color></i>
   name: '全员死斗'
-  description: '在死斗模式中互相厮杀'
+  description: '在全员死斗中相互战斗'
   command_name: 'dm'
 Among Us:
   starting_event: |-
     <b>{name}</b>
-    游戏将在 {time} 秒后开始 正在选择 <color=red><b>内鬼</b></color>
+    距离游戏开始还有 {time} 秒 正在选择 <color=red><b>内鬼</b></color>
   you_are_impostor: '你是 <color=red>内鬼</color>！'
   you_are_crewmate: '你是 <color=#00FFFF>船员</color>！'
-  impostor_win: '<color=red>内鬼</color> 获胜了！'
-  crewmate_win: '<color=#00FFFF>船员</color> 获胜了！'
+  impostor_win: '<color=red>内鬼</color> 胜利！'
+  crewmate_win: '<color=#00FFFF>船员</color> 胜利！'
   killed_by_impostor: '你被内鬼杀死了！'
-  kill_cooldown: '你需要再等待 {time} 秒才能杀人！'
-  too_far: '你离得太远，无法进行击杀！'
+  kill_cooldown: '你还需要等待 {time} 秒才能再次击杀！'
+  too_far: '距离太远 无法击杀！'
   voting_info: |-
     {reason}
-    你可以输入 .vote <color/name/skip> 来进行投票，默认情况下可通过 ~ 打开控制台
+    你可以在控制台中输入 .vote <color/name/skip> 进行投票 默认按 ~ 打开控制台
     剩余 {time} 秒
   discussion_info: |-
     {reason}
-    Discussion time! You can't chat with other players.
-    {time} seconds remaining, soon you will can speak and vote.
-  meeting_called: '{player} 发起了一次紧急会议！'
-  death_body_reported: '<color=red>{deadPlayer}</color> 的尸体被 <color=yellow>{reportedPlayer}</color> 发现！'
-  emergency_meetings_reached: '你不能再召集紧急会议了！'
-  meeting_cooldown: '你需要再等待 {time} 秒才能召集会议！'
-  calibrate_distributor: 'Calibrate Distributor'
-  chart_course: 'Chart Course'
-  clean_o2_filter: 'Clean O2 Filter'
-  empty_chute: 'Empty Chute'
-  prime_shields: 'Prime Shields'
-  start_reactor: 'Start Reactor'
-  submit_scan: 'Submit Scan'
-  fix_wiring: 'Fix Wiring'
-  align_engine_output: 'Align Engine Output'
-  divert_power_to: 'Divert Power to {roomName}'
-  accept_divert_power: 'Accept Divert Power'
-  download_data: 'Download Data'
-  upload_data: 'Upload Data'
-  no_votes: 'No votes'
-  vote: 'vote'
-  no_one_voted_out: 'No one was voted out.'
-  its_a_tie: 'It''s a tie!'
-  death_message: 'Voted out.'
-  voted_out: '{player} was voted out.'
-  tasks: 'Tasks'
-  didnt_vote: 'Didn''t vote'
-  was_an_impostor: '{player} was an Impostor.'
-  was_not_an_impostor: '{player} was not an Impostor.'
-  name: 'Among Us'
+    讨论时间！你无法与其他玩家聊天
+    剩余 {time} 秒 稍后你将可以发言并投票
+  meeting_called: '{player} 发起了一次会议！'
+  death_body_reported: '<color=red>{deadPlayer}</color> 的尸体被 <color=yellow>{reportedPlayer}</color> 发现了！'
+  emergency_meetings_reached: '你无法再发起紧急会议了！'
+  meeting_cooldown: '你还需要等待 {time} 秒才能再次发起会议！'
+  calibrate_distributor: '校准分配器'
+  chart_course: '规划航线'
+  clean_o2_filter: '清理 O2 过滤器'
+  empty_chute: '清空滑槽'
+  prime_shields: '启动护盾'
+  start_reactor: '启动反应堆'
+  submit_scan: '提交扫描'
+  fix_wiring: '修复线路'
+  align_engine_output: '校准引擎输出'
+  divert_power_to: '将电力转移至 {roomName}'
+  accept_divert_power: '接收转移的电力'
+  download_data: '下载数据'
+  upload_data: '上传数据'
+  no_votes: '无投票'
+  vote: '投票'
+  no_one_voted_out: '没有人被投票出局'
+  its_a_tie: '平票！'
+  death_message: '被投票出局'
+  voted_out: '{player} 被投票出局'
+  tasks: '任务'
+  didnt_vote: '未投票'
+  was_an_impostor: '{player} 是内鬼'
+  was_not_an_impostor: '{player} 不是内鬼'
+  name: '谁是内鬼'
   description: '内鬼就在我们之中'
   command_name: 'amongus'
 Nuke Run:
   before_start: |-
     {name}
-    准备从即将爆炸的设施中逃离！
-    <color=red>回合开始倒计时: {time} 秒</color>
+    准备在核弹爆炸前逃离设施！
+    <color=red>回合开始前剩余时间 {time} 秒</color>
   cycle: |-
     {name}
-    <color=red>{time}</color> 秒后爆炸！
+    <color=red>距离爆炸还有 {time} 秒</color>
   end: |-
     {name}
-    <color=red>{players} 名玩家成功逃脱 </color>
-  name: '花生赛跑'
-  description: 'Escape the facility before it explodes!'
+    <color=red>{players} 名玩家成功逃离</color>
+  name: '花生逃亡'
+  description: '在核弹爆炸前逃离设施'
   command_name: 'escape'
 Battle:
   time_left: '<size=100><color=red>战斗将在 {time} 后开始 </color></size>'
   ci_win: |-
-    <color=#299438>胜利方: 混沌分裂者 </color>
-    <color=red>持续时间: {time} </color>
+    <color=#299438>胜者 混沌分裂者 </color>
+    <color=red>持续时间 {time} </color>
   mtf_win: |-
-    <color=#14AAF5>胜利方: 九尾狐</color>
-    <color=red>持续时间: {time} </color>
+    <color=#14AAF5>胜者 九尾狐</color>
+    <color=red>持续时间 {time} </color>
   counter: |-
-    <color=#14AAF5> MTF: {FoundationForces} </color> vs <color=#299438> CI: {ChaosForces} </color> 
-     已用时间: {time}
-  name: '团队死斗'
+    <color=#14AAF5> MTF {FoundationForces} </color> vs <color=#299438> CI {ChaosForces} </color> 
+     已用时间 {time}
+  name: '团队战斗'
   description: '九尾狐与混沌分裂者在竞技场中决一死战'
   command_name: 'battle'
 Cock Fights:
   players_null: |-
     <color=#D71868><b><i>{name}</i></b></color>
-    进入竞技场互相决斗！
-    <color=red>{remain}</color> 秒倒计时
+    进入竞技场互相战斗！
+    <color=red>剩余 {remain} 秒</color>
   class_d_null: |-
     <color=#D71868><b><i>{name}</i></b></color>
-    存活玩家 <color=yellow>{scientist}</color>
-    <color=orange>{remain}</color> 秒后进入
+    存活的玩家是 <color=yellow>{scientist}</color>
+    在 <color=orange>{remain}</color> 秒内进入
   scientist_null: |-
     <color=#D71868><b><i>{name}</i></b></color>
-    存活玩家 <color=orange>{classd}</color>
-    <color=yellow>{remain}</color> 秒后进入
+    存活的玩家是 <color=orange>{classd}</color>
+    在 <color=yellow>{remain}</color> 秒内进入
   players_duel: |-
     <color=#D71868><b><i>{name}</i></b></color>
     <color=yellow><color=yellow>{scientist}</color> <color=red>VS</color> <color=orange>{classd}</color></color>
   class_d_win: |-
     <color=#D71868><b><i>{name}</i></b></color>
-    <color=yellow>胜利者: <color=red>D级人员</color></color>
+    <color=yellow>胜者 <color=red>D级人员</color></color>
   scientist_win: |-
     <color=#D71868><b><i>{name}</i></b></color>
-    <color=yellow>胜利者: <color=red>科学家</color></color>
+    <color=yellow>胜者 <color=red>科学家</color></color>
   name: '囚鸟对决'
-  description: '在CS 1.6的35hp地图上进行的囚鸟1v1决斗'
+  description: '在 cs 1.6 的 35hp 地图上进行的玩家决斗'
   command_name: 'versus'
 Counter-Strike:
   cycle: |-
     <size=60>{name}</size>
     <size=25><i>{task}</i>
     <i><color=#42AAFF>{ctCount} 反恐精英</color> <b>/</b> <color=green>{tCount} 恐怖分子</color></i>
-    <i>回合时间: {time}</i></size>
-  no_planted_counter: '保护A点和B点不被恐怖分子炸毁'
-  no_planted_terror: '在A点或B点安放炸弹'
+    <i>回合时间 {time}</i></size>
+  no_planted_counter: '保护 A 点和 B 点的炸弹安放区不被恐怖分子破坏'
+  no_planted_terror: '在 A 点或 B 点安放炸弹'
   planted_counter: '<color=red>在炸弹爆炸前拆除它</color>'
-  planted_terror: '<color=red>保护炸弹直到它爆炸</color>'
+  planted_terror: '<color=red>保护炸弹直到爆炸</color>'
   draw: |-
     <b><color=#808080>平局</color></b>
-    <i>所有人都挂了</i>
+    <i>所有人都死了</i>
   time_ended: |-
     <b><color=#808080>平局</color></b>
     <i>回合时间结束</i>
@@ -162,179 +162,179 @@ Counter-Strike:
     <i>所有反恐精英已被消灭</i>
   planted_win: |-
     <b><color=green>恐怖分子胜利</color></b>
-    <i>炸弹爆炸</i>
+    <i>炸弹已爆炸</i>
   defused_win: |-
     <b><color=#42AAFF>反恐精英胜利</color></b>
     <i>炸弹已被拆除</i>
-  you_planted: '<b><color=#ff4c5b>你放置了炸弹</color></b>'
+  you_planted: '<b><color=#ff4c5b>你安放了炸弹</color></b>'
   you_defused: '<b><color=#42aaff>你拆除了炸弹</color></b>'
-  picked_up_bomb: 你捡起了炸弹!
-  equipped_bomb: 你正在拿着炸弹!
-  bomb_death_reason: 炸弹爆炸了
+  picked_up_bomb: 你拾取了 C4
+  equipped_bomb: 你正在携带 C4
+  bomb_death_reason: 炸弹爆炸
   name: '反恐精英'
-  description: '反恐精英与恐怖分子之间的对抗'
+  description: '恐怖分子与反恐精英之间的战斗'
   command_name: 'cs'
 Dead Jump:
   start: |-
-    <size=50>死亡跳跃
-    跳跃在脆弱的平台上</size>
-    <size=20>存活玩家: {plyAlive} 
-    剩余时间: {time}</size>
+    <size=50>玻璃桥
+    在脆弱的玻璃桥上跳跃</size>
+    <size=20>存活玩家 {plyAlive} 
+    剩余时间 {time}</size>
   died: '你掉进了岩浆'
-  win_survived: '<color=yellow>人类胜利！幸存者 {plyAlive} 名</color>'
+  win_survived: '<color=yellow>人类胜利 存活 {plyAlive} 名玩家</color>'
   winner: |-
-    <color=red>死亡跳跃</color>
-    <color=yellow>胜利者: {winner}</color>
+    <color=red>玻璃桥</color>
+    <color=yellow>胜者 {winner}</color>
   fail: |-
-    <color=red>死亡跳跃</color>
-    <color=yellow>全部玩家都寄了</color>
-  push: '<color=green>按 <color=yellow>[Alt]</color> 推动其他玩家</color>'
-  name: '死亡跳跃'
-  description: '在脆弱的平台上跳跃'
+    <color=red>玻璃桥</color>
+    <color=yellow>所有玩家死亡</color>
+  push: '<color=green>按下 <color=yellow>[Alt]</color> 推动玩家</color>'
+  name: '玻璃桥'
+  description: '在脆弱的玻璃桥上跳跃'
   command_name: 'glass'
 Death Line:
   cycle: |-
     <color=#FF4242>{name}</color>
-    <color=#14AAF5>剩余时间: {time}
-    <color=yellow>剩余玩家: {count}</color>
+    <color=#14AAF5>剩余时间 {time}
+    <color=yellow>剩余玩家 {count}</color>
   more_players: |-
     <color=#FF4242>{name}</color>
-    <color=yellow>{count} 名玩家存活</color>
-    <color=red>恭喜！</color>
+    <color=yellow>{count} 名玩家幸存</color>
+    <color=red>恭喜</color>
   winner: |-
     <color=#FF4242>{name}</color>
-    <color=yellow>胜利者: {winner}</color>
-    <color=red>恭喜！</color>
-  all_died: '<color=red>所有玩家都阵亡了</color>'
+    <color=yellow>胜者 {winner}</color>
+    <color=red>恭喜</color>
+  all_died: '<color=red>所有玩家死亡</color>'
   name: '死亡之线'
-  description: '躲避旋转平台以求生存'
+  description: '躲避旋转的平台以求存活'
   command_name: 'line'
 Death Run:
   before_start_broadcast: |-
     <color=#FFC618>{name}</color>
-    <size=35><color=#ff4c5b>警告！前方有致命陷阱</color>
-    <color=#20B2AA>准备在 <b>{time}</b> 秒后开跑</color></size>
+    <size=35><color=#ff4c5b>警告! 前方有致命陷阱</color>
+    <color=#20B2AA>准备在 <b>{time}</b> 秒后开始奔跑</color></size>
   cycle_broadcast: |-
     <color=#FFC618>{name}</color>
     <size=35><color=yellow>😃 人类 [{runnerCount}]</color> | <color=#ff4c5b>[{deathCount}] 死神 😈</color>
-    <color=#20B2AA>剩余时间: <b>{time}</b></color></size>
+    <color=#20B2AA>剩余时间 <b>{time}</b></color></size>
   death_win_broadcast: |-
     <color=#FFC618>{name}</color>
     <b><color=#ff4c5b>死神胜利</color></b>
   runner_win_broadcast: |-
     <color=#FFC618>{name}</color>
     <b><color=yellow>人类胜利</color></b>
-  died: '<color=red>你没能及时消灭死神</color>'
-  over_time_broadcast: "<b><color=red>是时候干掉<i>死神</i>了 \U0001F638</color></b>"
-  second_life_hint: '<b><color=green>你获得了第二条命</color></b>'
+  died: '<color=red>你没有及时击杀死神</color>'
+  over_time_broadcast: "<b><color=red>是时候击杀 <i>死神</i> \U0001F638</color></b>"
+  second_life_hint: '<b><color=green>你获得了第二条生命</color></b>'
   name: '死亡跑酷'
-  description: '避开死神激活的陷阱，到达终点'
+  description: '到达终点 一路躲避由死神触发的陷阱'
   command_name: 'deathrun'
 Dodgeball:
   start: |-
-    <color=#ffff00>准备接球！</color>
-    游戏将在: <color=red>{time}</color> 后开始
+    <color=#ffff00>准备好拿起球</color>
+    游戏开始于 <color=red>{time}</color>
   cycle: |-
     <b><color=#ffff00>{name}</color></b>
-    <color=#aad9ff>向其他玩家投掷球</color>
+    <color=#aad9ff>向玩家投掷球</color>
     <color=red>{time}</color>
   all_died: |-
     <b><color=#ffff00>{name}</color></b>
-    <color=red>所有玩家都阵亡了</color>
-    时间: <color=red>{time}</color>
+    <color=red>所有玩家死亡</color>
+    时间 <color=red>{time}</color>
   class_d_win: |-
     <b><color=#ffff00>{name}</color></b>
-    <color=#ffa500>D级人员胜利</color>
-    时间: <color=red>{time}</color>
+    <color=#ffa500>D级人员 胜利</color>
+    时间 <color=red>{time}</color>
   scientist_win: |-
     <b><color=#ffff00>{name}</color></b>
     <color=#ffff00>科学家胜利</color>
-    时间: <color=red>{time}</color>
+    时间 <color=red>{time}</color>
   draw: |-
     <b><color=#ffff00>{name}</color></b>
     <color=#808080>平局</color>
-    时间: <color=red>{time}</color>
+    时间 <color=red>{time}</color>
   redline: '<color=red>你不能穿过红线</color>'
-  knocked: '<color=red>你被 {killer} 击倒</color>'
+  knocked: '<color=red>你被 {killer} 击倒了</color>'
   name: '躲避球'
   description: '用球击败敌人'
   command_name: 'dodge'
 FallDown:
   broadcast: |-
     {name}
-    {time}
-    <color=yellow>剩余: </color>{count}<color=yellow> 名玩家</color>
-  winner: '<color=red>胜利者:</color> {winner}'
-  died: '<color=red>所有玩家都挂了</color>'
-  name: '坍塌世界'
-  description: '所有平台都在销毁，必须生存下来'
+    剩余时间：{time}
+    <color=yellow>存活玩家：</color>{count}
+  winner: '<color=green>最终胜者：</color>{winner}'
+  died: '<color=red>无人存活，本局结束</color>'
+  name: '坠落生存'
+  description: '平台将逐步消失，掉落即淘汰，活到最后获胜'
   command_name: 'fall'
 Football:
   red_team: |-
-    <color=red>你的队伍: 红队
+    <color=red>你的队伍 红队
     </color>
   blue_team: |-
-    <color=#14AAF5>你的队伍: 蓝队
+    <color=#14AAF5>你的队伍 蓝队
     </color>
   time_left: |-
     <color=#14AAF5>{BluePnt}</color> : <color=red>{RedPnt}</color>
-    剩余时间: {time}
+    剩余时间 {time}
   red_wins: '<color=red>红队胜利</color>'
   blue_wins: '<color=#14AAF5>蓝队胜利</color>'
   draw: |-
     平局
-    <color=#14AAF5>{BluePnt}</color> vs <color=red>{RedPnt}</color>
+    <color=#14AAF5>{BluePnt}</color> 对战 <color=red>{RedPnt}</color>
   name: '足球'
-  description: '足球比赛，进3球获胜'
+  description: '率先获得 3 个进球即可获胜'
   command_name: 'football'
 Gun Game:
   cycle: |-
     <color=#D71868><b><i>{name}</i></b></color>
-    <b><color=yellow>下一把 <color=#D71868>{gun}</color> <color=#D71868>||</color> 需要 <color=#D71868>{kills}</color> 击杀</color>
-    <color=#D71868>领先者: <color=yellow>{leadnick}</color> 等级 <color=yellow>{leadgun}</color></color></b>
+    <b><color=yellow>下一把武器 <color=#D71868>{gun}</color> <color=#D71868>||</color> 需要 <color=#D71868>{kills}</color> 次击杀</color>
+    <color=#D71868>领先者 <color=yellow>{leadnick}</color> 等级 <color=yellow>{leadgun}</color></color></b>
   winner: |-
     <color=#D71868><b><i>{name}</i></b></color>
-    <color=yellow>游戏胜利者: <color=green>{winner}</color></color>
+    <color=yellow>本局胜者 <color=green>{winner}</color></color>
   name: '枪王战斗'
   description: '在使命召唤19的码头地图上体验酷炫的枪王争夺赛'
   command_name: 'gungame'
 Knives of Death:
   cycle: |-
     <color=#D71868><b><i>{name}</i></b></color>
-    <color=yellow><color=blue>{mtfcount} MTF</color> <color=red>VS</color> <color=green>{chaoscount} CI</color></color>
+    <color=yellow><color=blue>{mtfcount} 九尾狐</color> <color=red>VS</color> <color=green>{chaoscount} 混沌分裂者</color></color>
   chaos_win: |-
     <color=#D71868><b><i>{name}</i></b></color>
-    <color=yellow>胜利者: <color=green>混沌分裂者</color></color>
+    <color=yellow>胜者 <color=green>混沌分裂者</color></color>
   mtf_win: |-
     <color=#D71868><b><i>{name}</i></b></color>
-    <color=yellow>胜利者: <color=#42AAFF>九尾狐</color></color>
+    <color=yellow>胜者 <color=#42AAFF>九尾狐</color></color>
   name: '死亡之刃'
   description: '在CS 1.6的35hp地图上九尾与混沌互相使用囚鸟进行对决'
   command_name: 'knives'
 Musical Chairs:
   start: |-
-    <color=#42aaff>准备奔跑</color>
-    游戏将在: <color=red>{time}</color> 后开始
+    <color=#42aaff>准备开始奔跑</color>
+    游戏开始于 <color=red>{time}</color>
   cycle: |-
     <b><color=#42aaff>{name}</color></b>
     <color=#ffff00>{state}</color>
-    <color=#008000>{count}</color> 名玩家仍在游戏中</color>
-  run_dont_touch: '跑动时不要碰平台'
-  stand_free: '站在空闲平台上'
+    <color=#008000>{count}</color> 名玩家剩余</color>
+  run_dont_touch: '奔跑并且不要触碰平台'
+  stand_free: '站在空闲的平台上'
   stop_running: '<color=red>你停止了奔跑</color>'
-  touch_ahead: '<color=red>你在允许前触碰了平台</color>'
-  no_time: '<color=red>你没能及时站到空闲平台上</color>'
+  touch_ahead: '<color=red>你在允许之前触碰了平台</color>'
+  no_time: '<color=red>你未能及时站在空闲的平台上</color>'
   more_players: |-
     <b><color=#42aaff>{name}</color></b>
     <color=red>管理员取消了游戏</color>
   winner: |-
     <b><color=#42aaff>{name}</color></b>
-    <color=red>胜利者: {winner}</color>
+    <color=red>胜者 {winner}</color>
   all_died: |-
     <b><color=#42aaff>{name}</color></b>
-    <color=red>所有玩家都阵亡了</color>
+    <color=red>所有玩家死亡</color>
   name: '抢椅子'
-  description: '在欢快的音乐中与其他玩家争夺空闲椅子'
+  description: '伴随有趣的音乐与其他玩家竞争空椅子'
   command_name: 'chair'
 Puzzle:
   start: |-
@@ -342,15 +342,15 @@ Puzzle:
     <color=yellow>小游戏将在 <color=red>{time}</color> 秒后开始</color>
   stage: |-
     <b>{name}</b>
-    <color=red>阶段: </color>{stageNum}<color=red> / </color>{stageFinal}
-    <color=yellow>剩余玩家:</color> {count}
+    <color=red>阶段 </color>{stageNum}<color=red> / </color>{stageFinal}
+    <color=yellow>剩余玩家 </color> {count}
   all_died: |-
     <b>{name}</b>
-    <color=red>所有玩家都阵亡了</color>
+    <color=red>所有玩家死亡</color>
     小游戏结束
   some_survived: |-
     <b>{name}</b>
-    <color=green>{count} 名玩家存活</color>
+    <color=green>{count} 名玩家幸存</color>
     小游戏结束
   winner: |-
     <b>{name}</b>
@@ -358,113 +358,113 @@ Puzzle:
     小游戏结束
   died: '<color=red>你掉进了岩浆</color>'
   name: '色盲派对'
-  description: '尽快站到正确的颜色上'
+  description: '快速站在正确的颜色上来取得胜利'
   command_name: 'puzzle'
 Race:
   cycle: |-
     {name}
-    <color=yellow>到达终点平台获胜！</color>
-    剩余时间: {time}
-  died: '<color=red>你没能完成比赛</color>'
+    <color=yellow>到达终点平台即可获胜！</color>
+    剩余时间：{time}
+  died: '<color=red>你未能到达终点</color>'
   players_survived: |-
-    <color=red>人类胜利！</color>
-    存活 {count} 名
+    <color=green>比赛结束</color>
+    <color=yellow>成功到达终点：{count} 人</color>
   one_survived: |-
-    <color=red>人类胜利！</color>
-    胜利者: {player}
-  no_survivors: '<color=red>无人幸存！</color>'
-  name: '竞速'
-  description: '到达地图终点获胜'
+    <color=green>比赛结束</color>
+    <color=yellow>胜者：{player}</color>
+  no_survivors: '<color=red>无人到达终点！</color>'
+  name: '终点竞速'
+  description: '穿越障碍，率先到达终点平台即可获胜'
   command_name: 'race'
 Red Light Green Light:
   start: |-
-    <color=#42aaff>准备奔跑</color>
-    游戏将在: <color=red>{time}</color> 后开始
+    <color=#42aaff>准备开始奔跑</color>
+    游戏开始于 <color=red>{time}</color>
   cycle: |-
     <b><color=#42aaff>{name}</color></b>
     <color=#aad9ff>{state}</color>
-    <color=red>剩余时间 {time} 秒</color>
+    <color=red>剩余 {time} 秒</color>
   all_died: |-
     <b><color=#42aaff>{name}</color></b>
-    <color=red>没有人能到达终点</color>
+    <color=red>没有人到达终点</color>
   more_win: |-
     <b><color=#42aaff>{name}</color></b>
-    <color=red>{count} 名玩家胜利</color>
+    <color=red>{count} 名玩家获胜</color>
   player_win: |-
     <b><color=#42aaff>{name}</color></b>
-    <color=green>胜利者: {winner}</color>
-  red_light: '<color=red>不许动！</color>'
-  green_light: '<color=green>快跑！</color>'
-  red_lose: '<color=red>你闯红灯了！</color>'
-  no_time: '<color=red>你没能及时到达终点！</color>'
-  hint: '<color=green>按 <color=yellow>[Alt]</color> 推动其他玩家</color>'
-  hint_wait: '<color=red>稍等片刻</color>'
-  hint_ready: '<color=green>准备好了</color>'
+    <color=green>胜者 {winner}</color>
+  red_light: '<color=red>不要移动</color>'
+  green_light: '<color=green>奔跑</color>'
+  red_lose: '<color=red>你动了</color>'
+  no_time: '<color=red>你没有到达终点</color>'
+  hint: '<color=green>按下 <color=yellow>[Alt]</color> 推动其他玩家</color>'
+  hint_wait: '<color=red>请等待几秒</color>'
+  hint_ready: '<color=green>准备就绪</color>'
   name: '木头人'
   description: '活着到达终点线'
   command_name: 'light'
 Simon's Prison:
   start: |-
     <color=yellow><color=red><b><i>{name}</i></b></color>
-    <i>射击大按钮来触发或解除封锁</i>
-    开始倒计时: <color=red>{time}</color> 秒</color>
+    <i>射击大按钮以触发或解除封锁</i>
+    开始前 <color=red>{time}</color> 秒</color>
   start_prisoners: |-
     <color=yellow><color=red><b><i>{name}</i></b></color>
-    <i>不惜一切代价逃离监狱或占领它。地图上散布着可以帮助你生存的物品</i>
-    开始倒计时: <color=red>{time}</color> 秒</color>
+    <i>不惜一切代价越狱或接管监狱 请小心 地图上散落着物品帮助你生存</i>
+    开始前 <color=red>{time}</color> 秒</color>
   cycle: |-
     <size=20><color=red>{name}</color>
-    <color=yellow>囚犯: {dclasscount}</color> || <color=#14AAF5>狱警: {mtfcount}</color>
+    <color=yellow>囚犯 {dclasscount}</color> || <color=#14AAF5>狱警 {mtfcount}</color>
     <color=red>{time}</color></size>
   prisoners_win: |-
-    <color=red><b><i>囚犯获胜</i></b></color>
+    <color=red><b><i>囚犯胜利</i></b></color>
     <color=red>{time}</color>
   jailers_win: |-
-    <color=#14AAF5><b><i>狱警获胜</i></b></color>
+    <color=#14AAF5><b><i>狱警胜利</i></b></color>
     <color=red>{time}</color>
-  lockdown_on_cooldown: '封锁冷却中，无法触发剩余冷却时间: {cooldown}'
-  lives_remaining: '你还剩 {lives} 条命'
-  no_lives_remaining: '你没有剩余生命了'
+  lockdown_on_cooldown: '你无法触发封锁 因为仍在冷却中 剩余冷却 {cooldown}'
+  lives_remaining: '你还剩余 {lives} 条生命'
+  no_lives_remaining: '你已没有剩余生命'
   name: '西蒙监狱'
-  description: '来自CS 1.6的监狱模式，需要通过举办活动来维持游戏 [非常困难]'
+  description: '来自 CS 1.6 的监狱模式 你需要主持事件 非常困难(这不是杀戮游戏)'
   command_name: 'jail'
 Spleef:
-  start: '<color=red>开始倒计时: </color>{time}'
+  start: '<color=red>开始于 </color>{time}'
   cycle: |-
     <color=red>{name}</color>
-    <color=yellow>存活玩家:</color> {players}
-    <color=#42aaff>剩余时间:</color> {remaining}
+    <color=yellow>存活玩家 </color> {players}
+    <color=#42aaff>剩余时间 </color> {remaining}
   all_died: |-
-    <color=red>所有玩家都阵亡了</color>
+    <color=red>所有玩家死亡</color>
     小游戏结束
   some_survived: |-
-    <color=red>多人存活</color>
+    <color=red>有玩家幸存</color>
     小游戏结束
   winner: |-
-    <color=red>胜利者: {winner}</color>
+    <color=red>胜者 {winner}</color>
     小游戏结束
   died: '<color=red>你掉进了岩浆</color>'
-  name: '地板陷阱'
-  description: '射击平台，别掉入虚空'
+  name: '破坏生存'
+  description: '击毁平台，淘汰对手，成为最后的幸存者'
   command_name: 'spleef'
 Tag:
   broadcast: |-
-    快跑！
-    正在选择烫手山芋持有人，现在躲起来！
-    剩余时间: {time}
+    <color=red>快跑！</color>
+    <color=yellow>正在选出烫手山芋持有者，现在躲起来！</color>
+    剩余时间：{time}
   cycle: |-
-    追逐另一位玩家
-    <color=yellow><b><i>{time}</i></b> 秒倒计时</color>
-  hurt: '你没能将烫手山芋传给其他人'
+    <color=yellow>尽快把烫手山芋传给其他玩家！</color>
+    <color=red><b><i>剩余 {time} 秒</i></b></color>
+  hurt: '<color=red>你没能把烫手山芋传出去</color>'
   one_player: |-
-    玩家 {winner} 获胜
-    <color=yellow>事件持续时间 <color=red>{time}</color></color>
+    <color=green>胜者：</color>{winner}
+    <color=yellow>本局用时 <color=red>{time}</color></color>
   all_die: |-
-    没有人幸存
-    游戏结束
-    <color=yellow>事件持续时间 <color=red>{time}</color></color>
+    <color=red>无人成功传递</color>
+    小游戏结束
+    <color=yellow>本局用时 <color=red>{time}</color></color>
   name: '烫手山芋'
-  description: '需要将烫手山芋传给其他玩家'
+  description: '被选中的玩家必须尽快传递，否则将被淘汰'
   command_name: 'tag'
 Team Death-Match:
   cycle: |-
@@ -472,58 +472,58 @@ Team Death-Match:
     <b><color=yellow><color=#42AAFF> {mtftext}> </color> <color=red>|</color> <color=green> <{chaostext}</color></color></b>
   chaos_win: |-
     <color=#D71868><b><i>{name}</i></b></color>
-    <color=yellow>胜利者: <color=green>混沌</color></color>
+    <color=yellow>胜者 <color=green>CHAOS</color></color>
   mtf_win: |-
     <color=#D71868><b><i>{name}</i></b></color>
-    <color=yellow>胜利者: <color=#42AAFF>九尾狐</color></color>
+    <color=yellow>胜者 <color=#42AAFF>MTF</color></color>
   name: '团队死斗'
   description: '在使命召唤19的码头地图上进行团队死斗'
   command_name: 'tdm'
 The floor is LAVA:
   start: |-
     <size=100><color=red>{time}</color></size>
-    拿起武器并向上爬
-  cycle: '<size=20><color=red><b>存活: {count} 名玩家</b></color></size>'
+    拿起武器并向上攀爬
+  cycle: '<size=20><color=red><b>存活 {count} 名玩家</b></color></size>'
   win: |-
-    <color=red><b>胜利者
+    <color=red><b>胜者
     玩家 - {winner}</b></color>
-  all_dead: '<color=red><b>没有人坚持到最后</b></color>'
-  died: '<color=red>你掉入了岩浆</color>'
-  name: '地板是岩浆'
-  description: '生存模式，需要避开岩浆并杀死其他人'
+  all_dead: '<color=red><b>无人存活到最后</b></color>'
+  died: '<color=red>你掉进了岩浆</color>'
+  name: '岩浆生存'
+  description: '生存模式 你需要躲避岩浆并射击其他人'
   command_name: 'lava'
 Zombie Infection:
   start: |-
     <color=#D71868><b><i>{name}</i></b></color>
-    <color=#ABF000>游戏将在 <color=red>{time}</color> 秒后开始</color>
+    <color=#ABF000>距离游戏开始还有 <color=red>{time}</color> 秒</color>
   cycle: |-
     <color=#D71868><b><i>{name}</i></b></color>
-    <color=yellow>剩余人类: <color=green>{count}</color></color>
-    <color=yellow>已用时间: <color=red>{time}</color></color>
+    <color=yellow>剩余人类 <color=green>{count}</color></color>
+    <color=yellow>已用时间 <color=red>{time}</color></color>
   extra_time: |-
-    额外时间: {extratime}
-    <color=yellow>只剩<b><i>最后一个</i></b>人了！</color>
-    <color=yellow>已用时间: <color=red>{time}</color></color>
+    额外时间 {extratime}
+    <color=yellow>只剩下 <b><i>最后</i></b> 一个人</color>
+    <color=yellow>已用时间 <color=red>{time}</color></color>
   win: |-
-    <color=red>僵尸获胜！</color>
-    <color=yellow>已用时间: <color=red>{time}</color></color>
+    <color=red>僵尸胜利</color>
+    <color=yellow>已用时间 <color=red>{time}</color></color>
   lose: |-
-    <color=yellow><color=#D71868><b><i>人类</i></b></color> 获胜！</color>
-    <color=yellow>已用时间: <color=red>{time}</color></color>
+    <color=yellow><color=#D71868><b><i>人类</i></b></color> 胜利</color>
+    <color=yellow>已用时间 <color=red>{time}</color></color>
   name: '僵尸感染'
-  description: '僵尸模式，目标是感染所有玩家'
+  description: '僵尸模式 目标是感染所有玩家'
   command_name: 'zombie'
 Zombie Survival:
   survival_before_infection: |-
     <b>{name}</b>
-    <color=yellow>还有</color> {time} <color=yellow>秒开始感染</color>
+    <color=yellow>距离感染开始还有</color> {time} <color=yellow>秒</color>
   survival_after_infection: |-
     <b>{name}</b>
-    <color=#14AAF5>人类:</color> {humanCount}
-    <color=#299438>剩余时间:</color> {time}
-  survival_zombie_win: '<color=red>僵尸感染了所有人类并获胜！</color>'
+    <color=#14AAF5>人类</color> {humanCount}
+    <color=#299438>剩余时间</color> {time}
+  survival_zombie_win: '<color=red>僵尸感染了所有人类并取得胜利</color>'
   survival_human_win: '<color=#14AAF5>人类消灭了所有僵尸并阻止了感染</color>'
-  survival_human_win_time: '<color=yellow>人类幸存了下来，但没能阻止感染</color>'
+  survival_human_win_time: '<color=yellow>人类存活下来 但未能阻止感染</color>'
   name: '僵尸生存'
-  description: '人类从僵尸中求生'
+  description: '人类对抗僵尸并努力生存'
   command_name: 'zombie2'
