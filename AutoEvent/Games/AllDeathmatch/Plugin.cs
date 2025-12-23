@@ -130,7 +130,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
         var time = $"{(int)remainTime:00}:{(int)(remainTime * 60 % 60):00}";
         var sortedDict = TotalKills.OrderByDescending(r => r.Value).ToDictionary(x => x.Key, x => x.Value);
 
-        var leaderboard = new StringBuilder("Leaderboard:\n");
+        var leaderboard = new StringBuilder($"{Translation.Leaderboard}:\n");
         for (var i = 0; i < 3; i++)
             if (i < sortedDict.Count)
             {
@@ -144,9 +144,10 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
                 var player = Player.Get(sortedDict.ElementAt(i).Key);
                 if (player is null) continue;
                 var length = Math.Min(player.Nickname.Length, 10);
-                leaderboard.Append($"<color={color}>{i + 1}. ");
-                leaderboard.Append($"{player.Nickname.Substring(0, length)} ");
-                leaderboard.Append($"/ {sortedDict.ElementAt(i).Value} kills</color>\n");
+                leaderboard.Append(Translation.LeaderboardContent.Replace("{color}", color))
+                    .Replace("{num}", (i + 1).ToString())
+                    .Replace("{playerName}", player.Nickname.Substring(0, length))
+                    .Replace("{kills}", sortedDict.ElementAt(i).Value.ToString() + "\n");
             }
 
         foreach (var player in Player.ReadyList)
@@ -157,7 +158,8 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
             if (TotalKills[player.NetworkId] >= NeedKills) Winner = player;
 
             var playerItem = sortedDict.FirstOrDefault(x => x.Key == player.NetworkId);
-            var playerText = leaderboard + $"<color=#ff0000>You - {playerItem.Value}/{NeedKills} kills</color></size>";
+            var playerText = leaderboard + Translation.HintCycle.Replace("{kills}", playerItem.Value.ToString())
+                .Replace("{needKills}", NeedKills.ToString());
 
             var text = Translation.Cycle.Replace("{name}", Name).Replace("{kills}", playerItem.Value.ToString())
                 .Replace("{needKills}", NeedKills.ToString()).Replace("{time}", time);

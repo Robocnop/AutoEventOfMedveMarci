@@ -23,6 +23,9 @@ All Deathmatch:
     <size=30><i><b>{name}</b>
     <color=red>Você - {kills}/{needKills} assassinatos</color>
     Tempo de Partida: {time}</i></size>
+  hint_cycle: <color=#ff0000>You - {kills}/{needKills} kills</color></size>
+  leaderboard: Leaderboard
+  leaderboard_content: <color={color}>{num}. {playerName} / {kills} kills</color>
   no_players: |-
     <color=red>O jogo foi encerrado pelo administrador
     Seus assassinatos {count}</color>

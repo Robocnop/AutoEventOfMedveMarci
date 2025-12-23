@@ -23,6 +23,9 @@ All Deathmatch:
     <size=30><i><b>{name}</b>
     <color=red>Du - {kills}/{needKills} Kills</color>
     Rundenzeit: {time}</i></size>
+  hint_cycle: <color=#ff0000>You - {kills}/{needKills} kills</color></size>
+  leaderboard: Leaderboard
+  leaderboard_content: <color={color}>{num}. {playerName} / {kills} kills</color>
   no_players: |-
     <color=red>Das Spiel wurde vom Admin beendet
     Deine Kills {count}</color>

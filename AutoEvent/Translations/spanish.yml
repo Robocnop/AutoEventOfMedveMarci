@@ -22,7 +22,10 @@ All Deathmatch:
   cycle: |-
     <size=30><i><b>{name}</b>  
     <color=red>Tú - {kills}/{needKills} kills</color>  
-    Tiempo de Ronda: {time}</i></size>  
+    Tiempo de Ronda: {time}</i></size>
+  hint_cycle: <color=#ff0000>You - {kills}/{needKills} kills</color></size>
+  leaderboard: Leaderboard
+  leaderboard_content: <color={color}>{num}. {playerName} / {kills} kills</color>
   no_players: |-
     <color=red>El juego ha terminado por un administrador  
     Tus kills {count}</color>  

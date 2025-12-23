@@ -23,6 +23,9 @@ All Deathmatch:
     <size=30><i><b>{name}</b>
     <color=red>Te - {kills}/{needKills} ölés</color>
     Köridő: {time}</i></size>
+  hint_cycle: <color=#ff0000>You - {kills}/{needKills} ölések</color></size>
+  leaderboard: 'Ranglista'
+  leaderboard_content: <color={color}>{num}. {playerName} / {kills} ölések</color>
   no_players: |-
     <color=red>A játékot egy staff leállította
     Öléseid: {count}</color>
