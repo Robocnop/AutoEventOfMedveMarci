@@ -147,7 +147,8 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IEventSound
                 leaderboard.Append(Translation.LeaderboardContent.Replace("{color}", color))
                     .Replace("{num}", (i + 1).ToString())
                     .Replace("{playerName}", player.Nickname.Substring(0, length))
-                    .Replace("{kills}", sortedDict.ElementAt(i).Value.ToString() + "\n");
+                    .Replace("{kills}", sortedDict.ElementAt(i).Value.ToString());
+                leaderboard.Append("\n");
             }
 
         foreach (var player in Player.ReadyList)

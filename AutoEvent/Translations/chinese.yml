@@ -23,9 +23,9 @@ All Deathmatch:
     <size=30><i><b>{name}</b>
     <color=red>你 - {kills}/{needKills} 击杀</color>
     回合时间: {time}</i></size>
-  hint_cycle: <color=#ff0000>You - {kills}/{needKills} kills</color></size>
-  leaderboard: Leaderboard
-  leaderboard_content: <color={color}>{num}. {playerName} / {kills} kills</color>
+  hint_cycle: <color=#ff0000>你 - {kills}/{needKills} 击杀</color></size>
+  leaderboard: 排行榜
+  leaderboard_content: <color={color}>{num}. {playerName} / {kills} 击杀</color>
   no_players: |-
     <color=red>游戏已被管理员结束
     你的击杀数 {count}</color>

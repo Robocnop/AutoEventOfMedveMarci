@@ -1,4 +1,6 @@
-﻿Airstrike Party:
+﻿  hint_cycle: <color=#ff0000>Te - {kills}/{needKills} ölések</color></size>
+  leaderboard: Ranglista
+Airstrike Party:
   cycle: |-
     <color=yellow>Kerüld el a gránátokat!</color>
     <color=green>{time} másodperc telt el</color>
@@ -23,7 +25,7 @@ All Deathmatch:
     <size=30><i><b>{name}</b>
     <color=red>Te - {kills}/{needKills} ölés</color>
     Köridő: {time}</i></size>
-  hint_cycle: <color=#ff0000>You - {kills}/{needKills} ölések</color></size>
+  hint_cycle: <color=#ff0000>Te - {kills}/{needKills} ölések</color></size>
   leaderboard: 'Ranglista'
   leaderboard_content: <color={color}>{num}. {playerName} / {kills} ölések</color>
   no_players: |-
