@@ -23,9 +23,6 @@ All Deathmatch:
     <size=30><i><b>{name}</b>
     <color=red>Du - {kills}/{needKills} Kills</color>
     Rundenzeit: {time}</i></size>
-  hint_cycle: <color=#ff0000>You - {kills}/{needKills} kills</color></size>
-  leaderboard: Leaderboard
-  leaderboard_content: <color={color}>{num}. {playerName} / {kills} kills</color>
   no_players: |-
     <color=red>Das Spiel wurde vom Admin beendet
     Deine Kills {count}</color>
@@ -49,40 +46,40 @@ Among Us:
   crewmate_win: '<color=#00FFFF>Besatzungsmitglieder</color> haben gewonnen!'
   killed_by_impostor: 'Du wurdest von einem Verräter getötet!'
   kill_cooldown: 'Du kannst noch nicht für {time} Sekunden töten!'
-  too_far: 'Du bist viel zu weit weck um zu töten!'
+  too_far: 'Du bist viel zu weit weck um jemanden zu töten!'
   voting_info: |-
     {reason}
-    Du kannst abstimmen in dem du .vote <color/name/skip> in die Konsole eingibst, was du mit ~ öffnen kannst.
+    Du kannst abstimmen in dem du .vote <color/name/skip> in die Konsole eingibst, was du mit ö öffnen kannst.
     {time} Sekunden verbleiben.
   meeting_called: 'Eine Sitzung wurde von {player} gefordert!'
   death_body_reported: '<color=red>{deadPlayer}</color>''s Leiche wurde von <color=yellow>{reportedPlayer}</color> gefunden!'
   emergency_meetings_reached: 'Du kannst keine weitere Notfall-Sitzungen anfordern!'
   meeting_cooldown: 'Du kannst keine Sitzung für {time} Sekunden anfordern!'
-  calibrate_distributor: 'Calibrate Distributor'
-  chart_course: 'Chart Course'
-  clean_o2_filter: 'Clean O2 Filter'
-  empty_chute: 'Empty Chute'
-  prime_shields: 'Prime Shields'
-  start_reactor: 'Start Reactor'
-  submit_scan: 'Submit Scan'
-  fix_wiring: 'Fix Wiring'
-  align_engine_output: 'Align Engine Output'
-  divert_power_to: 'Divert Power to {roomName}'
-  accept_divert_power: 'Accept Divert Power'
-  download_data: 'Download Data'
-  upload_data: 'Upload Data'
-  no_votes: 'No votes'
-  vote: 'vote'
-  no_one_voted_out: 'No one was voted out.'
-  its_a_tie: 'It''s a tie!'
-  death_message: 'Voted out.'
-  voted_out: '{player} was voted out.'
-  tasks: 'Tasks'
-  didnt_vote: 'Didn''t vote'
-  was_an_impostor: '{player} was an Impostor.'
-  was_not_an_impostor: '{player} was not an Impostor.'
+  calibrate_distributor: 'Verteiler kalibrieren'
+  chart_course: 'Kurs legen'
+  clean_o2_filter: 'O2 Filter reinigen'
+  empty_chute: 'Schacht leeren'
+  prime_shields: 'Primär schilde'
+  start_reactor: 'Reaktor starten'
+  submit_scan: 'Scannen absenden'
+  fix_wiring: 'Kabel reparieren'
+  align_engine_output: 'Motor ausrichten'
+  divert_power_to: 'Strom umleiten zu {roomName}'
+  accept_divert_power: 'Umleitungsstrom akzeptieren'
+  download_data: 'Datein Runterladen'
+  upload_data: 'Datein Hochladen'
+  no_votes: 'keine abstimmung'
+  vote: 'abstimmung'
+  no_one_voted_out: 'Niemand wurde rausgewählt.'
+  its_a_tie: 'Es ist ein Unentschieden!'
+  death_message: 'Rausgewählt.'
+  voted_out: '{player} wurde rausgewählt.'
+  tasks: 'Aufgaben'
+  didnt_vote: 'Nicht gewählt'
+  was_an_impostor: '{player} war der Verräter.'
+  was_not_an_impostor: '{player} war nicht der Verräter.'
   name: 'Among Us'
-  description: 'The Impostor is among us.'
+  description: 'among us aber in SCP:SL'
   command_name: 'amongus'
 Nuke Run:
   before_start: |-
@@ -95,8 +92,8 @@ Nuke Run:
   end: |-
     {name}
     <color=red>{players} Spieler sind entkommen</color>
-  name: 'Nuke Run'
-  description: 'Escape the facility before it explodes!'
+  name: 'Atomare Flucht'
+  description: 'Entkomme der Einrichtung hinter SCP-173 mit Überschallgeschwindigkeit!'
   command_name: 'escape'
 Battle:
   time_left: '<size=100><color=red>Die Schlacht beginnt in {time}</color></size>'
@@ -134,7 +131,7 @@ Cock Fights:
   scientist_win: |-
     <color=#D71868><b><i>{name}</i></b></color>
     <color=yellow>GEWINNER: <color=red>WISSENSCHAFTLER</color></color>
-  name: 'Hahnenkämpfe'
+  name: 'Box kämpfe'
   description: 'Duell der Spieler auf der 35hp-Map aus CS 1.6'
   command_name: 'versus'
 Counter-Strike:
@@ -167,9 +164,9 @@ Counter-Strike:
     <i>Bombe entschärft</i>
   you_planted: '<b><color=#ff4c5b>Du hast die Bombe platziert</color></b>'
   you_defused: '<b><color=#42aaff>Du hast die Bombe entschärft</color></b>'
-  picked_up_bomb: You picked up the C4!
-  equipped_bomb: You're holding the C4!
-  bomb_death_reason: The Bomb exploded.
+  picked_up_bomb: Du hast das C4 aufgehoben!
+  equipped_bomb: Du hälst das C4!
+  bomb_death_reason: Die Bombe ist explodiert.
   hint_cycle: |-
     <size=30><i><b>{name}</b>
     {kills}
@@ -267,8 +264,8 @@ FallDown:
     {time}
     <color=yellow>Verbleibend: </color>{count}<color=yellow> Spieler</color>
   winner: '<color=red>Gewinner:</color> {winner}'
-  died: '<color=red>Alle Spieler sind gestorben</color>'
-  name: 'FallRunter'
+  died: '<color=red>Du bist gestorben</color>'
+  name: 'FallDown'
   description: 'Alle Plattformen werden zerstört. Es ist notwendig zu überleben'
   command_name: 'fall'
 Football:
@@ -297,7 +294,7 @@ Gun Game:
   winner: |-
     <color=#D71868><b><i>{name}</i></b></color>
     <color=yellow>Der Gewinner des Spiels: <color=green>{winner}</color></color>
-  name: 'Waffenkrieg'
+  name: 'Gun Game'
   description: 'Cooler GunGame auf der Shipment-Karte aus MW19.'
   command_name: 'gungame'
 Knives of Death:
@@ -335,13 +332,13 @@ Musical Chairs:
   all_died: |-
     <b><color=#42aaff>{name}</color></b>
     <color=red>Alle Spieler sind gestorben</color>
-  name: 'Musical Chairs'
+  name: 'Reise nach Jerusalem'
   description: 'Wettbewerb mit anderen Spielern um freie Stühle zur lustigen Musik'
   command_name: 'chair'
 Puzzle:
   start: |-
     <b>{name}</b>
-    <color=yellow>O minijogo começará em <color=red>{time}</color> segundos</color>
+    <color=yellow>Das Mini-Spiel wird starten in <color=red>{time}</color> sekunden</color>
   stage: |-
     <b>{name}</b>
     <color=red>Stufe: </color>{stageNum}<color=red> / </color>{stageFinal}
@@ -365,17 +362,17 @@ Puzzle:
 Race:
   cycle: |-
     {name}
-    <color=yellow>Passiere den Zielpunkt, um zu gewinnen!</color>
+    <color=yellow>Erreiche den Zielpunkt, um zu gewinnen!</color>
     Verbleibende Zeit: {time}
   died: '<color=red>Du hast das Rennen nicht beendet</color>'
   players_survived: |-
-    <color=red>Der Mensch gewinnt!</color>
+    <color=red>Mehrere haben überlebt!</color>
     Überlebende: {count}
   one_survived: |-
-    <color=red>Der Mensch gewinnt!</color>
+    <color=red>Einer hat überlebt!</color>
     Gewinner: {player}
   no_survivors: '<color=red>Niemand hat überlebt!</color>'
-  name: 'Rennen'
+  name: 'Jump and Run'
   description: 'Erreiche das Ende der Karte, um zu gewinnen'
   command_name: 'race'
 Red Light Green Light:
@@ -459,7 +456,7 @@ Tag:
     <color=yellow><b><i>{time}</i></b> Sekunden übrig</color>
   hurt: 'Du hattest keine Zeit, jemanden zu fangen.'
   one_player: |-
-    Der Spieler hat gewonnen {winner}
+    {winner} hat gewonnen
     <color=yellow>Event-Zeit <color=red>{time}</color></color>
   all_die: |-
     Niemand hat überlebt.
