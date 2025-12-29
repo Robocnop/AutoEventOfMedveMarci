@@ -489,6 +489,7 @@ The floor is LAVA:
     Játékos - {winner}</b></color>
   all_dead: '<color=red><b>Senki sem élte túl a végéig.</b></color>'
   died: '<color=red>Lávába estél</color>'
+  reload: 'Töltsd újra a fegyveredet!'
   name: 'The Floor Is Lava!'
   description: 'Túlélő mód, ahol kerülnöd kell a lávát és lőnöd a többieket'
   command_name: 'lava'

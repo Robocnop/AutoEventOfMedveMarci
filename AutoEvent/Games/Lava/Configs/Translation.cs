@@ -9,4 +9,5 @@ public class Translation : EventTranslation
     public string Win { get; set; } = "<color=red><b>Winner\nPlayer - {winner}</b></color>";
     public string AllDead { get; set; } = "<color=red><b>No one survived to the end.</b></color>";
     public string Died { get; set; } = "<color=red>You fell into lava</color>";
+    public string Reload { get; set; } = "Reload your weapon!";
 }

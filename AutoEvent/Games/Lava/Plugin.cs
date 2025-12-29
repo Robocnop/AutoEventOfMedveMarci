@@ -17,13 +17,13 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
     public override string Description { get; set; } = "Survival, in which you need to avoid lava and shoot at others";
     public override string Author { get; set; } = "RisottoMan";
     public override string CommandName { get; set; } = "lava";
+    internal EventHandler _eventHandler;
     protected override FriendlyFireSettings ForceEnableFriendlyFire { get; set; } = FriendlyFireSettings.Enable;
 
     public override EventFlags EventHandlerSettings { get; set; } = EventFlags.IgnoreRagdoll |
                                                                     EventFlags.IgnoreHandcuffing |
                                                                     EventFlags.IgnoreBulletHole |
                                                                     EventFlags.IgnoreBloodDecal;
-
 
     public MapInfo MapInfo { get; set; } = new()
     {
@@ -39,14 +39,16 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 
     protected override void RegisterEvents()
     {
+        _eventHandler = new EventHandler(this);
         PlayerEvents.Hurting += EventHandler.OnHurting;
-        PlayerEvents.PickedUpItem += EventHandler.OnPickedUpItem;
+        PlayerEvents.PickedUpItem += _eventHandler.OnPickedUpItem;
     }
 
     protected override void UnregisterEvents()
     {
         PlayerEvents.Hurting -= EventHandler.OnHurting;
-        PlayerEvents.PickedUpItem -= EventHandler.OnPickedUpItem;
+        PlayerEvents.PickedUpItem -= _eventHandler.OnPickedUpItem;
+        _eventHandler = null;
     }
 
     protected override void OnStart()

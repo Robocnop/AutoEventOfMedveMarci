@@ -5,7 +5,7 @@ using PlayerStatsSystem;
 
 namespace AutoEvent.Games.Lava;
 
-public abstract class EventHandler
+public class EventHandler(Plugin plugin)
 {
     public static void OnHurting(PlayerHurtingEventArgs ev)
     {
@@ -21,11 +21,11 @@ public abstract class EventHandler
             damageHandler.Damage = 10;
     }
 
-    public static void OnPickedUpItem(PlayerPickedUpItemEventArgs ev)
+    public void OnPickedUpItem(PlayerPickedUpItemEventArgs ev)
     {
         if (ev.Item is not FirearmItem firearm2) return;
         if (!firearm2.Base.TryGetModule<MagazineModule>(out var module)) return;
-        ev.Player.SendHint("Reload your weapon!", 5);
+        ev.Player.SendHint(plugin.Translation.Reload, 5);
         ev.Player.AddAmmo(module.AmmoType, (ushort)module.AmmoMax);
         ev.Player.CurrentItem = ev.Item;
     }

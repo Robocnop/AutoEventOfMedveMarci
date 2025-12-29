@@ -131,7 +131,7 @@ Cock Fights:
   scientist_win: |-
     <color=#D71868><b><i>{name}</i></b></color>
     <color=yellow>GEWINNER: <color=red>WISSENSCHAFTLER</color></color>
-  max_round_reached: You reached the max number of rounds!
+  max_round_reached: 'You reached the max number of rounds!'
   name: 'Box kämpfe'
   description: 'Duell der Spieler auf der 35hp-Map aus CS 1.6'
   command_name: 'versus'
@@ -489,6 +489,7 @@ The floor is LAVA:
     Spieler - {winner}</b></color>
   all_dead: '<color=red><b>Niemand hat es bis zum Ende überlebt.</b></color>'
   died: '<color=red>In Lava verbrannt</color>'
+  reload: 'Reload your weapon!'
   name: 'Der Boden ist LAVA'
   description: 'Überleben, indem du Lava vermeidest und auf andere schießt.'
   command_name: 'lava'
