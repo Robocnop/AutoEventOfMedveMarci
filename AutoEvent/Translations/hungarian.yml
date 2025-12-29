@@ -54,6 +54,10 @@ Among Us:
     {reason}
     A szavazáshoz írd be a .vote <color/name/skip> parancsot a ClientConsole-ba, amit alapból a ~ gombbal nyithatsz meg.
     Még {time} másodperc maradt.
+  discussion_info: |-
+    {reason}
+    Beszéd idő van! Csak az beszél aki indította a megbeszélést.
+    {time} másodperc maradt. Hamarosan fogsz tudni beszélni és szavazni.
   meeting_called: '{player} összehívta a megbeszélést!'
   death_body_reported: '<color=red>{deadPlayer}</color> holttestét <color=yellow>{reportedPlayer}</color> találta meg!'
   emergency_meetings_reached: 'Már nem hívhatsz több vészmegbeszélést!'

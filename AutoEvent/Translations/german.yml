@@ -51,6 +51,10 @@ Among Us:
     {reason}
     Du kannst abstimmen in dem du .vote <color/name/skip> in die Konsole eingibst, was du mit ö öffnen kannst.
     {time} Sekunden verbleiben.
+  discussion_info: |-
+    {reason}
+    Discussion time! You can't chat with other players.
+    {time} seconds remaining, soon you will can speak and vote.
   meeting_called: 'Eine Sitzung wurde von {player} gefordert!'
   death_body_reported: '<color=red>{deadPlayer}</color>''s Leiche wurde von <color=yellow>{reportedPlayer}</color> gefunden!'
   emergency_meetings_reached: 'Du kannst keine weitere Notfall-Sitzungen anfordern!'
