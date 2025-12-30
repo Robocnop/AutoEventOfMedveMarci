@@ -115,7 +115,8 @@
 
 ##### Avoid it to survive.
 
-![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Zombie%20Escape.png)
+![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Line.png)
+![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/Line1.png)
 
 ### Musical Chairs [chair]
 
