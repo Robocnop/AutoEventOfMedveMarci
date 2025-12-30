@@ -1,4 +1,4 @@
-## I'll introduce you to 20 mini-games I've made:
+## I'll introduce you to the 26 mini-games:
 
 ### AirStrike [airstrike]
 
@@ -122,7 +122,7 @@
 
 ##### Competition with other players for free chairs to funny music.
 
-![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/FinishWay.png)
+![](https://github.com/MedveMarci/AutoEvent/blob/main/Photos/MusicalChair.png)
 
 ### Nuke Run [nukerun]
 
