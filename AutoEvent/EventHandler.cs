@@ -185,8 +185,7 @@ internal class EventHandler : CustomEventsHandler
     {
         if (AutoEvent.Singleton.Config != null && AutoEvent.Singleton.Config.CreditTagSystem)
         {
-            CreditTag.GetTagsFromGithub();
-            if (CreditTag.TryGetTag(ev.Player.UserId, out var tag, out var color))
+            if (ApiManager.TryGetCreditTag(ev.Player.UserId, out var tag, out var color))
             {
                 ev.Player.ReferenceHub.serverRoles.SetText(tag);
                 ev.Player.ReferenceHub.serverRoles.SetColor(color);

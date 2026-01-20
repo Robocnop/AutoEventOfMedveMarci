@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Text.Json;
 using LabApi.Features;
@@ -126,6 +127,49 @@ public static class ApiManager
             LogManager.Error($"Sending logs failed.\n{e}");
             return null;
         }
+    }
+    
+    internal static bool TryGetCreditTag(string steam64, out string tag, out string color)
+    {
+        tag = string.Empty;
+        color = string.Empty;
+        if (string.IsNullOrWhiteSpace(steam64))
+            return false;
+        LogManager.Debug($"[CreditTag] Original Steam64 ID: {steam64}");
+        steam64 = steam64.Trim().Replace("@steam", "");
+        LogManager.Debug($"[CreditTag] Looking up tag for Steam64 ID: {steam64}");
+        if (!steam64.All(char.IsDigit))
+            return false;
+
+        var resp = HttpQuery.Get($"{ApiBase}/api/v1/credittag/{steam64}");
+        var (statusCode, message) = ParseApiResponse(resp);
+        
+        if (statusCode != HttpStatusCode.OK)
+        {
+            switch (statusCode)
+            {
+                case HttpStatusCode.NotFound:
+                    LogManager.Debug("[CreditTag] Tag not found (404).");
+                    return false;
+                case HttpStatusCode.InternalServerError:
+                    LogManager.Error("[CreditTag] Server error (500) while looking up tag.");
+                    return false;
+                default:
+                    LogManager.Debug($"[CreditTag] Unexpected status code: {statusCode} - {message}");
+                    return false;
+            }
+        }
+
+        var root = JsonDocument.Parse(resp).RootElement;
+
+        if (root.TryGetProperty("badge_name", out var tagProp) && tagProp.ValueKind == JsonValueKind.String)
+                tag = tagProp.GetString() ?? string.Empty;
+        if (root.TryGetProperty("color", out var colorProp) && colorProp.ValueKind == JsonValueKind.String)
+                color = colorProp.GetString() ?? string.Empty;
+
+        if (!string.IsNullOrEmpty(tag) && !string.IsNullOrEmpty(color)) return true;
+        LogManager.Debug("[CreditTag] Tag or color is empty.");
+        return false;
     }
 
     private static (HttpStatusCode StatusCode, string Message) ParseApiResponse(string json)
