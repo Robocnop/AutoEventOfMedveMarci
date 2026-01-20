@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Net.Http;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoEvent.ApiFeatures;
 
 namespace AutoEvent;
 

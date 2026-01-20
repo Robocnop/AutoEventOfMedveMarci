@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoEvent.API;
+using AutoEvent.ApiFeatures;
 using AutoEvent.Games.Glass.Features;
 using AutoEvent.Interfaces;
 using LabApi.Events.Handlers;

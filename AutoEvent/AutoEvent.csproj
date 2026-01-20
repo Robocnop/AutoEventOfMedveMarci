@@ -41,10 +41,9 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Lib.Harmony" Version="2.4.2"/>
-        <PackageReference Include="Northwood.LabAPI" Version="1.1.4"/>
         <PackageReference Include="System.Buffers" Version="4.6.1"/>
         <PackageReference Include="System.Net.Http" Version="4.3.4"/>
-        <PackageReference Include="System.Text.Json" Version="10.0.0"/>
+        <PackageReference Include="System.Text.Json" Version="10.0.2" />
     </ItemGroup>
     <ItemGroup>
         <Reference Include="AudioPlayerApi" HintPath="$(LABAPI_DEPENDENCIES)\AudioPlayerApi.dll"/>
@@ -55,6 +54,7 @@
         <Reference Include="Assembly-CSharp" HintPath="$(SL_REFERENCES)\Assembly-CSharp-Publicized.dll"/>
         <Reference Include="Mirror" HintPath="$(SL_REFERENCES)\Mirror.dll"/>
         <Reference Include="System"/>
+        <Reference Include="LabApi" HintPath="$(SL_REFERENCES)\LabApi.dll"/>
         <Reference Include="System.ComponentModel.DataAnnotations" HintPath="$(SL_REFERENCES)\System.ComponentModel.DataAnnotations.dll"/>
         <Reference Include="UnityEngine" HintPath="$(SL_REFERENCES)\UnityEngine.dll"/>
         <Reference Include="UnityEngine.AssetBundleModule" HintPath="$(SL_REFERENCES)\UnityEngine.AssetBundleModule.dll"/>
@@ -70,9 +70,6 @@
         <Reference Include="Pooling" HintPath="$(SL_REFERENCES)\Pooling.dll"/>
     </ItemGroup>
     <ItemGroup>
-        <Content Include="..\.gitignore">
-            <Link>.gitignore</Link>
-        </Content>
         <Content Include="..\Docs\*" Link="Docs\*"/>
         <Content Include="..\Docs\Translations\*" Link="Docs\Translations\*"/>
         <Content Include="..\README.md" Link="README.md"/>

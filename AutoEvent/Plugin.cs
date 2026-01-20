@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using AutoEvent.API;
+using AutoEvent.ApiFeatures;
 using AutoEvent.Loader;
 using HarmonyLib;
 using LabApi.Events.CustomHandlers;
@@ -26,7 +27,7 @@ public class AutoEvent : Plugin<Config>
     public override string Description =>
         "A plugin that allows you to play mini-games in SCP:SL. It includes a variety of games such as Spleef, Lava, Hide and Seek, Knives, and more. Each game has its own unique mechanics and rules, providing a fun and engaging experience for players.";
 
-    public override Version Version => new(9, 15, 0);
+    public override Version Version => new(9, 16, 0);
     public override Version RequiredApiVersion => new(LabApiProperties.CompiledVersion);
 
     public static string BaseConfigPath { get; private set; }

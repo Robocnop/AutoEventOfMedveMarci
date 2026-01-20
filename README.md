@@ -1,6 +1,6 @@
 # AutoEvent
 
-[![Version](https://img.shields.io/github/v/release/MedveMarci/AutoEvent?&label=Version&color=d500ff)](https://github.com/MedveMarci/AutoEvent/releases/latest) [![LabAPI Version](https://img.shields.io/badge/LabAPI_Version-1.1.4-51f4ff )](https://github.com/northwood-studios/LabAPI/releases/tag/1.1.4) [![SCP:SL Version](https://img.shields.io/badge/SCP:SL_Version-14.2.4-blue?&color=e5b200)](https://store.steampowered.com/app/700330/SCP_Secret_Laboratory/) [![Total Downloads](https://img.shields.io/github/downloads/MedveMarci/AutoEvent/total.svg?label=Total%20Downloads&color=&color=ffbf00)]()<br>
+[![Version](https://img.shields.io/github/v/release/MedveMarci/AutoEvent?&label=Version&color=d500ff)](https://github.com/MedveMarci/AutoEvent/releases/latest) [![LabAPI Version](https://img.shields.io/badge/LabAPI_Version-1.1.5-51f4ff )](https://github.com/northwood-studios/LabAPI/releases/tag/1.1.4) [![SCP:SL Version](https://img.shields.io/badge/SCP:SL_Version-14.2.5-blue?&color=e5b200)](https://store.steampowered.com/app/700330/SCP_Secret_Laboratory/) [![Total Downloads](https://img.shields.io/github/downloads/MedveMarci/AutoEvent/total.svg?label=Total%20Downloads&color=&color=ffbf00)]()<br>
 
 ---
 

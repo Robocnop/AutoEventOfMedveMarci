@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoEvent.API;
 using AutoEvent.API.Enums;
+using AutoEvent.ApiFeatures;
 using CustomPlayerEffects;
 using InventorySystem.Items;
 using InventorySystem.Items.Firearms.Modules;
@@ -163,8 +164,7 @@ internal class EventHandler : CustomEventsHandler
     {
         try
         {
-            var currentVersion = AutoEvent.Singleton.Version;
-            _ = Task.Run(() => VersionManager.CheckForUpdatesAsync(currentVersion));
+            ApiManager.CheckForUpdates();
         }
         catch (Exception ex)
         {

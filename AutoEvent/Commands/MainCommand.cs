@@ -1,4 +1,5 @@
 ﻿using System;
+using AutoEvent.ApiFeatures;
 using CommandSystem;
 
 namespace AutoEvent.Commands;

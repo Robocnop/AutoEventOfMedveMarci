@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using AutoEvent.ApiFeatures;
 using AutoEvent.Interfaces;
 using LabApi.Features.Wrappers;
 using LabApi.Loader.Features.Yaml;

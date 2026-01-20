@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoEvent.API;
 using AutoEvent.API.Enums;
+using AutoEvent.ApiFeatures;
 using AutoEvent.Interfaces;
 using LabApi.Features.Wrappers;
 using MEC;
