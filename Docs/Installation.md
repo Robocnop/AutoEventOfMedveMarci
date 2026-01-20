@@ -4,19 +4,15 @@
 
 ### *You need to download the latest release:*
 
-- [``AutoEvent-LabApi.dll``](https://github.com/MedveMarci/AutoEvent/releases/latest) move to =>
-  ``LabApi/plugins/global/``
+- [``AutoEvent.dll``](https://github.com/MedveMarci/AutoEvent/releases/latest) move to => ``LabApi/plugins/global/``
 
-- [
-  ``ProjectMER.dll``](https://github.com/Michal78900/ProjectMER/releases/latest)
+- [``dependencies.zip``](https://github.com/MedveMarci/AutoEvent/releases/latest) unzip files to => ``LabAPI\dependencies\global``
 
-  move to => ``LabApi/plugins/global/``
+- [``ProjectMER.dll``](https://github.com/Michal78900/ProjectMER/releases/latest) move to => ``LabApi/plugins/global/``
 
-- [``Music.tar.gz``](https://github.com/MedveMarci/AutoEvent/releases/latest) unzip files to =>
-  ``LabApi/configs/AutoEvent/Music``
+- [``Music.tar.gz``](https://github.com/MedveMarci/AutoEvent/releases/latest) unzip files to => ``LabApi/configs/AutoEvent/Music``
 
-- [``Schematics.tar.gz``](https://github.com/MedveMarci/AutoEvent/releases/latest) unzip files to =>
-  ``LabApi/configs/AutoEvent/Schematics``
+- [``Schematics.tar.gz``](https://github.com/MedveMarci/AutoEvent/releases/latest) unzip files to => ``LabApi/configs/AutoEvent/Schematics``
 
 - Ensure that the Config has the following directories, and that they can be accessed to the server.
 
