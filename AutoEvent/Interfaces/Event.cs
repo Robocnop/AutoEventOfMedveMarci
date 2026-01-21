@@ -4,6 +4,7 @@ using System.Linq;
 using AutoEvent.API;
 using AutoEvent.API.Enums;
 using AutoEvent.API.Season;
+using AutoEvent.API.Season.Enum;
 using AutoEvent.ApiFeatures;
 using AutoEvent.Interfaces;
 using MEC;
@@ -184,10 +185,10 @@ namespace AutoEvent.Interfaces
         /// <summary>
         ///     Used to start the event safely.
         /// </summary>
-        public void StartEvent()
+        public void StartEvent(string mapName = "")
         {
             LogManager.Debug($"Starting Event {Name}");
-            OnInternalStart();
+            OnInternalStart(mapName);
         }
 
         /// <summary>
@@ -286,7 +287,7 @@ namespace AutoEvent.Interfaces
         /// <summary>
         ///     Assigns a random map.
         /// </summary>
-        private void SetRandomMap()
+        private void SetMap(string mapName = "")
         {
             if (InternalConfig.AvailableMaps is null || InternalConfig.AvailableMaps.Count == 0)
                 return;
@@ -295,11 +296,14 @@ namespace AutoEvent.Interfaces
             var seasonFlags = SeasonMethod.GetSeasonStyle().SeasonFlag;
 
             // If there are no seasonal maps, then choose the default maps
-            if (InternalConfig.AvailableMaps.Count(r => r.SeasonFlag == seasonFlags) == 0) seasonFlags = 0;
+            if (InternalConfig.AvailableMaps.Count(r => r.SeasonFlag == SeasonFlags.None) == 0) seasonFlags = SeasonFlags.None;
 
             List<MapChance> maps = [];
-            maps.AddRange(InternalConfig.AvailableMaps.Where(map => map.SeasonFlag == seasonFlags));
+            maps.AddRange(InternalConfig.AvailableMaps.Where(map => map.SeasonFlag == seasonFlags || map.SeasonFlag == SeasonFlags.None));
 
+            if (!string.IsNullOrEmpty(mapName))
+                maps = [InternalConfig.AvailableMaps.FirstOrDefault(x => x.Map.MapName.Contains(mapName, StringComparison.OrdinalIgnoreCase))];
+            
             if (this is not IEventMap eventMap) return;
             var spawnAutomatically = eventMap.MapInfo.SpawnAutomatically;
             if (maps.Count == 1)
@@ -357,7 +361,7 @@ namespace AutoEvent.Interfaces
         /// <summary>
         ///     Used to trigger plugin events in the right order.
         /// </summary>
-        private void OnInternalStart()
+        private void OnInternalStart(string mapName = "")
         {
             KillLoop = false;
             _cleanupRun = false;
@@ -383,8 +387,8 @@ namespace AutoEvent.Interfaces
             {
                 LogManager.Error($"Could not modify friendly fire / ff autoban settings.\n{e}");
             }
-
-            SetRandomMap();
+            
+            SetMap(mapName);
             SpawnMap(true);
 
             try

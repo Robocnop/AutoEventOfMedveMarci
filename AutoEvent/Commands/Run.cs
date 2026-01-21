@@ -13,7 +13,7 @@ namespace AutoEvent.Commands;
 internal class Run : ICommand, IUsageProvider
 {
     public string Command => nameof(Run);
-    public string Description => "Run the event, takes on 1 argument - the command name of the event";
+    public string Description => "Run the event, takes on 2 argument - the command name of the event, the name of the map (optional)";
     public string[] Aliases => ["start", "play", "begin"];
 
     public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
@@ -32,7 +32,7 @@ internal class Run : ICommand, IUsageProvider
 
         if (arguments.Count < 1)
         {
-            response = "Only 1 argument is needed - the command name of the event!";
+            response = "You need to specify the name of the event, optionally the name of the map!";
             return false;
         }
 
@@ -70,7 +70,15 @@ internal class Run : ICommand, IUsageProvider
                 return false;
             }
         }
-
+        
+        //Get the map name from the arguments if it exists
+        if (arguments.Count >= 2)
+        {
+            var mapName = arguments.At(1);
+            if (!Extensions.IsExistsMap(mapName, out response))
+                return false;
+        }
+        
         Round.IsLocked = true;
         if (!Round.IsRoundStarted)
         {
@@ -95,5 +103,5 @@ internal class Run : ICommand, IUsageProvider
         return true;
     }
 
-    public string[] Usage => ["Event Name"];
+    public string[] Usage => ["Event Name", "Map Name (Optional)"];
 }

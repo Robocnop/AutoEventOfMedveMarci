@@ -2,15 +2,15 @@
 
 ## 1. Download and Setup :moyai:
 
-### *You need to download the latest release:*
+### *You need to download the latest release (You can click on the names):*
 
 - [``AutoEvent.dll``](https://github.com/MedveMarci/AutoEvent/releases/latest) move to => ``LabApi/plugins/global/``
 
 - [``dependencies.zip``](https://github.com/MedveMarci/AutoEvent/releases/latest) unzip files to =>
   ``LabAPI\dependencies\global``
 
-- [``ProjectMER.dll``](https://github.com/Michal78900/ProjectMER/releases/latest) move to => ``LabApi/plugins/global/``
-
+- ``ProjectMER.dll`` move to => ``LabApi/plugins/global/``
+    - You can find a fixed version of ProjectMER on my [Discord Server](https://discord.gg/KmpA8cfaSA). If it will be fixed, I will link that one here.
 - [``Music.tar.gz``](https://github.com/MedveMarci/AutoEvent/releases/latest) unzip files to =>
   ``LabApi/configs/AutoEvent/Music``
 
