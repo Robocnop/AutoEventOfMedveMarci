@@ -72,12 +72,10 @@ internal class Run : ICommand, IUsageProvider
         }
         
         //Get the map name from the arguments if it exists
+        var mapName = "";
         if (arguments.Count >= 2)
-        {
-            var mapName = arguments.At(1);
-            if (!Extensions.IsExistsMap(mapName, out response))
-                return false;
-        }
+            mapName = arguments.At(1);
+        
         
         Round.IsLocked = true;
         if (!Round.IsRoundStarted)
@@ -89,13 +87,13 @@ internal class Run : ICommand, IUsageProvider
                 foreach (var player in Player.ReadyList)
                     player.ClearInventory();
 
-                ev.StartEvent();
+                ev.StartEvent(mapName);
                 AutoEvent.EventManager.CurrentEvent = ev;
             });
         }
         else
         {
-            ev.StartEvent();
+            ev.StartEvent(mapName);
             AutoEvent.EventManager.CurrentEvent = ev;
         }
 

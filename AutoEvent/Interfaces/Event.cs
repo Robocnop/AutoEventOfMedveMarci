@@ -162,15 +162,23 @@ namespace AutoEvent.Interfaces
         /// <param name="checkIfAutomatic">Should the audio abide by <see cref="MapInfo.SpawnAutomatically" /></param>
         protected void SpawnMap(bool checkIfAutomatic = false)
         {
-            LogManager.Debug($"Spawning Map: " +
-                             $"{(this is IEventMap m ? "true, " +
-                                                       $"{(!string.IsNullOrEmpty(m.MapInfo.MapName) ? "true" : "false")}, " +
-                                                       $"{(!checkIfAutomatic ? "true" : "false")}, " +
-                                                       $"{(m.MapInfo.SpawnAutomatically ? "true" : "false")}" : "false")}");
-            if (this is IEventMap map && !string.IsNullOrEmpty(map.MapInfo.MapName) &&
-                (!checkIfAutomatic || map.MapInfo.SpawnAutomatically))
-                map.MapInfo.Map = Extensions.LoadMap(map.MapInfo.MapName, map.MapInfo.Position, map.MapInfo.MapRotation,
-                    map.MapInfo.Scale);
+            try
+            {
+                LogManager.Debug($"Spawning Map: " +
+                                 $"{(this is IEventMap m ? "true, " +
+                                                           $"{(!string.IsNullOrEmpty(m.MapInfo.MapName) ? "true" : "false")}, " +
+                                                           $"{(!checkIfAutomatic ? "true" : "false")}, " +
+                                                           $"{(m.MapInfo.SpawnAutomatically ? "true" : "false")}" : "false")}");
+                if (this is IEventMap map && !string.IsNullOrEmpty(map.MapInfo.MapName) &&
+                    (!checkIfAutomatic || map.MapInfo.SpawnAutomatically))
+                    map.MapInfo.Map = Extensions.LoadMap(map.MapInfo.MapName, map.MapInfo.Position, map.MapInfo.MapRotation,
+                        map.MapInfo.Scale);
+            }
+            catch (Exception e)
+            {
+                LogManager.Error($"Could not spawn map for event {Name}.\n{e}");
+                AutoEvent.EventManager.CurrentEvent.StopEvent();
+            }
         }
 
         /// <summary>
