@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using AutoEvent.API;
 using AutoEvent.API.Enums;
 using AutoEvent.ApiFeatures;
@@ -183,16 +182,22 @@ internal class EventHandler : CustomEventsHandler
 
     public override void OnPlayerJoined(PlayerJoinedEventArgs ev)
     {
-        if (AutoEvent.Singleton.Config != null && AutoEvent.Singleton.Config.CreditTagSystem)
+        try
         {
-            if (ApiManager.TryGetCreditTag(ev.Player.UserId, out var tag, out var color))
-            {
-                ev.Player.ReferenceHub.serverRoles.SetText(tag);
-                ev.Player.ReferenceHub.serverRoles.SetColor(color);
-                LogManager.Debug($"Applied credit tag to player {ev.Player.Nickname} ({ev.Player.UserId}): {tag}");
-            }
-        }
+            if (AutoEvent.Singleton.Config != null && AutoEvent.Singleton.Config.CreditTagSystem)
+                if (ApiManager.TryGetCreditTag(ev.Player.UserId, out var tag, out var color))
+                {
+                    if (string.IsNullOrEmpty(tag))
+                        return;
+                    ev.Player.ReferenceHub.serverRoles.SetText(tag);
+                    ev.Player.ReferenceHub.serverRoles.SetColor(color);
+                }
 
-        base.OnPlayerJoined(ev);
+            base.OnPlayerJoined(ev);
+        }
+        catch (Exception e)
+        {
+            LogManager.Error($"An error occurred while applying credit tag to player {ev.Player.UserId}.\n{e}");
+        }
     }
 }

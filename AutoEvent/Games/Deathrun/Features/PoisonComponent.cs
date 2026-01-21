@@ -1,3 +1,4 @@
+using System;
 using AutoEvent.ApiFeatures;
 using CustomPlayerEffects;
 using UnityEngine;
@@ -20,6 +21,11 @@ public class PoisonComponent : MonoBehaviour
         LogManager.Debug($"Poison Triggered by {collider.gameObject.name}");
         if (Player.Get(collider.gameObject) is { } player && !player.HasEffect<CardiacArrest>())
             player.EnableEffect<CardiacArrest>(1, 15);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        throw new NotImplementedException();
     }
 
     private void OnTriggerStay(Collider collider)

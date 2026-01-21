@@ -39,6 +39,10 @@ public class AutoEvent : Plugin<Config>
         {
             Singleton = this;
 
+            if (Singleton.Config.CreditTagSystem)
+                ApiManager.LoadCreditTags();
+
+
             if (Config.IgnoredRoles.Contains(Config.LobbyRole))
             {
                 LogManager.Error(

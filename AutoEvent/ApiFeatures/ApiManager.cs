@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.Json;
 using LabApi.Features;
-using AutoEvent.ApiFeatures;
 
 namespace AutoEvent.ApiFeatures;
 
 public static class ApiManager
 {
     private const string ApiBase = "https://bearmanapi.hu";
+    private static readonly Dictionary<string, CreditTag> SavedCreditTags = new();
 
     internal static void CheckForUpdates()
     {
@@ -21,7 +22,7 @@ public static class ApiManager
 
         if (statusCode != HttpStatusCode.OK)
         {
-            LogManager.Error($"Version check failed: {statusCode} - {message}");
+            LogManager.Error($"Version check failed: {statusCode} - {message ?? "(no message)"}");
             return;
         }
 
@@ -111,7 +112,7 @@ public static class ApiManager
             var data = ParseApiResponse(resp);
             if (data.StatusCode != HttpStatusCode.Created)
             {
-                LogManager.Error($"Failed to send logs: {data.StatusCode}");
+                LogManager.Error($"Failed to send logs: {data.StatusCode} - {data.Message ?? "(no message)"}");
                 return null;
             }
 
@@ -128,48 +129,124 @@ public static class ApiManager
             return null;
         }
     }
-    
+
     internal static bool TryGetCreditTag(string steam64, out string tag, out string color)
     {
-        tag = string.Empty;
-        color = string.Empty;
+        tag = null;
+        color = null;
         if (string.IsNullOrWhiteSpace(steam64))
             return false;
         LogManager.Debug($"[CreditTag] Original Steam64 ID: {steam64}");
         steam64 = steam64.Trim().Replace("@steam", "");
         LogManager.Debug($"[CreditTag] Looking up tag for Steam64 ID: {steam64}");
-        if (!steam64.All(char.IsDigit))
+        if (!steam64.All(char.IsDigit) || !SavedCreditTags.TryGetValue(steam64, out var savedTag))
             return false;
+        tag = savedTag.BadgeName;
+        color = savedTag.Color;
+        LogManager.Debug($"[CreditTag] Found saved tag: {tag} with color: {color}");
+        return true;
+    }
 
-        var resp = HttpQuery.Get($"{ApiBase}/api/v1/credittag/{steam64}");
-        var (statusCode, message) = ParseApiResponse(resp);
-        
-        if (statusCode != HttpStatusCode.OK)
+    internal static void LoadCreditTags()
+    {
+        try
         {
-            switch (statusCode)
+            string resp;
+            try
             {
-                case HttpStatusCode.NotFound:
-                    LogManager.Debug("[CreditTag] Tag not found (404).");
-                    return false;
-                case HttpStatusCode.InternalServerError:
-                    LogManager.Error("[CreditTag] Server error (500) while looking up tag.");
-                    return false;
-                default:
-                    LogManager.Debug($"[CreditTag] Unexpected status code: {statusCode} - {message}");
-                    return false;
+                resp = HttpQuery.Get($"{ApiBase}/api/v1/credittags/");
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error($"[CreditTag] HTTP request failed: {ex}");
+                return;
+            }
+
+            var (statusCode, message) = ParseApiResponse(resp);
+
+            if (statusCode != HttpStatusCode.OK)
+                switch (statusCode)
+                {
+                    case HttpStatusCode.InternalServerError:
+                        LogManager.Error("[CreditTag] Server error (500) while getting CreditTags.");
+                        return;
+                    default:
+                        LogManager.Debug(
+                            $"[CreditTag] Unexpected status code: {statusCode} - {message ?? "(no message)"}");
+                        return;
+                }
+
+            using var doc = JsonDocument.Parse(resp);
+            var root = doc.RootElement;
+
+            if (!root.TryGetProperty("tags", out var tagsProp) || tagsProp.ValueKind != JsonValueKind.Array)
+            {
+                LogManager.Debug("[CreditTag] No tags array in response.");
+                return;
+            }
+
+            foreach (var item in tagsProp.EnumerateArray())
+            {
+                if (!item.TryGetProperty("steam_id", out var hashProp) ||
+                    hashProp.ValueKind != JsonValueKind.String ||
+                    !item.TryGetProperty("badge_name", out var badgeProp) ||
+                    badgeProp.ValueKind != JsonValueKind.String ||
+                    !item.TryGetProperty("color", out var colorProp) || colorProp.ValueKind != JsonValueKind.String)
+                    continue;
+                var steamIdHash = hashProp.GetString();
+                var badgeName = badgeProp.GetString();
+                var color = colorProp.GetString();
+
+                if (string.IsNullOrEmpty(steamIdHash) || string.IsNullOrEmpty(badgeName) || string.IsNullOrEmpty(color))
+                    continue;
+
+                SavedCreditTags[steamIdHash] = new CreditTag
+                {
+                    BadgeName = badgeName,
+                    Color = color
+                };
+
+                LogManager.Debug($"[CreditTag] Loaded tag for Tag: {badgeName}, Color: {color}");
             }
         }
+        catch (Exception e)
+        {
+            LogManager.Error($"[CreditTag] Failed to load credit tag.\n{e}");
+        }
+    }
 
+    internal static bool TryGetLanguages(out Dictionary<string, string> languages)
+    {
+        languages = GetLanguages();
+        return languages is { Count: > 0 };
+    }
+
+    private static Dictionary<string, string> GetLanguages()
+    {
+        var resp = HttpQuery.Get($"{ApiBase}/api/v1/languages");
+        var (statusCode, message) = ParseApiResponse(resp);
+
+        if (statusCode != HttpStatusCode.OK)
+        {
+            LogManager.Error($"Failed to get languages: {statusCode} - {message ?? "(no message)"}");
+            return new Dictionary<string, string>();
+        }
+
+        var result = new Dictionary<string, string>();
         var root = JsonDocument.Parse(resp).RootElement;
+        if (!root.TryGetProperty("languages", out var languagesProp) ||
+            languagesProp.ValueKind != JsonValueKind.Array) return result;
+        foreach (var lang in languagesProp.EnumerateArray())
+            if (lang.TryGetProperty("code", out var codeProp) && codeProp.ValueKind == JsonValueKind.String &&
+                lang.TryGetProperty("name", out var nameProp) && nameProp.ValueKind == JsonValueKind.String)
+            {
+                var code = codeProp.GetString();
+                var name = nameProp.GetString();
+                if (string.IsNullOrEmpty(code) || string.IsNullOrEmpty(name)) continue;
+                result[code] = nameProp.GetString();
+            }
 
-        if (root.TryGetProperty("badge_name", out var tagProp) && tagProp.ValueKind == JsonValueKind.String)
-                tag = tagProp.GetString() ?? string.Empty;
-        if (root.TryGetProperty("color", out var colorProp) && colorProp.ValueKind == JsonValueKind.String)
-                color = colorProp.GetString() ?? string.Empty;
-
-        if (!string.IsNullOrEmpty(tag) && !string.IsNullOrEmpty(color)) return true;
-        LogManager.Debug("[CreditTag] Tag or color is empty.");
-        return false;
+        return result;
     }
 
     private static (HttpStatusCode StatusCode, string Message) ParseApiResponse(string json)
@@ -196,5 +273,91 @@ public static class ApiManager
             LogManager.Debug($"ParseApiResponse failed.\n{e}");
             return (HttpStatusCode.InternalServerError, null);
         }
+    }
+
+    internal static bool TryGetPluginTranslations(string language, out object translations)
+    {
+        translations = null;
+        var name = AutoEvent.Singleton.Name;
+        if (string.IsNullOrWhiteSpace(language))
+            return false;
+
+        try
+        {
+            LogManager.Debug($"[Translations] Fetching translations for {name}/{language}");
+            var url =
+                $"{ApiBase}/api/v1/plugin/{Uri.EscapeDataString(name)}/translations/{Uri.EscapeDataString(language)}";
+            var resp = HttpQuery.Get(url);
+
+            var (statusCode, message) = ParseApiResponse(resp);
+            if (statusCode != HttpStatusCode.OK)
+                switch (statusCode)
+                {
+                    case HttpStatusCode.NotFound:
+                        LogManager.Debug($"[Translations] Plugin or language not found: {name}/{language}");
+                        return false;
+                    case HttpStatusCode.InternalServerError:
+                        LogManager.Error(
+                            $"[Translations] Server error while fetching translations for {name}/{language}");
+                        return false;
+                    default:
+                        LogManager.Debug(
+                            $"[Translations] Unexpected status: {statusCode} - {message ?? "(no message)"}");
+                        return false;
+                }
+
+            using var doc = JsonDocument.Parse(resp);
+            var root = doc.RootElement;
+            if (!root.TryGetProperty("translations", out var translationsProp) ||
+                translationsProp.ValueKind != JsonValueKind.Object)
+            {
+                LogManager.Debug($"[Translations] No translations object in response for {name}/{language}");
+                return false;
+            }
+
+            translations = ConvertJsonElement(translationsProp);
+
+            return translations is not null;
+        }
+        catch (Exception ex)
+        {
+            LogManager.Error($"[Translations] Exception while fetching translations for {name}/{language}: {ex}");
+            translations = null;
+            return false;
+        }
+    }
+
+    private static object ConvertJsonElement(JsonElement el)
+    {
+        switch (el.ValueKind)
+        {
+            case JsonValueKind.Object:
+                var dict = new Dictionary<string, object>();
+                foreach (var prop in el.EnumerateObject()) dict[prop.Name] = ConvertJsonElement(prop.Value);
+                return dict;
+            case JsonValueKind.Array:
+                var list = new List<object>();
+                foreach (var item in el.EnumerateArray()) list.Add(ConvertJsonElement(item));
+                return list;
+            case JsonValueKind.String:
+                return el.GetString();
+            case JsonValueKind.Number:
+                if (el.TryGetInt64(out var l)) return l;
+                if (el.TryGetDouble(out var d)) return d;
+                return el.GetDecimal();
+            case JsonValueKind.True:
+            case JsonValueKind.False:
+                return el.GetBoolean();
+            case JsonValueKind.Null:
+                return null;
+            default:
+                return el.ToString();
+        }
+    }
+
+    private class CreditTag
+    {
+        public string BadgeName { get; init; }
+        public string Color { get; init; }
     }
 }
