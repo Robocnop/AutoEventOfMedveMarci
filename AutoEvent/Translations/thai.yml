@@ -1,0 +1,537 @@
+﻿Airstrike Party:
+  cycle: |-
+    <color=yellow>หลบลูกระเบิดจากฟากฟ้า!</color>
+    <color=green>เวลา: {time} วินาทีผ่านไป</color>
+    <color=red>เหลือคนรอด {count} คน</color>
+  more_player: |-
+    <color=red>Death Party</color>
+    <color=yellow><color=red>เหลือคนรอด {count}</color> คน</color>
+    <color=#ffc0cb>{time}</color>
+  one_player: |-
+    <color=red>Death Party</color>
+    <color=yellow>ผู้ชนะคือ <color=red>{winner}</color></color>
+    <color=#ffc0cb>{time}</color>
+  all_die: |-
+    <color=red>Death Party</color>
+    <color=yellow>ไม่มีใครรอด :(((</color>
+    <color=#ffc0cb>{time}</color>
+  name: 'ระเบิดจากฟากฟ้า'
+  description: 'เอาชีวิตรอดจากระเบิดที่หล่นมาจากฟากฟ้า'
+  command_name: 'airstrike'
+All Deathmatch:
+  cycle: |-
+    <size=30><i><b>{name}</b>
+    <color=red>คุณต้องสังหาร - {kills}/{needKills} คน</color>
+    เวลา: {time}</i></size>
+  hint_cycle: <color=#ff0000>You - {kills}/{needKills} kills</color></size>
+  leaderboard: Leaderboard
+  leaderboard_content: <color={color}>{num}. {playerName} / {kills} kills</color>
+  no_players: |-
+    <color=red>เกมถูกจบโดยทีมงาน
+    คุณสังหาร {count}</color>
+  time_end: |-
+    <color=red>หมดเวลา
+    คุณสังหาร{count}</color>
+  winner_end: |-
+    <b><color=red>ผู้ชนะได้แก่ - <color=yellow>{winner}</color></color></b>
+    คุณสังหารไปทั้งหมด <color=red>{count}</color></color>
+    เวลา - <color=#008000>{time}</color></i>
+  name: 'แบบไม่มีทีม'
+  description: 'สู้กันให้ตายกันไปโดยไม่นับฝ่าย คุณต้องเอาชนะ'
+  command_name: 'dm'
+Among Us:
+  starting_event: |-
+    <b>{name}</b>
+    There are {time} seconds before the game starts. Selecting the <color=red><b>Impostors</b></color>.
+  you_are_impostor: 'You are the <color=red>Impostor</color>!'
+  you_are_crewmate: 'You are a <color=#00FFFF>Crewmate</color>!'
+  impostor_win: '<color=red>Impostors</color> have won!'
+  crewmate_win: '<color=#00FFFF>Crewmates</color> have won!'
+  killed_by_impostor: 'You were killed by an Impostor!'
+  kill_cooldown: 'You can''t kill for another {time} seconds!'
+  too_far: 'You are too far away to kill!'
+  voting_info: |-
+    {reason}
+    You can vote by writing .vote <color/name/skip> to the Console which you can open with ~ by default.
+    {time} seconds remaining.
+  discussion_info: |-
+    {reason}
+    Discussion time! You can't chat with other players.
+    {time} seconds remaining, soon you will can speak and vote.
+  meeting_called: 'A meeting has been called by {player}!'
+  death_body_reported: '<color=red>{deadPlayer}</color>''s body found by <color=yellow>{reportedPlayer}</color>!'
+  emergency_meetings_reached: 'You can''t call any more emergency meetings!'
+  meeting_cooldown: 'You can''t call a meeting for another {time} seconds!'
+  calibrate_distributor: 'Calibrate Distributor'
+  chart_course: 'Chart Course'
+  clean_o2_filter: 'Clean O2 Filter'
+  empty_chute: 'Empty Chute'
+  prime_shields: 'Prime Shields'
+  start_reactor: 'Start Reactor'
+  submit_scan: 'Submit Scan'
+  fix_wiring: 'Fix Wiring'
+  align_engine_output: 'Align Engine Output'
+  divert_power_to: 'Divert Power to {roomName}'
+  accept_divert_power: 'Accept Divert Power'
+  download_data: 'Download Data'
+  upload_data: 'Upload Data'
+  no_votes: 'No votes'
+  vote: 'vote'
+  no_one_voted_out: 'No one was voted out.'
+  its_a_tie: 'It''s a tie!'
+  death_message: 'Voted out.'
+  voted_out: '{player} was voted out.'
+  tasks: 'Tasks'
+  didnt_vote: 'Didn''t vote'
+  was_an_impostor: '{player} was an Impostor.'
+  was_not_an_impostor: '{player} was not an Impostor.'
+  name: 'Among Us'
+  description: 'The Impostor is among us.'
+  command_name: 'amongus'
+Nuke Run:
+  before_start: |-
+    {name}
+    เตรียมวิ่งหนีเอาตัวรอดออกจากสถาบันก่อนที่นี้จะระเบิด
+    <color=red>เวลาก่อนเริ่มในอีก: {time} วินาที</color>
+  cycle: |-
+    {name}
+    <color=red>{time}</color> วินาที ก่อนระเบิด
+  end: |-
+    {name}
+    <color=red>มี {players} ผู้เล่นหนีออกมาได้ </color>
+  name: 'วิ่งหนีเอาตัวรอด'
+  description: 'Escape the facility before it explodes!'
+  command_name: 'escape'
+Battle:
+  time_left: '<size=100><color=red>จะเริ่มสู้กันในอีก {time} </color></size>'
+  ci_win: |-
+    <color=#299438>ทีมชนะ: Chaos Insurgency </color>
+    <color=red>เวลา: {time} </color>
+  mtf_win: |-
+    <color=#14AAF5>ทีมชนะ: Foundation forces</color>
+    <color=red>เวลา: {time} </color>
+  counter: |-
+    <color=#14AAF5> MTF: {FoundationForces} </color> สู้กับ <color=#299438> CI: {ChaosForces} </color> 
+     ตอนนี้เวลา: {time}
+  name: 'ดวลทีม'
+  description: 'MTF สู้กับ CI ในสังเวียนต่อสู้'
+  command_name: 'battle'
+Cock Fights:
+  players_null: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    เข้าไปในเวที แล้วไปสู้กันซะ!
+    <color=red>เหลือ {remain}</color> วินาที
+  class_d_null: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    ผู้รอดชีวิต <color=yellow>{scientist}</color>
+    บังคับเข้าเวทีในอีก <color=orange>{remain}</color> วิ
+  scientist_null: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    ผู้รอดชีวิต <color=orange>{classd}</color>
+    บังคับเข้าเวทีในอีก <color=yellow>{remain}</color> วิ
+  players_duel: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow><color=yellow>{scientist}</color> <color=red>สู้กับ</color> <color=orange>{classd}</color></color>
+  class_d_win: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow>ทีมชนะ: <color=red>CLASS D</color></color>
+  scientist_win: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow>ทีมชนะ: <color=red>SCIENTISTS</color></color>
+  max_round_reached: 'You reached the max number of rounds!'
+  name: 'แลกหมัดมวย'
+  description: 'ปะทะผู้เล่นอีกฝั่งโดยการเข้าเวที'
+  command_name: 'versus'
+Counter-Strike:
+  cycle: |-
+    <size=60>{name}</size>
+    <size=25><i>{task}</i>
+    <i><color=#42AAFF>{ctCount} Counters</color> <b>/</b> <color=green>{tCount} Terrorists</color></i>
+    <i>เวลารอบ: {time}</i></size>
+  no_planted_counter: 'ปกป้องจุดวาง A และ B จากผู้ก่อการร้าย'
+  no_planted_terror: 'วางระเบิดในจุดวาง A และ B'
+  planted_counter: '<color=red>รีบแก้ระเบิดก่อนมันจะระเบิด</color>'
+  planted_terror: '<color=red>ปกป้องระเบิดจนกว่ามันจะระเบิด</color>'
+  draw: |-
+    <b><color=#808080>เสมอ</color></b>
+    <i>ทุกคน ตาย</i>
+  time_ended: |-
+    <b><color=#808080>เสมอ</color></b>
+    <i>หมด เวลา</i>
+  counter_win: |-
+    <b><color=#42AAFF>ผู้ต่อต้านก่อการร้าย ชนะ</color></b>
+    <i>ผู้ก่อการร้ายตายหมด</i>
+  terrorist_win: |-
+    <b><color=green>ผู้ก่อการร้าย ชนะ</color></b>
+    <i>ผู้ต่อต้านก่อการร้ายตายหมด</i>
+  planted_win: |-
+    <b><color=green>ผู้ก่อการร้าย ชนะ</color></b>
+    <i>ระเบิดทำงานสำเร็จ</i>
+  defused_win: |-
+    <b><color=#42AAFF>ผู้ต่อต้านก่อการร้าย ชนะ</color></b>
+    <i>กู้ระเบิดสำเร็จ</i>
+  you_planted: '<b><color=#ff4c5b>คุณวางระเบิด</color></b>'
+  you_defused: '<b><color=#42aaff>คุณกู้ระเบิด</color></b>'
+  picked_up_bomb: You picked up the C4!
+  equipped_bomb: You're holding the C4!
+  bomb_death_reason: The Bomb exploded.
+  hint_cycle: |-
+    <size=30><i><b>{name}</b>
+    {kills}
+  name: 'ต่อต้านก่อการร้าย'
+  description: 'การสู้ระหว่าง ผู้ก่อการร้าย กับ ผู้ต่อต้านก่อการร้าย'
+  command_name: 'cs'
+Dead Jump:
+  start: |-
+    <size=50>สะพานมรณะ
+    กระโดดไปมาในจุดที่ยืนค่อย ๆ หายไป</size>
+    <size=20>รอด: {plyAlive} คน
+    เหลือเวลา: {time}</size>
+  died: 'หล่นลงลาวา ตาย'
+  win_survived: '<color=yellow>ชนะ เหลือรอด {plyAlive} players</color>'
+  winner: |-
+    <color=red>สะพานมรณะ</color>
+    <color=yellow>Winner: {winner}</color>
+  fail: |-
+    <color=red>สะพานมรณะ</color>
+    <color=yellow>ตายทั้งหมด</color>
+  push: '<color=green>กดปุ่ม <color=yellow>[Alt]</color> เพื่อพลักผู้เล่นหล่นคนอื่น</color>'
+  name: 'สะพานมรณะ'
+  description: 'กระโดดไปมาในจุดที่ยืนหายไปแบบสุ่ม'
+  command_name: 'glass'
+Death Line:
+  cycle: |-
+    <color=#FF4242>{name}</color>
+    <color=#14AAF5>เวลา: {time}
+    <color=yellow>ผู้เล่นเหลือ: {count}</color>
+  more_players: |-
+    <color=#FF4242>{name}</color>
+    <color=yellow>{count} คน รอด!!</color>
+    <color=red>ยินดีด้วย!</color>
+  winner: |-
+    <color=#FF4242>{name}</color>
+    <color=yellow>ผู้ชนะ: {winner}</color>
+    <color=red>ยินดีด้วย!</color>
+  all_died: '<color=red>ตายทั้งหมด</color>'
+  name: 'เส้นตาย'
+  description: 'หลบเส้นที่เข้ามาหาเรื่อย ๆ '
+  command_name: 'line'
+Death Run:
+  before_start_broadcast: |-
+    <color=#FFC618>{name}</color>
+    <size=35><color=#ff4c5b>คำเตือน! มีกับดักที่อันตรายอยู่ข้างหน้า</color>
+    <color=#20B2AA>เตรียมพร้อมที่จะวิ่งใน <b>{time}</b> วินาที</color></size>
+  cycle_broadcast: |-
+    <color=#FFC618>{name}</color>
+    <size=35><color=yellow>😃 นักโทษ [{runnerCount}]</color> | <color=#ff4c5b>[{deathCount}] ผู้คุม 😈</color>
+    <color=#20B2AA>เวลาที่เหลือ: <b>{time}</b></color></size>
+  death_win_broadcast: |-
+    <color=#FFC618>{name}</color>
+    <b><color=#ff4c5b>ฝ่ายผู้คุมชนะ</color></b>
+  runner_win_broadcast: |-
+    <color=#FFC618>{name}</color>
+    <b><color=yellow>ฝ่ายนักวิ่งชนะ</color></b>
+  died: '<color=red>คุณไม่มีเวลาในการฆ่าฝ่ายผู้คุม</color>'
+  over_time_broadcast: "<b><color=red>ถึงเวลาฆ่า <i>ฝ่ายผู้คุม</i> \U0001F638</color></b>"
+  second_life_hint: '<b><color=green>คุณมีโอกาสแก้ตัวอีกครั้ง</color></b>'
+  name: 'วิ่งหลบกับดัก'
+  description: 'ไปถึงจุดสิ้นสุด โดยหลีกเลี่ยงกับดักที่อันตรายตามทาง'
+  command_name: 'deathrun'
+Dodgeball:
+  start: |-
+    <color=#ffff00>เตรียมพร้อม การแข่งขัน</color>
+    เริ่มเกมใน: <color=red>{time}</color>
+  cycle: |-
+    <b><color=#ffff00>{name}</color></b>
+    <color=#aad9ff>ปาลูกบอลที่ผู้เล่นอีกฝั่ง</color>
+    <color=red>{time}</color>
+  all_died: |-
+    <b><color=#ffff00>{name}</color></b>
+    <color=red>ผู้เล่นทุกคนตายหมดแล้ว</color>
+    เวลา: <color=red>{time}</color>
+  class_d_win: |-
+    <b><color=#ffff00>{name}</color></b>
+    <color=#ffa500>ชนะของคลาสดี</color>
+    เวลา: <color=red>{time}</color>
+  scientist_win: |-
+    <b><color=#ffff00>{name}</color></b>
+    <color=#ffff00>นักวิทยาศาสตร์ชนะ</color>
+    เวลา: <color=red>{time}</color>
+  draw: |-
+    <b><color=#ffff00>{name}</color></b>
+    <color=#808080>เสมอกัน</color>
+    เวลา: <color=red>{time}</color>
+  redline: '<color=red>คุณไม่สามารถเดินผ่านเส้นแดง</color>'
+  knocked: '<color=red>คุณถูกปาอัดโดย {killer}</color>'
+  name: 'หลบลูกบอล'
+  description: 'หลบบอลจากอีกฝั่ง และหยิบไปปาฝั่งด้วย'
+  command_name: 'dodge'
+FallDown:
+  broadcast: |-
+    {name}
+    {time}
+    <color=yellow>เหลือ: </color>{count}<color=yellow> คน</color>
+  winner: '<color=red>ผู้ชนะ:</color> {winner}'
+  died: '<color=red>ทั้งหมดตาย</color>'
+  name: 'บล็อคหาย'
+  description: 'จุดยืนต่าง ๆ จะค่อย ๆ หาย ทำยังไงก็ได้ให้รอด'
+  command_name: 'fall'
+Football:
+  red_team: |-
+    <color=red>ทีมของคุณ: ทีมแดง
+    </color>
+  blue_team: |-
+    <color=#14AAF5>ทีมของคุณ: ทีมน้ำเงิน
+    </color>
+  time_left: |-
+    <color=#14AAF5>{BluePnt}</color> : <color=red>{RedPnt}</color>
+    เวลาที่เหลือ: {time}
+  red_wins: '<color=red>ทีมแดง ชนะ</color>'
+  blue_wins: '<color=#14AAF5>Blue Team ชนะ</color>'
+  draw: |-
+    เสมอ
+    <color=#14AAF5>{BluePnt}</color> แข่งกับ <color=red>{RedPnt}</color>
+  name: 'ฟุตบอล'
+  description: 'เข้าประตู 3 ลูก ก็ชนะเลย'
+  command_name: 'football'
+Gun Game:
+  cycle: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <b><color=yellow>ต่อไป <color=#D71868>{gun}</color> <color=#D71868>||</color> ต้องการ <color=#D71868>{kills}</color> kills</color>
+    <color=#D71868>คนนำ: <color=yellow>{leadnick}</color> เลเวล <color=yellow>{leadgun}</color></color></b>
+  winner: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow>ผู้ชนะได้แก่: <color=green>{winner}</color></color>
+  name: 'เกมปืน'
+  description: 'ยิงทุกคนเพื่อให้ได้แต้มคะแนนสูงสุด'
+  command_name: 'gungame'
+Knives of Death:
+  cycle: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow><color=blue>{mtfcount} MTF</color> <color=red>สู้กับ</color> <color=green>{chaoscount} CHAOS</color></color>
+  chaos_win: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow>ทีมชนะ: <color=green>CHAOS</color></color>
+  mtf_win: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow>ทีมชนะ: <color=#42AAFF>MTF</color></color>
+  name: 'มีดแห่งความตาย'
+  description: 'ประจันหน้าทั้งสองฝั่งในด่าน CS1.6'
+  command_name: 'knives'
+Musical Chairs:
+  start: |-
+    <color=#42aaff>เตรียมตัววิ่งรอบเก้าอี้</color>
+    เกมจะเริ่มในอีก: <color=red>{time}</color>
+  cycle: |-
+    <b><color=#42aaff>{name}</color></b>
+    <color=#ffff00>{state}</color>
+    เหลือ <color=#008000>{count}</color> คน</color>
+  run_dont_touch: 'วิ่งและอย่าไปแตะเก้าอี้ตอนนี้'
+  stand_free: 'ยืนจุดที่ยังไม่มีคนยืน'
+  stop_running: '<color=red>คุณหยุดวิ่ง เลยระเบิดตาย</color>'
+  touch_ahead: '<color=red>คุณแตะเก้าอี้ก่อนหยุด เลยตาย</color>'
+  no_time: '<color=red>คุณแตะเก้าอี้ไม่ทัน</color>'
+  more_players: |-
+    <b><color=#42aaff>{name}</color></b>
+    <color=red>แอดมินยกเลิกเกม</color>
+  winner: |-
+    <b><color=#42aaff>{name}</color></b>
+    <color=red>ผู้ชนะ: {winner}</color>
+  all_died: |-
+    <b><color=#42aaff>{name}</color></b>
+    <color=red>ตายหมด</color>
+  name: 'เก้าอี้ดนตรี'
+  description: 'ทำการแย่งเก้าอี้ก่อนคนอื่นตอนเพลงหยุด ไม่งั้นตาย'
+  command_name: 'chair'
+Puzzle:
+  start: |-
+    <b>{name}</b>
+    <color=yellow>เกมจะเริ่มในอีก <color=red>{time}</color> วินาที</color>
+  stage: |-
+    <b>{name}</b>
+    <color=red>ด่าน: </color>{stageNum}<color=red> / </color>{stageFinal}
+    <color=yellow>เหลือ:</color> {count} คน
+  all_died: |-
+    <b>{name}</b>
+    <color=red>ตายหมด</color>
+    เกมจบแล้ว
+  some_survived: |-
+    <b>{name}</b>
+    <color=red>มีหลายคนรอบ</color>
+    เกมจบแล้ว
+  winner: |-
+    <b>{name}</b>
+    <color=red>ผู้ชนะ: {winner}</color>
+    เกมจบแล้ว
+  died: '<color=red>ไหม้ลาวาตาย</color>'
+  name: 'วิ่งตามสี'
+  description: 'วิ่งไปจุดที่สีที่ถูกต้อง'
+  command_name: 'puzzle'
+Race:
+  cycle: |-
+    {name}
+    <color=yellow>วิ่งไปจุดเส้นชัยเพื่อชนะ!</color>
+    เหลืออีก: {time}
+  died: '<color=red>วิ่งไม่ทัน</color>'
+  players_survived: |-
+    <color=red>ชนะ!</color>
+    รอดทั้งหมด {count} คน
+  one_survived: |-
+    <color=red>ชนะ!</color>
+    ผู้ชนะ: {player}
+  no_survivors: '<color=red>ไม่มีใครรอด!</color>'
+  name: 'วิ่งแข่ง'
+  description: 'วิ่งไปยังจุดเส้นชัยเพื่อชนะ'
+  command_name: 'race'
+Red Light Green Light:
+  start: |-
+    <color=#42aaff>เตรียมวิ่งในอีก</color>
+    เกมจะเริ่มในอีก: <color=red>{time}</color>
+  cycle: |-
+    <b><color=#42aaff>{name}</color></b>
+    <color=#aad9ff>{state}</color>
+    <color=red>{time} วินาที ที่เหลือ</color>
+  all_died: |-
+    <b><color=#42aaff>{name}</color></b>
+    <color=red>ตายหมด</color>
+  more_win: |-
+    <b><color=#42aaff>{name}</color></b>
+    <color=red>{count} รอดชีวิต</color>
+  player_win: |-
+    <b><color=#42aaff>{name}</color></b>
+    <color=green>ผู้ชนะ: {winner}</color>
+  red_light: '<color=red>อย่าขยับ ไม่งั้นตาย</color>'
+  green_light: '<color=green>วิ่ง!!</color>'
+  red_lose: '<color=red>คุณขยับตัวตอนไฟแดง</color>'
+  no_time: '<color=red>คุณวิ่งไม่ทัน!</color>'
+  hint: '<color=green>กด <color=yellow>[Alt]</color> เพื่อพลักผู้เล่นข้างหน้า</color>'
+  hint_wait: '<color=red>รอสักครู่</color>'
+  hint_ready: '<color=green>พร้อม</color>'
+  name: 'ไฟแดง ไฟเขียว'
+  description: 'วิ่งไปยังเส้นชัยก่อน หากขยับตอนไฟแดง ตาย'
+  command_name: 'light'
+Simon's Prison:
+  start: |-
+    <color=yellow><color=red><b><i>{name}</i></b></color>
+    <i>เปิดประตูคุกด้วยการยิงปุ่มใหญ่</i>
+    ก่อนจะเริ่มในอีก: <color=red>{time}</color> วินาที</color>
+  start_prisoners: |-
+    <color=yellow><color=red><b><i>{name}</i></b></color>
+    <i>หนีออกจากคุกด้วยทุกวิถีทาง และโปรดระวัง มีสิ่งของที่จะช่วยคุณตามจุดต่าง ๆ</i>
+    ก่อนจะเริ่มในอีก: <color=red>{time}</color> วินาที</color>
+  cycle: |-
+    <size=20><color=red>{name}</color>
+    <color=yellow>คนคุก: {dclasscount}</color> || <color=#14AAF5>ผู้คุม: {mtfcount}</color>
+    <color=red>{time}</color></size>
+  prisoners_win: |-
+    <color=red><b><i>คนคุก ชนะ</i></b></color>
+    <color=red>{time}</color>
+  jailers_win: |-
+    <color=#14AAF5><b><i>ผู้คุม ชนะ</i></b></color>
+    <color=red>{time}</color>
+  lockdown_on_cooldown: 'คุณไม่สามารถทำการ Lockdown ได้ เนื่องจากยังอยู่ในช่วงผ่อนเวลา เหลือเวลาอีก: {cooldown}'
+  lives_remaining: 'คุณมี {lives} ชีวิตที่เหลือ'
+  no_lives_remaining: 'คุณไม่มีชีวิตเหลือ'
+  name: 'โหมดคุก'
+  description: 'โหมด Jail ของเกม CS1.6 ซึ่งคุณต้องจัดกิจกรรม [ยุ่งยาก]'
+  command_name: 'jail'
+Spleef:
+  start: '<color=red>เริ่มในอีก: </color>{time}'
+  cycle: |-
+    <color=red>{name}</color>
+    <color=yellow>รอดชีวิต:</color> {players} คน
+    <color=#42aaff>เวลาเหลือ:</color> {remaining}
+  all_died: |-
+    <color=red>ผู้เล่นทั้งหมดตาย</color>
+    เกมจบแล้ว
+  some_survived: |-
+    <color=red>มีบางส่วนรอด</color>
+    เกมจบแล้ว
+  winner: |-
+    <color=red>ผู้ชนะ: {winner}</color>
+    เกมจบแล้ว
+  died: '<color=red>หล่นลาวา ตาย</color>'
+  name: 'แผ่นพัง'
+  description: 'ยิงชุดยืนเพื่อให้คนอื่นหล่นและอย่าหล่นไปตายเองละกัน'
+  command_name: 'spleef'
+Tag:
+  broadcast: |-
+    วิ่ง
+    คนไล่แปะกำลังโดนเลือก แอบซะ!
+    เหลือเวลาอีก: {time}
+  cycle: |-
+    ไล่แปะคนเล่นอื่น
+    <color=yellow>เหลือ <b><i>{time}</i></b> วินาที</color>
+  hurt: 'คุณไล่แปะคนอื่นไม่ทัน'
+  one_player: |-
+    ผู้ชนะได้แก่ {winner}
+    <color=yellow>เวลา <color=red>{time}</color></color>
+  all_die: |-
+    ไม่มีใครรอด
+    จบเกม
+    <color=yellow>เวลา <color=red>{time}</color></color>
+  name: 'วิ่งไล่แปะ'
+  description: 'วิ่งไล่แปะหรือวิ่งหนีเอาตัวรอด'
+  command_name: 'tag'
+Team Death-Match:
+  cycle: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <b><color=yellow><color=#42AAFF> {mtftext}> </color> <color=red>|</color> <color=green> <{chaostext}</color></color></b>
+  chaos_win: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow>ทีมชนะ: <color=green>CHAOS</color></color>
+  mtf_win: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow>ทีมชนะ: <color=#42AAFF>MTF</color></color>
+  name: 'ทีมเดธแมตช์'
+  description: 'ยิงอีกทีมในฉาก ทีมไหนสังหารเยอะสุด ชนะ'
+  command_name: 'tdm'
+The floor is LAVA:
+  start: |-
+    <size=100><color=red>{time}</color></size>
+    หาอาวุธและรีบขึ้น
+  cycle: '<size=20><color=red><b>รอด: {count} คน</b></color></size>'
+  win: |-
+    <color=red><b>ชนะ
+    ผู้ชนะ - {winner}</b></color>
+  all_dead: '<color=red><b>ไม่มีใครรอดจนถึงสุดท้าย</b></color>'
+  died: '<color=red>หล่นลาวาตาย</color>'
+  reload: 'Reload your weapon!'
+  name: 'พื้นเป็นลาวา'
+  description: 'เอาตัวรอดด้วยการหลีกเลี่ยงลาวา และสังหารผู้เล่นอื่นด้วย'
+  command_name: 'lava'
+Zombie Infection:
+  start: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=#ABF000>มีเวลาเหลืออีก <color=red>{time}</color> วินาทีก่อนการแพร่เชื้อครั้งแรกเกิดขึ้น</color>
+  cycle: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow>คนรอด: <color=green>{count}</color></color>
+    <color=yellow>เริ่มไปแล้ว: <color=red>{time}</color></color>
+  extra_time: |-
+    Extra time: {extratime}
+    <color=yellow>เหลือ <b><i>คน</i></b> สุดท้าย!</color>
+    <color=yellow>เริ่มไปแล้ว: <color=red>{time}</color></color>
+  win: |-
+    <color=red>ซอมบี้ชนะ!</color>
+    <color=yellow>เริ่มไปแล้ว: <color=red>{time}</color></color>
+  lose: |-
+    <color=yellow><color=#D71868><b><i>คน</i></b></color> ชนะ!</color>
+    <color=yellow>เริ่มไปแล้ว: <color=red>{time}</color></color>
+  name: 'ซอมบี้แพร่เชื้อ'
+  description: 'โหมดซอมบี้ ทำการแพร่เชื้อใส่ผู้เล่นอื่น'
+  command_name: 'zombie'
+Zombie Survival:
+  survival_before_infection: |-
+    <b>{name}</b>
+    <color=yellow>เหลือเวลาอีก</color> {time} <color=yellow>วินาที ก่อนการแพร่เชื้อ</color>
+  survival_after_infection: |-
+    <b>{name}</b>
+    <color=#14AAF5>มนุษย์:</color> {humanCount}
+    <color=#299438>เวลาที่เหลือ:</color> {time}
+  survival_zombie_win: '<color=red>ซอมบี้แพร่เชื้อคนทั้งหมด ชนะ!</color>'
+  survival_human_win: '<color=#14AAF5>คนฆ่าซอมบี้ทั้งหมดและหยุดการแพร่เชื้อ</color>'
+  survival_human_win_time: '<color=yellow>มนุษย์รอดชีวิต แต่การแพร่เชื้อยังไม่หยุด</color>'
+  name: 'เอาตัวรอดจากซอมบี้'
+  description: 'มนุษย์เอาตัวรอดจากซอมบี้'
+  command_name: 'zombie2'

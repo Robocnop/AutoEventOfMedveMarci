@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using AutoEvent.Loader;
 using CommandSystem;
 using LabApi.Features.Permissions;
@@ -35,9 +36,9 @@ public class Translations : ICommand, IUsageProvider
             response = "List of translations:\n";
             try
             {
-                response += "Language - Code\n";
-                foreach (var language in ConfigManager.LanguageByCountryCodeDictionary)
-                    response += $"{language.Value} - {language.Key}\n";
+                foreach (var language in ConfigManager.LanguageByCountryCodeDictionary.Values.Distinct()
+                             .ToList())
+                    response += $"{language}\n";
             }
             catch (Exception e)
             {
@@ -45,7 +46,7 @@ public class Translations : ICommand, IUsageProvider
                 return false;
             }
 
-            response += "Use ev language load [languageCode] to load a translation.";
+            response += "Use ev language load [language] to load a translation.";
             return true;
         }
 
@@ -53,7 +54,7 @@ public class Translations : ICommand, IUsageProvider
         {
             if (arguments.Count != 2)
             {
-                response = "Usage: ev language load [languageCode]";
+                response = "Usage: ev language load [language]";
                 return false;
             }
 
@@ -61,13 +62,16 @@ public class Translations : ICommand, IUsageProvider
             {
                 var language = arguments.At(1).ToLower();
 
-                if (!ConfigManager.LanguageByCountryCodeDictionary.ContainsKey(language))
+                if (!ConfigManager.LanguageByCountryCodeDictionary.ContainsValue(language))
                 {
                     response = "Language not found!";
                     return false;
                 }
 
-                _ = ConfigManager.LoadTranslationFromAssembly(language);
+                var countryCode = ConfigManager.LanguageByCountryCodeDictionary
+                    .FirstOrDefault(x => x.Value == language).Key;
+
+                _ = ConfigManager.LoadTranslationFromAssembly(countryCode);
                 ConfigManager.LoadTranslations();
                 response = "Translation loaded!";
                 return true;

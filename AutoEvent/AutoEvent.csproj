@@ -78,17 +78,45 @@
         </Content>
     </ItemGroup>
     <ItemGroup>
+        <EmbeddedResource Include="Translations\chinese.yml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
         <None Remove="Translations\italian.yml"/>
+        <EmbeddedResource Include="Translations\italian.yml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
         <None Remove="Translations\portuguese.yml"/>
+        <EmbeddedResource Include="Translations\portuguese.yml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
         <None Remove="Translations\polish.yml"/>
+        <EmbeddedResource Include="Translations\polish.yml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
         <None Remove="Translations\german.yml"/>
+        <EmbeddedResource Include="Translations\german.yml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
         <None Remove="Translations\turkish.yml"/>
+        <EmbeddedResource Include="Translations\turkish.yml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
         <None Remove="Translations\thai.yml"/>
+        <EmbeddedResource Include="Translations\thai.yml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
         <None Remove="Translations\russian.yml"/>
+        <EmbeddedResource Include="Translations\russian.yml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
         <None Remove="Translations\french.yml"/>
+        <EmbeddedResource Include="Translations\french.yml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
         <None Remove="Translations\spanish.yml"/>
-        <None Remove="Translations\english.yml"/>
-        <None Remove="Translations\hungarian.yml"/>
+        <EmbeddedResource Include="Translations\spanish.yml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
     <Target Name="AfterBuild">

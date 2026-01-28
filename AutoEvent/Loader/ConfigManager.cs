@@ -3,20 +3,41 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using AutoEvent.ApiFeatures;
 using AutoEvent.Interfaces;
 using LabApi.Features.Wrappers;
 using LabApi.Loader.Features.Yaml;
+using LiteNetLib.Utils;
 
 namespace AutoEvent.Loader;
 
 public static class ConfigManager
 {
-    private static string ConfigPath { get; } = Path.Combine(AutoEvent.BaseConfigPath, "configs.yml");
+    internal static string ConfigPath { get; } = Path.Combine(AutoEvent.BaseConfigPath, "configs.yml");
 
-    private static string TranslationPath { get; } = Path.Combine(AutoEvent.BaseConfigPath, "translation.yml");
+    internal static string TranslationPath { get; } = Path.Combine(AutoEvent.BaseConfigPath, "translation.yml");
 
-    internal static Dictionary<string, string> LanguageByCountryCodeDictionary { get; private set; } = new();
+    internal static Dictionary<string, string> LanguageByCountryCodeDictionary { get; } = new()
+    {
+        ["EN"] = "english",
+        ["HU"] = "hungarian",
+        ["CN"] = "chinese",
+        ["FR"] = "french",
+        ["DE"] = "german",
+        ["NL"] = "german", //sorry :)
+        ["IT"] = "italian",
+        ["PL"] = "polish",
+        ["BR"] = "portuguese",
+        ["PT"] = "portuguese",
+        ["RU"] = "russian",
+        ["KZ"] = "russian",
+        ["BY"] = "russian",
+        ["UA"] = "russian", //sorry :)
+        ["ES"] = "spanish",
+        ["TH"] = "thai",
+        ["TR"] = "turkish"
+    };
 
     public static void LoadConfigsAndTranslations()
     {
@@ -80,25 +101,16 @@ public static class ConfigManager
     {
         try
         {
-            if (ApiManager.TryGetLanguages(out var languages))
-            {
-                LanguageByCountryCodeDictionary = languages;
-            }
-            else
-            {
-                LogManager.Warn("[ConfigManager] Could not retrieve languages from API. Defaulting to English only.");
-                LanguageByCountryCodeDictionary["en"] = "English";
-            }
-
             Dictionary<string, object> translations;
 
             if (!File.Exists(TranslationPath))
             {
-                var countryCode = "en";
+                var countryCode = "EN";
                 try
                 {
-                    countryCode = HttpQuery.Get($"http://ipinfo.io/{Server.IpAddress}/country");
-                    countryCode = countryCode?.Trim().ToLowerInvariant();
+                    using var client = new WebClient();
+                    var url = $"http://ipinfo.io/{Server.IpAddress}/country";
+                    countryCode = client.DownloadString(url).Trim();
                 }
                 catch (WebException)
                 {
@@ -109,7 +121,6 @@ public static class ConfigManager
                     $"[ConfigManager] The translation.yml file was not found. Creating a new translation for {countryCode} language...");
                 translations = LoadTranslationFromAssembly(countryCode);
             }
-
             // Otherwise, check language of the translation with the language of the config.
             else
             {
@@ -154,7 +165,7 @@ public static class ConfigManager
     internal static Dictionary<string, object> LoadTranslationFromAssembly(string countryCode)
     {
         // Try to get a translation from an assembly
-        if (!TryGetTranslationFromApi(countryCode, TranslationPath, out Dictionary<string, object> translations))
+        if (!TryGetTranslationFromAssembly(countryCode, TranslationPath, out Dictionary<string, object> translations))
             translations = GenerateDefaultTranslations();
 
         return translations;
@@ -179,64 +190,49 @@ public static class ConfigManager
         return translations;
     }
 
-    private static bool TryGetTranslationFromApi<T>(string countryCode, string path, out T translationFile)
+    private static bool TryGetTranslationFromAssembly<T>(string countryCode, string path, out T translationFile)
     {
-        countryCode = countryCode?.Trim().ToLowerInvariant();
-
-        if (string.IsNullOrWhiteSpace(countryCode))
+        if (!LanguageByCountryCodeDictionary.TryGetValue(countryCode, out var language))
         {
-            LogManager.Debug($"[ConfigManager] Country code is empty after normalization ('{countryCode}')");
             translationFile = default;
             return false;
         }
 
+        var resourceName = $"AutoEvent.Translations.{language}.yml";
+
         try
         {
-            if (!ApiManager.TryGetPluginTranslations(countryCode, out var result) || result is null)
+            var assembly = Assembly.GetExecutingAssembly();
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream == null)
             {
-                LogManager.Debug($"[ConfigManager] No translations found from API for country code '{countryCode}'");
+                LogManager.Warn($"[ConfigManager] The language '{language}' was not found in the assembly.");
                 translationFile = default;
                 return false;
             }
 
-            // Save as YAML to the requested path so rest of the code can load it
-            try
-            {
-                File.WriteAllText(path, YamlConfigParser.Serializer.Serialize(result));
-            }
-            catch
-            {
-                // If saving fails, continue and still return the translations in-memory
-            }
+            using var reader = new StreamReader(stream);
+            var yaml = reader.ReadToEnd();
+            translationFile = YamlConfigParser.Deserializer.Deserialize<T>(yaml);
 
-            if (typeof(T) == typeof(Dictionary<string, object>))
-            {
-                translationFile = (T)result;
-                return true;
-            }
-
-            translationFile = default;
-            return false;
+            // Save the translation file
+            File.WriteAllText(path, yaml);
+            return true;
         }
         catch (Exception ex)
         {
-            LogManager.Error(
-                $"[ConfigManager] Failed to get translations from API for '{countryCode}' ({countryCode}): {ex}");
-            translationFile = default;
-            return false;
+            LogManager.Error($"[ConfigManager] The language '{language}' cannot load from the assembly.\n{ex}");
         }
+
+        translationFile = default;
+        return false;
     }
 
     private static void CopyProperties(this object target, object source)
     {
         var type = target.GetType();
         if (type != source.GetType())
-        {
-            LogManager.Error(
-                $"[ConfigManager] Cannot copy properties from different types: {type.FullName} and {source.GetType().FullName}");
-            return;
-        }
-
+            throw new InvalidTypeException("Target and source type mismatch!");
         foreach (var property in type.GetProperties())
             type.GetProperty(property.Name)?.SetValue(target, property.GetValue(source, null), null);
     }

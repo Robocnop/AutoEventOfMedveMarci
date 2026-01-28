@@ -215,40 +215,6 @@ public static class ApiManager
         }
     }
 
-    internal static bool TryGetLanguages(out Dictionary<string, string> languages)
-    {
-        languages = GetLanguages();
-        return languages is { Count: > 0 };
-    }
-
-    private static Dictionary<string, string> GetLanguages()
-    {
-        var resp = HttpQuery.Get($"{ApiBase}/api/v1/languages");
-        var (statusCode, message) = ParseApiResponse(resp);
-
-        if (statusCode != HttpStatusCode.OK)
-        {
-            LogManager.Error($"Failed to get languages: {statusCode} - {message ?? "(no message)"}");
-            return new Dictionary<string, string>();
-        }
-
-        var result = new Dictionary<string, string>();
-        var root = JsonDocument.Parse(resp).RootElement;
-        if (!root.TryGetProperty("languages", out var languagesProp) ||
-            languagesProp.ValueKind != JsonValueKind.Array) return result;
-        foreach (var lang in languagesProp.EnumerateArray())
-            if (lang.TryGetProperty("code", out var codeProp) && codeProp.ValueKind == JsonValueKind.String &&
-                lang.TryGetProperty("name", out var nameProp) && nameProp.ValueKind == JsonValueKind.String)
-            {
-                var code = codeProp.GetString();
-                var name = nameProp.GetString();
-                if (string.IsNullOrEmpty(code) || string.IsNullOrEmpty(name)) continue;
-                result[code] = nameProp.GetString();
-            }
-
-        return result;
-    }
-
     private static (HttpStatusCode StatusCode, string Message) ParseApiResponse(string json)
     {
         try
@@ -272,86 +238,6 @@ public static class ApiManager
             LogManager.Error("Failed to parse API response.");
             LogManager.Debug($"ParseApiResponse failed.\n{e}");
             return (HttpStatusCode.InternalServerError, null);
-        }
-    }
-
-    internal static bool TryGetPluginTranslations(string language, out object translations)
-    {
-        translations = null;
-        var name = AutoEvent.Singleton.Name;
-        if (string.IsNullOrWhiteSpace(language))
-            return false;
-
-        try
-        {
-            LogManager.Debug($"[Translations] Fetching translations for {name}/{language}");
-            var url =
-                $"{ApiBase}/api/v1/plugin/{Uri.EscapeDataString(name)}/translations/{Uri.EscapeDataString(language)}";
-            var resp = HttpQuery.Get(url);
-
-            var (statusCode, message) = ParseApiResponse(resp);
-            if (statusCode != HttpStatusCode.OK)
-                switch (statusCode)
-                {
-                    case HttpStatusCode.NotFound:
-                        LogManager.Debug($"[Translations] Plugin or language not found: {name}/{language}");
-                        return false;
-                    case HttpStatusCode.InternalServerError:
-                        LogManager.Error(
-                            $"[Translations] Server error while fetching translations for {name}/{language}");
-                        return false;
-                    default:
-                        LogManager.Debug(
-                            $"[Translations] Unexpected status: {statusCode} - {message ?? "(no message)"}");
-                        return false;
-                }
-
-            using var doc = JsonDocument.Parse(resp);
-            var root = doc.RootElement;
-            if (!root.TryGetProperty("translations", out var translationsProp) ||
-                translationsProp.ValueKind != JsonValueKind.Object)
-            {
-                LogManager.Debug($"[Translations] No translations object in response for {name}/{language}");
-                return false;
-            }
-
-            translations = ConvertJsonElement(translationsProp);
-
-            return translations is not null;
-        }
-        catch (Exception ex)
-        {
-            LogManager.Error($"[Translations] Exception while fetching translations for {name}/{language}: {ex}");
-            translations = null;
-            return false;
-        }
-    }
-
-    private static object ConvertJsonElement(JsonElement el)
-    {
-        switch (el.ValueKind)
-        {
-            case JsonValueKind.Object:
-                var dict = new Dictionary<string, object>();
-                foreach (var prop in el.EnumerateObject()) dict[prop.Name] = ConvertJsonElement(prop.Value);
-                return dict;
-            case JsonValueKind.Array:
-                var list = new List<object>();
-                foreach (var item in el.EnumerateArray()) list.Add(ConvertJsonElement(item));
-                return list;
-            case JsonValueKind.String:
-                return el.GetString();
-            case JsonValueKind.Number:
-                if (el.TryGetInt64(out var l)) return l;
-                if (el.TryGetDouble(out var d)) return d;
-                return el.GetDecimal();
-            case JsonValueKind.True:
-            case JsonValueKind.False:
-                return el.GetBoolean();
-            case JsonValueKind.Null:
-                return null;
-            default:
-                return el.ToString();
         }
     }
 

@@ -1,0 +1,534 @@
+﻿Airstrike Party:
+  cycle: |-
+    <color=yellow>Kerüld el a gránátokat!</color>
+    <color=green>{time} másodperc telt el</color>
+    <color=red>{count} db játékos maradt</color>
+  more_player: |-
+    <color=red>AirStrike</color>
+    <color=yellow><color=red>{count}</color> db játékos élte túl.</color>
+    <color=#ffc0cb>{time}</color>
+  one_player: |-
+    <color=red>AirStrike</color>
+    <color=yellow>Győztes - <color=red>{winner}</color></color>
+    <color=#ffc0cb>{time}</color>
+  all_die: |-
+    <color=red>AirStrike</color>
+    <color=yellow>Senki sem élte túl. :(((</color>
+    <color=#ffc0cb>{time}</color>
+  name: 'Airstrike'
+  description: 'Éld túl a fentről érkező gránátokat!'
+  command_name: 'airstrike'
+All Deathmatch:
+  cycle: |-
+    <size=30><i><b>{name}</b>
+    <color=red>Te - {kills}/{needKills} ölés</color>
+    Köridő: {time}</i></size>
+  hint_cycle: <color=#ff0000>Te - {kills}/{needKills} ölések</color></size>
+  leaderboard: 'Ranglista'
+  leaderboard_content: <color={color}>{num}. {playerName} / {kills} ölések</color>
+  no_players: |-
+    <color=red>A játékot egy staff leállította
+    Öléseid: {count}</color>
+  time_end: |-
+    <color=red>A játék időtúllépés miatt véget ért
+    Öléseid: {count}</color>
+  winner_end: |-
+    <b><color=red>Győztes - <color=yellow>{winner}</color></color></b>
+    Öléseid: <color=red>{count}</color></color>
+    Játékidő - <color=#008000>{time}</color></i>
+  name: 'Free For All'
+  description: 'Harcoljatok egymás ellen mindenki mindenki ellen módban'
+  command_name: 'dm'
+Among Us:
+  starting_event: |-
+    <b>{name}</b>
+    A játék {time} másodperc múlva kezdődik. Az <color=red><b>Impostorok</b></color> kiválasztás alatt.
+  you_are_impostor: 'Te vagy az <color=red>Impostor</color>!'
+  you_are_crewmate: 'Te egy <color=#00FFFF>Crewmate</color> vagy!'
+  impostor_win: '<color=red>Impostorok</color> győztek!'
+  crewmate_win: '<color=#00FFFF>Crewmateek</color> győzött!'
+  killed_by_impostor: 'Egy Impostor megölt téged!'
+  kill_cooldown: 'Még {time} másodpercig nem ölhetsz!'
+  too_far: 'Túl messze vagy, nem tudod megölni!'
+  voting_info: |-
+    {reason}
+    A szavazáshoz írd be a .vote <color/name/skip> parancsot a ClientConsole-ba, amit alapból a ~ gombbal nyithatsz meg.
+    Még {time} másodperc maradt.
+  discussion_info: |-
+    {reason}
+    Beszéd idő van! Csak az beszél aki indította a megbeszélést.
+    {time} másodperc maradt. Hamarosan fogsz tudni beszélni és szavazni.
+  meeting_called: '{player} összehívta a megbeszélést!'
+  death_body_reported: '<color=red>{deadPlayer}</color> holttestét <color=yellow>{reportedPlayer}</color> találta meg!'
+  emergency_meetings_reached: 'Már nem hívhatsz több vészmegbeszélést!'
+  meeting_cooldown: 'Még {time} másodpercig nem hívhatsz megbeszélést!'
+  calibrate_distributor: 'Elosztő kalibrálása'
+  chart_course: 'Útvonal beállítása'
+  clean_o2_filter: 'O2 Szűrő tisztítása'
+  empty_chute: 'Leeresztő ürítése'
+  prime_shields: 'Pajzs aktiválása'
+  start_reactor: 'Reaktor indítása'
+  submit_scan: 'Szkennelés leadása'
+  fix_wiring: 'Vezetékezés javítása'
+  align_engine_output: 'Motor kimenetének igazítása'
+  divert_power_to: 'Energia átirányítása: {roomName}'
+  accept_divert_power: 'Energiaátirányítás elfogadása'
+  download_data: 'Adatok letöltése'
+  upload_data: 'Adatok feltöltése'
+  no_votes: 'Senki sem szavazott rád'
+  vote: 'szavazat'
+  no_one_voted_out: 'Senki sem lett kiszavazva!'
+  its_a_tie: 'Döntetlen, senki sem lett kiszavazva!'
+  death_message: 'Kiszavazva.'
+  voted_out: '{player} ki lett szavazva.'
+  tasks: 'Feladatok'
+  didnt_vote: 'Akik nem szavaztak:'
+  was_an_impostor: '{player} Imposztor volt.'
+  was_not_an_impostor: '{player} nem volt Imposztor.'
+  name: 'Among Us'
+  description: 'Az Impostor köztünk van.'
+  command_name: 'amongus'
+Nuke Run:
+  before_start: |-
+    {name}
+    Készülj fel a menekülésre a létesítményből, mielőtt felrobban!
+    <color=red>Idő a kör kezdetéig: {time} másodperc</color>
+  cycle: |-
+    {name}
+    <color=red>{time}</color> másodperc a robbanásig!
+  end: |-
+    {name}
+    <color=red>{players} játékos menekült meg</color>
+  name: 'Nuke Run'
+  description: 'Juss ki a létesítményből, mielőtt az felrobban!'
+  command_name: 'escape'
+Battle:
+  time_left: '<size=100><color=red>Csata kezdődik: {time}</color></size>'
+  ci_win: |-
+    <color=#299438>Győztes: CHAOS</color>
+    <color=red>Időtartam: {time}</color>
+  mtf_win: |-
+    <color=#14AAF5>Győztes: M.T.F.</color>
+    <color=red>Időtartam: {time}</color>
+  counter: |-
+    <color=#14AAF5> M.T.F.: {FoundationForces} </color> vs <color=#299438> C.I.: {ChaosForces} </color> 
+    Eltelt idő: {time}
+  name: 'Battle'
+  description: 'M.T.F. harcol a C.I. ellen egy arénában'
+  command_name: 'battle'
+Cock Fights:
+  players_null: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    Menjetek be az arénába, hogy megküzdjetek egymással!
+    <color=red>{remain} másodperc van hátra</color>
+  class_d_null: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    Az életben maradt játékos: <color=yellow>{scientist}</color>
+    Menj be, amire <color=orange>{remain}</color> másodperced van!
+  scientist_null: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    Az életben maradt játékos: <color=orange>{classd}</color>
+    Menj be, amire <color=yellow>{remain}</color> másodperced van!
+  players_duel: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow><color=yellow>{scientist}</color> <color=red>VS</color> <color=orange>{classd}</color></color>
+  class_d_win: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow>GYŐZTESEK: <color=red>D-CLASS</color></color>
+  scientist_win: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow>GYŐZTESEK: <color=red>SCIENTIST</color></color>
+  max_round_reached: Elérted a maximális körszámot!
+  name: 'Kakasviadal'
+  description: 'Játékosok párbaja a cs 1.6-ból ismert 35hp pályán'
+  command_name: 'versus'
+Counter-Strike:
+  cycle: |-
+    <size=60>{name}</size>
+    <size=25><i>{task}</i>
+    <i><color=#42AAFF>{ctCount} Terrorelhárítók</color> <b>/</b> <color=green>{tCount} Terroristák</color></i>
+    <i>Köridő: {time}</i></size>
+  no_planted_counter: 'Védjétek az A és B lerakót a terroristáktól'
+  no_planted_terror: 'Helyezd el a bombát az A vagy B lerakón'
+  planted_counter: '<color=red>Hatástalanítsd a bombát, mielőtt felrobban</color>'
+  planted_terror: '<color=red>Védd a bombát, amíg fel nem robban</color>'
+  draw: |-
+    <b><color=#808080>Döntetlen</color></b>
+    <i>Mindenki meghalt</i>
+  time_ended: |-
+    <b><color=#808080>Döntetlen</color></b>
+    <i>Lejárt a köridő.</i>
+  counter_win: |-
+    <b><color=#42AAFF>A Terrorelhárítók nyertek</color></b>
+    <i>Minden terrorista halott</i>
+  terrorist_win: |-
+    <b><color=green>A Terroristák nyertek</color></b>
+    <i>Minden terrorelhárító halott</i>
+  planted_win: |-
+    <b><color=green>A Terroristák nyertek</color></b>
+    <i>A bomba felrobbant</i>
+  defused_win: |-
+    <b><color=#42AAFF>A Terrorelhárítók nyertek</color></b>
+    <i>A bombát hatástalanították</i>
+  you_planted: '<b><color=#ff4c5b>Elhelyezted a bombát</color></b>'
+  you_defused: '<b><color=#42aaff>Hatástalanítottad a bombát</color></b>'
+  picked_up_bomb: 'Felvetted a C4-et!'
+  equipped_bomb: 'Nálad van a C4!'
+  bomb_death_reason: 'A bomba felrobbant.'
+  name: 'Counter-Strike'
+  description: 'Harc a terroristák és a terrorelhárítók között'
+  command_name: 'cs'
+Dead Jump:
+  start: |-
+    <size=50>Halálugrás
+    Ugrálj a törékeny platformokon</size>
+    <size=20>Élő játékosok: {plyAlive} 
+    Hátralévő idő: {time}</size>
+  died: 'Lávába estél'
+  win_survived: '<color=yellow>Vége! {plyAlive} játékos élte túl</color>'
+  winner: |-
+    <color=red>Halálugrás</color>
+    <color=yellow>Győztes: {winner}</color>
+  fail: |-
+    <color=red>Halálugrás</color>
+    <color=yellow>Minden játékos meghalt</color>
+  push: '<color=green>Nyomd meg az <color=yellow>[Alt]</color> gombot egy játékos meglökéséhez</color>'
+  name: 'Halálugrás'
+  description: 'Ugrálj a törékeny platformokon'
+  command_name: 'glass'
+Death Line:
+  cycle: |-
+    <color=#FF4242>{name}</color>
+    <color=#14AAF5>Hátralévő idő: {time}
+    <color=yellow>Maradt játékosok: {count}</color>
+  more_players: |-
+    <color=#FF4242>{name}</color>
+    <color=yellow>{count} játékos élte túl</color>
+    <color=red>Gratulálok!</color>
+  winner: |-
+    <color=#FF4242>{name}</color>
+    <color=yellow>Győztes: {winner}</color>
+    <color=red>Gratulálok!</color>
+  all_died: '<color=red>Minden játékos meghalt</color>'
+  name: 'Halálvonal'
+  description: 'Kerüld el a forgó platformot a túléléshez'
+  command_name: 'line'
+Death Run:
+  before_start_broadcast: |-
+    <color=#FFC618>{name}</color>
+    <size=35><color=#ff4c5b>Vigyázat! Halálos csapdák várnak rád</color>
+    <color=#20B2AA>Készülj a futásra <b>{time}</b> másodperc múlva</color></size>
+  cycle_broadcast: |-
+    <color=#FFC618>{name}</color>
+    <size=35><color=yellow>😃 Futók [{runnerCount}]</color> | <color=#ff4c5b>[{deathCount}] Csapdázók 😈</color>
+    <color=#20B2AA>Hátralévő idő: <b>{time}</b></color></size>
+  death_win_broadcast: |-
+    <color=#FFC618>{name}</color>
+    <b><color=#ff4c5b>A csapdázók nyert</color></b>
+  runner_win_broadcast: |-
+    <color=#FFC618>{name}</color>
+    <b><color=yellow>A Futók nyertek</color></b>
+  died: '<color=red>Nem volt időd megölni a csapdázókat</color>'
+  over_time_broadcast: "<b><color=red>Itt az idő megölni a <i>csapdázókat</i> 😈</color></b>"
+  second_life_hint: '<b><color=green>Kaptál egy második életet.</color></b>'
+  name: 'Halálfutam'
+  description: 'Juss el a végéig, elkerülve a csapdázók által aktivált csapdákat'
+  command_name: 'deathrun'
+Dodgeball:
+  start: |-
+    <color=#ffff00>Készülj fel. Vegyél fel egy labdát a kupacból</color>
+    A játék kezdődik: <color=red>{time}</color>
+  cycle: |-
+    <b><color=#ffff00>{name}</color></b>
+    <color=#aad9ff>Dobálj labdákat az enemy játékosokra</color>
+    <color=red>{time}</color>
+  all_died: |-
+    <b><color=#ffff00>{name}</color></b>
+    <color=red>Minden játékos meghalt</color>
+    Idő: <color=red>{time}</color>
+  class_d_win: |-
+    <b><color=#ffff00>{name}</color></b>
+    <color=#ffa500>D-CLASS győzelme</color>
+    Idő: <color=red>{time}</color>
+  scientist_win: |-
+    <b><color=#ffff00>{name}</color></b>
+    <color=#ffff00>Scientist győzelme</color>
+    Idő: <color=red>{time}</color>
+  draw: |-
+    <b><color=#ffff00>{name}</color></b>
+    <color=#808080>Döntetlen</color>
+    Idő: <color=red>{time}</color>
+  redline: '<color=red>Nem léphetsz át a piros vonalon</color>'
+  knocked: "<color=red>{killer} kidobott téged</color>"
+  name: 'Kidobós'
+  description: 'Győzd le az ellenséget labdákkal'
+  command_name: 'dodge'
+FallDown:
+  broadcast: |-
+    {name}
+    {time}
+    <color=yellow>Hátravan: </color>{count}<color=yellow> játékos</color>
+  winner: '<color=red>Győztes:</color> {winner}'
+  died: '<color=red>Minden játékos meghalt</color>'
+  name: 'Leesés'
+  description: 'Minden platform megsemmisül'
+  command_name: 'fall'
+Football:
+  red_team: |-
+    <color=red>Csapatod: D-Class Csapat
+    </color>
+  blue_team: |-
+    <color=#14AAF5>Csapatod: M.T.F. Csapat
+    </color>
+  time_left: |-
+    <color=#14AAF5>{BluePnt}</color> : <color=red>{RedPnt}</color>
+    Hátralévő idő: {time}
+  red_wins: '<color=red>A Piros Csapat nyert</color>'
+  blue_wins: '<color=#14AAF5>A Kék Csapat nyert</color>'
+  draw: |-
+    Döntetlen
+    <color=#14AAF5>{BluePnt}</color> vs <color=red>{RedPnt}</color>
+  name: 'Foci'
+  description: 'Szerezz 3 gólt a győzelemhez'
+  command_name: 'football'
+Gun Game:
+  cycle: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <b><color=yellow>Következő <color=#D71868>{gun}</color> <color=#D71868>||</color> Szükséges <color=#D71868>{kills}</color> ölés</color>
+    <color=#D71868>Vezető: <color=yellow>{leadnick}</color> SZINT <color=yellow>{leadgun}</color></color></b>
+  winner: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow>A játék győztese: <color=green>{winner}</color></color>
+  name: 'Gun Game'
+  description: 'Fegyververseny a MW19-ből ismert Shipment pályán'
+  command_name: 'gungame'
+Knives of Death:
+  cycle: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow><color=blue>{mtfcount} M.T.F.</color> <color=red>VS</color> <color=green>{chaoscount} CHAOS</color></color>
+  chaos_win: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow>GYŐZTESEK: <color=green>CHAOS</color></color>
+  mtf_win: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow>GYŐZTESEK: <color=#42AAFF>M.T.F.</color></color>
+  name: 'Halálos Kések'
+  description: 'Játékosok késelnek egymás ellen a cs 1.6-ból ismert 35hp pályán.'
+  command_name: 'knives'
+Musical Chairs:
+  start: |-
+    <color=#42aaff>Készülj a székfoglalásra</color>
+    A játék kezdődik: <color=red>{time}</color>
+  cycle: |-
+    <b><color=#42aaff>{name}</color></b>
+    <color=#ffff00>{state}</color>
+    <color=#008000>{count}</color> játékos maradt</color>
+  run_dont_touch: 'Fuss és ne érj a platformokhoz'
+  stand_free: 'Állj egy szabad platformra'
+  stop_running: '<color=red>Megálltál futás közben</color>'
+  touch_ahead: '<color=red>Hozzáértél a platformokhoz, mielőtt szabad lett volna</color>'
+  no_time: '<color=red>Nem álltál időben egy szabad platformra</color>'
+  more_players: |-
+    <b><color=#42aaff>{name}</color></b>
+    <color=red>Egy staff leállította a játékot</color>
+  winner: |-
+    <b><color=#42aaff>{name}</color></b>
+    <color=red>Győztes: {winner}</color>
+  all_died: |-
+    <b><color=#42aaff>{name}</color></b>
+    <color=red>Minden játékos meghalt</color>
+  name: 'Székfoglaló'
+  description: 'Versenyezz más játékosokkal a szabad székekért sigma zenére'
+  command_name: 'chair'
+Puzzle:
+  start: |-
+    <b>{name}</b>
+    <color=yellow>A minijáték <color=red>{time}</color> másodperc múlva kezdődik</color>
+  stage: |-
+    <b>{name}</b>
+    <color=red>Szakasz: </color>{stageNum}<color=red> / </color>{stageFinal}
+    <color=yellow>Maradt játékosok:</color> {count}
+  all_died: |-
+    <b>{name}</b>
+    <color=red>Minden játékos meghalt</color>
+    Vége!
+  some_survived: |-
+    <b>{name}</b>
+    <color=green>{count} játékos élte túl</color>
+    Vége!
+  winner: |-
+    <b>{name}</b>
+    <color=green>Játékos {winner} nyert</color>
+    Vége!
+  died: '<color=red>Lávába estél</color>'
+  name: 'Puzzle'
+  description: 'Juss fel a leggyorsabban a megfelelő színű platformokra'
+  command_name: 'puzzle'
+Race:
+  cycle: |-
+    {name}
+    <color=yellow>Juss el a célig a győzelemhez!</color>
+    Hátralévő idő: {time}
+  died: '<color=red>Nem fejezted be a versenyt</color>'
+  players_survived: |-
+    <color=red>Vége!</color>
+    Ennyien élték túl: {count}
+  one_survived: |-
+    <color=red>Vége!</color>
+    Győztes: {player}
+  no_survivors: '<color=red>Senki sem élte túl!</color>'
+  name: 'Verseny'
+  description: 'Juss el a pálya végére a győzelemhez'
+  command_name: 'race'
+Red Light Green Light:
+  start: |-
+    <color=#42aaff>Készülj a futásra</color>
+    A játék kezdődik ekkor: <color=red>{time}</color>
+  cycle: |-
+    <b><color=#42aaff>{name}</color></b>
+    <color=#aad9ff>{state}</color>
+    <color=red>{time} másodperc van hátra</color>
+  all_died: |-
+    <b><color=#42aaff>{name}</color></b>
+    <color=red>Senki sem tudott eljutni a végéig</color>
+  more_win: |-
+    <b><color=#42aaff>{name}</color></b>
+    <color=red>{count} játékos nyert</color>
+  player_win: |-
+    <b><color=#42aaff>{name}</color></b>
+    <color=green>Győztes: {winner}</color>
+  red_light: '<color=red>Ne mozogj</color>'
+  green_light: '<color=green>Fuss</color>'
+  red_lose: '<color=red>Piros lámpánál mozogtál</color>'
+  no_time: '<color=red>Nem jutottál el a végéig!</color>'
+  hint: '<color=green>Nyomd meg az <color=yellow>[Alt]</color> gombot egy játékos meglökéséhez</color>'
+  hint_wait: '<color=red>Várj néhány másodpercet</color>'
+  hint_ready: '<color=green>Kész</color>'
+  name: 'Piros lámpa, zöld lámpa'
+  description: 'Érj el a célvonalig, mert különben vége a világnak'
+  command_name: 'light'
+Simon's Prison:
+  start: |-
+    <color=yellow><color=red><b><i>{name}</i></b></color>
+    <i>Indíts vagy oldj fel egy lezárást a nagy gomb meglövésével</i>
+    Kezdés előtt: <color=red>{time}</color> másodperc</color>
+  start_prisoners: |-
+    <color=yellow><color=red><b><i>{name}</i></b></color>
+    <i>Szökj meg a börtönből bármi áron, vagy vedd át az irányítást. Légy óvatos. Tárgyak vannak elszórva a pályán, hogy segítsenek a túlélésben.</i>
+    Kezdés előtt: <color=red>{time}</color> másodperc</color>
+  cycle: |-
+    <size=20><color=red>{name}</color>
+    <color=yellow>Rabok: {dclasscount}</color> || <color=#14AAF5>Börtönőrök: {mtfcount}</color>
+    <color=red>{time}</color></size>
+  prisoners_win: |-
+    <color=red><b><i>A Rabok nyertek</i></b></color>
+    <color=red>{time}</color>
+  jailers_win: |-
+    <color=#14AAF5><b><i>A Börtönőrök nyertek</i></b></color>
+    <color=red>{time}</color>
+  lockdown_on_cooldown: 'Nem indíthatsz lezárást, amíg töltődik. Hátralévő töltési idő: {cooldown}'
+  lives_remaining: '{lives} életed maradt.'
+  no_lives_remaining: 'Nincs több életed.'
+  name: 'Simon Börtöne'
+  description: 'Börtön mód a CS 1.6-ból, ahol eseményeket kell tartanod [NAGYON NEHÉZ]'
+  command_name: 'jail'
+Spleef:
+  start: '<color=red>Kezdés: </color>{time}'
+  cycle: |-
+    <color=red>{name}</color>
+    <color=yellow>Élő játékosok:</color> {players}
+    <color=#42aaff>Hátralévő idő:</color> {remaining}
+  all_died: |-
+    <color=red>Minden játékos meghalt</color>
+    Vége!
+  some_survived: |-
+    <color=red>Több ember is túlélte</color>
+    Vége!
+  winner: |-
+    <color=red>Győztes: {winner}</color>
+    Vége!
+  died: '<color=red>Lávába estél</color>'
+  name: 'Spleef'
+  description: 'Lődd a platformokat és ne ess le az ürességbe'
+  command_name: 'spleef'
+Tag:
+  broadcast: |-
+    FUSS
+    A fogók kiválasztása folyamatban. Bújj el!
+    Hátralévő idő: {time}
+  cycle: |-
+    A fogóknak most el kell kapniuk valakit!
+    <color=yellow><b><i>{time}</i></b> másodperc van hátra</color>
+  hurt: 'Nem kaptál el senki mást.'
+  one_player: |-
+    A győztes: {winner}
+    <color=yellow>Eddig tartott: <color=red>{time}</color></color>
+  all_die: |-
+    Senki sem élte túl.
+    A játéknak vége
+    <color=yellow>Eddig tartott: <color=red>{time}</color></color>
+  name: 'Fogócska'
+  description: 'El kell kapni az összes játékost a pályán'
+  command_name: 'tag'
+Team Death-Match:
+  cycle: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <b><color=yellow><color=#42AAFF> {mtftext}> </color> <color=red>|</color> <color=green> <{chaostext}</color></color></b>
+  chaos_win: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow>GYŐZTESEK: <color=green>CHAOS</color></color>
+  mtf_win: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow>GYŐZTESEK: <color=#42AAFF>M.T.F.</color></color>
+  name: 'Csapatos Deathmatch'
+  description: 'Csapatos Deathmatch a MW19-ből ismert Shipment pályán'
+  command_name: 'tdm'
+The floor is LAVA:
+  start: |-
+    <size=100><color=red>{time}</color></size>
+    Vegyél fegyvereket és mássz feljebb.
+  cycle: '<size=20><color=red><b>Élő: {count} db játékos</b></color></size>'
+  win: |-
+    <color=red><b>Győztes
+    Játékos - {winner}</b></color>
+  all_dead: '<color=red><b>Senki sem élte túl a végéig.</b></color>'
+  died: '<color=red>Lávába estél</color>'
+  reload: 'Töltsd újra a fegyveredet!'
+  name: 'The Floor Is Lava!'
+  description: 'Túlélő mód, ahol kerülnöd kell a lávát és lőnöd a többieket'
+  command_name: 'lava'
+Zombie Infection:
+  start: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=#ABF000>Még <color=red>{time}</color> másodperc van a játék kezdetéig.</color>
+  cycle: |-
+    <color=#D71868><b><i>{name}</i></b></color>
+    <color=yellow>Maradt emberek: <color=green>{count}</color></color>
+    <color=yellow>Eltelt idő: <color=red>{time}</color></color>
+  extra_time: |-
+    Extra idő: {extratime}
+    <color=yellow>Az <b><i>utolsó</i></b> ember maradt!</color>
+    <color=yellow>Eltelt idő: <color=red>{time}</color></color>
+  win: |-
+    <color=red>A zombik nyertek!</color>
+    <color=yellow>Eltelt idő: <color=red>{time}</color></color>
+  lose: |-
+    <color=yellow><color=#D71868><b><i>Az emberek</i></b></color> nyertek!</color>
+    <color=yellow>Eltelt idő: <color=red>{time}</color></color>
+  name: 'Zombi Infection'
+  description: 'Zombi mód, melynek célja az összes játékos megfertőzése'
+  command_name: 'zombie'
+Zombie Survival:
+  survival_before_infection: |-
+    <b>{name}</b>
+    <color=yellow>Még</color> {time} <color=yellow>másodperc van az infection kezdetéig</color>
+  survival_after_infection: |-
+    <b>{name}</b>
+    <color=#14AAF5>Emberek:</color> {humanCount}
+    <color=#299438>Hátralévő idő:</color> {time}
+  survival_zombie_win: '<color=red>A zombik megfertőztek minden embert és nyertek!</color>'
+  survival_human_win: '<color=#14AAF5>Az emberek megöltek minden zombit és megállították az infectiont</color>'
+  survival_human_win_time: '<color=yellow>Az emberek túlélték, de nem állították meg az infectiont</color>'
+  name: 'Zombi Survival'
+  description: 'Emberek túlélése a zombik ellen'
+  command_name: 'zombie2'

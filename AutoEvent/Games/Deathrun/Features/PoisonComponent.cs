@@ -23,11 +23,6 @@ public class PoisonComponent : MonoBehaviour
             player.EnableEffect<CardiacArrest>(1, 15);
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        throw new NotImplementedException();
-    }
-
     private void OnTriggerStay(Collider collider)
     {
         LogManager.Debug($"Poison Stay Triggered by {collider.gameObject.name}");
