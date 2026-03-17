@@ -100,10 +100,11 @@ public class EventHandler(Plugin plugin)
             {
                 case "Lights":
                     foreach (var crewmate in plugin.Crewmates) crewmate.GetEffect<FogControl>()!.Intensity = 2;
+                    plugin.CurrentSabotage?.Deactivate(plugin);
                     return;
                 default:
                     LogManager.Debug($"[OnPlayerSearchedToy] {room} sabotage resolved.");
-                    plugin.CurrentSabotage.Deactivate(plugin);
+                    plugin.CurrentSabotage?.Deactivate(plugin);
                     return;
             }
 
@@ -140,6 +141,25 @@ public class EventHandler(Plugin plugin)
                     animator.Play($"{task.Name}Task");
             }
 
+            // Unlock stage task toys for this player now that the main task is done
+            if (task.StageTasks is { Count: > 0 } && plugin.TaskToyList != null)
+            {
+                foreach (var st in task.StageTasks)
+                {
+                    foreach (var stageToy in plugin.TaskToyList)
+                    {
+                        if (!TryParseToyName(stageToy.name, out var stRoom, out var stName, out var stIsTask, out _, out _))
+                            continue;
+                        if (!stIsTask) continue;
+                        if ((!string.IsNullOrEmpty(stName) && st.Name.ToString() != stName) ||
+                            st.RoomName.ToString() != stRoom)
+                            continue;
+                        LogManager.Debug($"[OnPlayerSearchedToy] Unlocking stage toy '{stageToy.name}' for player '{ev.Player.Nickname}'");
+                        stageToy.SetFakeIsLocked(ev.Player, false);
+                    }
+                }
+            }
+
             LogManager.Debug("[OnPlayerSearchedToy] Marked task done. Searching for next regular task...");
             var nextTask = taskManager.Tasks.FirstOrDefault(t =>
                 (string.IsNullOrEmpty(tName) || t.Name.ToString() == tName) && t.RoomName.ToString() == room &&
@@ -154,6 +174,8 @@ public class EventHandler(Plugin plugin)
             else
             {
                 LogManager.Debug("[OnPlayerSearchedToy] No more regular tasks for this room/name.");
+                // Lock this toy for the player - no more main tasks here
+                ev.Interactable.Base.SetFakeIsLocked(ev.Player, true);
             }
 
             return;
@@ -430,6 +452,7 @@ public class EventHandler(Plugin plugin)
                 var meetingPos = Plugin.Instance.MeetingButton.transform.position;
 
                 if (!player.IsAlive)
+                {
                     if (plugin.PlayerSkins.TryGetValue(player.NetworkId, out var skin) && skin != null &&
                         skin.name.Contains("Death"))
                     {
@@ -437,8 +460,10 @@ public class EventHandler(Plugin plugin)
                         var skinDirection = meetingPos - skin.transform.position;
                         skin.transform.rotation =
                             Quaternion.LookRotation(new Vector3(skinDirection.x, 0, skinDirection.z));
-                        continue;
                     }
+
+                    continue;
+                }
 
                 player.ClearInventory();
                 player.Position = spawnPos;
@@ -481,7 +506,7 @@ public class EventHandler(Plugin plugin)
         LogManager.Debug("Player is using impostor radio item.");
         if (!plugin.Radios.TryGetValue(ev.Player, out var index)) return;
         LogManager.Debug("Current radio index: " + index);
-        var sabotage = plugin.CurrentSabotages[index];
+        var sabotage = plugin.CurrentSabotages[index % plugin.CurrentSabotages.Count];
         LogManager.Debug("Current sabotage: " + (sabotage != null ? sabotage.Type.ToString() : "null"));
         if (sabotage == null)
         {

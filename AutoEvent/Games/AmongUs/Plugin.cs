@@ -55,7 +55,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
     private AdminToyBase VentObject { get; set; }
     internal List<LightSourceToy> LightToys { get; private set; } = [];
     internal List<PrimitiveObjectToy> DoorList { get; private set; }
-    private List<InvisibleInteractableToy> TaskToyList { get; set; }
+    internal List<InvisibleInteractableToy> TaskToyList { get; private set; }
     internal ConcurrentDictionary<string, Vector3> TeleportOutList { get; private set; }
     internal InvisibleInteractableToy MeetingButton { get; private set; }
     internal Dictionary<uint, GameObject> PlayerSkins { get; private set; }
@@ -351,6 +351,8 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
                 var votedOut = Player.Get(maxVotes[0].Id);
                 if (votedOut != null)
                 {
+                    var wasImpostor = Impostors.Contains(votedOut);
+
                     votedOut.Kill($"{Translation.DeathMessage}");
                     votedOut.DisplayName = string.Empty;
                     TaskManager.ClearForPlayers([votedOut]);
@@ -368,7 +370,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
 
                     if (Config.ConfirmEjects)
                         Extensions.ServerBroadcast(
-                            Impostors.Contains(votedOut)
+                            wasImpostor
                                 ? $"{Translation.WasAnImpostor.Replace("{player}", votedOut.Nickname)}"
                                 : $"{Translation.WasNotAnImpostor.Replace("{player}", votedOut.Nickname)}", 5);
                     else
@@ -437,7 +439,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
                     text = Translation.NoVotes;
 
                 var didntVote = Impostors.Concat(Crewmates)
-                    .Where(p => !PlayerVotes.ContainsKey(p.NetworkId) || PlayerVotes[p.NetworkId] == 0)
+                    .Where(p => p.IsAlive && !PlayerVotes.ContainsKey(p.NetworkId))
                     .ToList();
                 var hintText = text;
                 if (didntVote.Count > 0)
@@ -701,6 +703,30 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
 
                 availableTasks.Remove(task);
             }
+
+            if (TaskToyList == null) continue;
+            
+                foreach (var toy in TaskToyList)
+                {
+                    if (!EventHandler.TryParseToyName(toy.name, out var toyRoom, out var toyName, out var isToyTask, out _, out _))
+                        continue;
+                    if (!isToyTask) continue;
+
+                    var isMainTask = assignedToys.Contains(toy) && tm.Tasks.Any(t =>
+                        (string.IsNullOrEmpty(toyName) || t.Name.ToString() == toyName) &&
+                        t.RoomName.ToString() == toyRoom);
+
+                    var isStageTask = assignedToys.Contains(toy) && tm.Tasks.Any(t =>
+                        t.StageTasks.Any(st =>
+                            (string.IsNullOrEmpty(toyName) || st.Name.ToString() == toyName) &&
+                            st.RoomName.ToString() == toyRoom));
+
+                    if (!isMainTask && !isStageTask || isStageTask && !isMainTask)
+                    {
+                        toy.SetFakeIsLocked(player, true);
+                    }
+                }
+            
         }
     }
 

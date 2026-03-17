@@ -48,6 +48,12 @@ internal class Vote : ICommand, IUsageProvider
             return false;
         }
 
+        if (!player.IsAlive)
+        {
+            response = "You cannot vote because you are dead.";
+            return false;
+        }
+
         var colorName = arguments.At(0);
 
         if (string.Equals(colorName, "none", StringComparison.OrdinalIgnoreCase) ||
