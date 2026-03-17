@@ -141,7 +141,6 @@ public class EventHandler(Plugin plugin)
                     animator.Play($"{task.Name}Task");
             }
 
-            // Unlock stage task toys for this player now that the main task is done
             if (task.StageTasks is { Count: > 0 } && plugin.TaskToyList != null)
             {
                 foreach (var st in task.StageTasks)
@@ -174,7 +173,6 @@ public class EventHandler(Plugin plugin)
             else
             {
                 LogManager.Debug("[OnPlayerSearchedToy] No more regular tasks for this room/name.");
-                // Lock this toy for the player - no more main tasks here
                 ev.Interactable.Base.SetFakeIsLocked(ev.Player, true);
             }
 

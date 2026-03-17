@@ -32,9 +32,11 @@ public class EventHandler(Plugin plugin)
         ev.Player.SendHint(plugin.Translation.YouDefused);
         ev.Player.DisableEffect<Ensnared>();
         ev.Player.DisableEffect<HeavyFooted>();
-        _bombAudio.Destroy();
+        _bombAudio?.Destroy();
+        if (plugin.BombObject == null) return;
         var lightSource = plugin.BombObject.transform.Find("Bomb_Source/LightSource");
-        NetworkServer.Destroy(lightSource.gameObject);
+        if (lightSource != null)
+            NetworkServer.Destroy(lightSource.gameObject);
     }
 
     public static void OnSearchToyAborted(PlayerSearchToyAbortedEventArgs ev)
@@ -85,7 +87,7 @@ public class EventHandler(Plugin plugin)
 
     public void OnUsedItem(PlayerUsedItemEventArgs ev)
     {
-        if (ev.UsableItem.Base.ItemId != Bomb.Base.ItemId) return;
+        if (Bomb == null || ev.UsableItem.Base.ItemId != Bomb.Base.ItemId) return;
         if (!ev.Player.IsChaos) return;
         ev.UsableItem.GlobalCooldownDuration = 0f;
         ev.UsableItem.PersonalCooldownDuration = 0f;
@@ -106,7 +108,7 @@ public class EventHandler(Plugin plugin)
 
     public static void OnCancelledUsingItem(PlayerCancelledUsingItemEventArgs ev)
     {
-        if (ev.UsableItem.Base.ItemId != Bomb.Base.ItemId) return;
+        if (Bomb == null || ev.UsableItem.Base.ItemId != Bomb.Base.ItemId) return;
         Bomb.PersonalCooldownDuration = 0f;
         Bomb.GlobalCooldownDuration = 0f;
         ev.Player.DisableEffect<Ensnared>();
@@ -117,13 +119,13 @@ public class EventHandler(Plugin plugin)
 
     public static void OnSearchingPickup(PlayerSearchingPickupEventArgs ev)
     {
-        if (ev.Pickup.Base.ItemId != Bomb.Base.ItemId) return;
+        if (Bomb == null || ev.Pickup.Base.ItemId != Bomb.Base.ItemId) return;
         if (ev.Player.IsNTF) ev.IsAllowed = false;
     }
 
     public void OnPickingUpItem(PlayerPickingUpItemEventArgs ev)
     {
-        if (ev.Pickup.Base.ItemId != Bomb.Base.ItemId) return;
+        if (Bomb == null || ev.Pickup.Base.ItemId != Bomb.Base.ItemId) return;
         ev.Player.SendHint(plugin.Translation.PickedUpBomb);
         plugin.BombObject.transform.ResetTransform();
         plugin.BombObject.gameObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
@@ -134,7 +136,7 @@ public class EventHandler(Plugin plugin)
 
     public void OnDroppedItem(PlayerDroppedItemEventArgs ev)
     {
-        if (ev.Pickup.Base.ItemId != Bomb.Base.ItemId) return;
+        if (Bomb == null || ev.Pickup.Base.ItemId != Bomb.Base.ItemId) return;
         ev.Throw = false;
         ev.Pickup.Rotation = Quaternion.identity;
         plugin.BombObject.gameObject.transform.parent = ev.Pickup.Transform;
@@ -145,6 +147,7 @@ public class EventHandler(Plugin plugin)
 
     public void OnChangedItemEvent(PlayerChangedItemEventArgs ev)
     {
+        if (Bomb == null) return;
         Bomb.PersonalCooldownDuration = 0f;
         Bomb.GlobalCooldownDuration = 0f;
         if (ev.OldItem != null && ev.OldItem.Base.ItemId == Bomb.Base.ItemId)

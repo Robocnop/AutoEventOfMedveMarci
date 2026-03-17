@@ -257,9 +257,9 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         if (_countdown.TotalSeconds > 0)
             return;
 
-        _speed -= 0.39f;
+        _speed = Math.Max(0.5f, _speed - 0.39f);
         _stage++;
-        _timeDelay -= 0.039f;
+        _timeDelay = Math.Max(0.05f, _timeDelay - 0.039f);
         _eventState = 0;
     }
 

@@ -46,7 +46,7 @@ public class EventHandler(Plugin plugin)
             return;
         }
 
-        var livesRemaining = plugin.Config.PrisonerLives = plugin.Deaths[ev.Player];
+        var livesRemaining = plugin.Config.PrisonerLives - plugin.Deaths[ev.Player];
         ev.Player.SendHint(plugin.Translation.LivesRemaining.Replace("{lives}", livesRemaining.ToString()), 4f);
         ev.Player.GiveLoadout(plugin.Config.PrisonerLoadouts);
         Timing.CallDelayed(Timing.WaitForOneFrame, () =>

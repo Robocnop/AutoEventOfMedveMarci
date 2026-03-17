@@ -217,7 +217,7 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
 
         // Kill alive players who didn't get up to platform
         foreach (var player in Player.ReadyList.Where(r => r.IsAlive))
-            if (!PlayerDict[player].IsStandUpPlatform)
+            if (!PlayerDict.TryGetValue(player, out var pc) || !pc.IsStandUpPlatform)
             {
                 Extensions.GrenadeSpawn(player.Position, 0.1f, 0.1f, 0);
                 player.Kill(Translation.NoTime);

@@ -146,7 +146,7 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         {
             if (Scientist.Items.All(item => item.Type != ItemType.Jailbird))
                 Scientist.CurrentItem ??= Scientist.AddItem(ItemType.Jailbird);
-            if (ClassD.Items.All(item => item.Type == ItemType.Jailbird))
+            if (ClassD.Items.All(item => item.Type != ItemType.Jailbird))
                 ClassD.CurrentItem ??= ClassD.AddItem(ItemType.Jailbird);
 
             text = Translation.PlayersDuel.Replace("{scientist}", Scientist.Nickname)
@@ -212,7 +212,10 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         if (_countdown.TotalSeconds > 0)
             return null;
 
-        chosenPlayer = Player.ReadyList.Where(r => r.Role == role).ToList().RandomItem();
+        var candidates = Player.ReadyList.Where(r => r.Role == role).ToList();
+        if (candidates.Count == 0)
+            return null;
+        chosenPlayer = candidates.RandomItem();
 
         End:
         chosenPlayer.Position = _teleports.ElementAt(value).transform.position;
