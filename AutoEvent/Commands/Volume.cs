@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Linq;
 using AutoEvent.ApiFeatures;
+using AutoEvent.Interfaces;
 using CommandSystem;
 using LabApi.Features.Permissions;
+using SecretLabNAudio.Core.Extensions;
 
 namespace AutoEvent.Commands;
 
@@ -37,8 +38,8 @@ public class Volume : ICommand, IUsageProvider
 
             var newVolume = float.Parse(arguments.At(0));
             AutoEvent.MusicVolume = newVolume;
-            foreach (var speaker in AudioPlayer.AudioPlayerByName.Values.SelectMany(audioPlayer =>
-                         audioPlayer.SpeakersByName.Values)) speaker.Volume = AutoEvent.MusicVolume / 100f;
+            if (AutoEvent.EventManager.CurrentEvent is IEventSound sound)
+                sound.SoundInfo.AudioPlayer?.WithVolume(AutoEvent.MusicVolume / 100f);
             AutoEvent.Singleton.LoadConfigs();
             if (AutoEvent.Singleton.Config == null)
             {

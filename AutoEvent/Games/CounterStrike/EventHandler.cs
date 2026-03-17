@@ -1,11 +1,12 @@
 ﻿using System;
-using System.IO;
+using AutoEvent.API;
 using AutoEvent.ApiFeatures;
 using AutoEvent.Games.CounterStrike.Features;
 using CustomPlayerEffects;
 using LabApi.Events.Arguments.PlayerEvents;
 using LabApi.Features.Wrappers;
 using Mirror;
+using SecretLabNAudio.Core;
 using UnityEngine;
 using Extensions = AutoEvent.API.Extensions;
 
@@ -41,7 +42,7 @@ public class EventHandler(Plugin plugin)
         ev.Player.DisableEffect<Ensnared>();
         ev.Player.DisableEffect<HeavyFooted>();
         LogManager.Debug("Player aborted searching the bomb");
-        _defuseAudio?.RemoveAllClips();
+        _defuseAudio?.StopAudio();
     }
 
     public static void OnSearchingToy(PlayerSearchingToyEventArgs ev)
@@ -80,11 +81,6 @@ public class EventHandler(Plugin plugin)
         ev.Player.EnableEffect<Ensnared>(255);
         ev.Player.EnableEffect<HeavyFooted>(255);
         _plantAudio = Extensions.PlayAudio("BombPlanting.ogg", false, true, 20, 30, ev.Player.Position);
-        if (AudioClipStorage.AudioClips.ContainsKey("TBombWin.ogg")) return;
-        var filePath = Path.Combine(AutoEvent.Singleton.Config.MusicDirectoryPath, "TBombWin.ogg");
-        LogManager.Debug($"[PlayAudio] File path: {filePath}");
-        if (!AudioClipStorage.LoadClip(filePath, "TBombWin.ogg"))
-            LogManager.Debug("[PlayAudio] The music file TBombWin.ogg was not found for playback");
     }
 
     public void OnUsedItem(PlayerUsedItemEventArgs ev)
@@ -116,7 +112,7 @@ public class EventHandler(Plugin plugin)
         ev.Player.DisableEffect<Ensnared>();
         ev.Player.DisableEffect<HeavyFooted>();
         LogManager.Debug("Player cancelled using the bomb");
-        _plantAudio?.RemoveAllClips();
+        _plantAudio?.StopAudio();
     }
 
     public static void OnSearchingPickup(PlayerSearchingPickupEventArgs ev)

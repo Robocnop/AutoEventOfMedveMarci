@@ -150,6 +150,10 @@ public class EventHandler(Plugin plugin)
 
         LogManager.Debug(
             $"[OnPlayerSearchedToy] Found stage task '{stageTask.Name}' in '{stageTask.RoomName}' (isDone={stageTask.IsDone})");
+
+        stageTask.IsDone = true;
+        LogManager.Debug("[OnPlayerSearchedToy] Marked stage task done.");
+
         var nextStageTask = TaskManager.GetPlayerStageTasks(ev.Player).FirstOrDefault(st =>
             (string.IsNullOrEmpty(tName) || st.Name.ToString() == tName) && st.RoomName.ToString() == room &&
             !st.IsDone);
@@ -165,9 +169,6 @@ public class EventHandler(Plugin plugin)
         {
             LogManager.Debug("[OnPlayerSearchedToy] No further stage tasks.");
         }
-
-        stageTask.IsDone = true;
-        LogManager.Debug("[OnPlayerSearchedToy] Marked stage task done.");
 
         var hasMoreRegularTasks = taskManager.Tasks.Any(t =>
             (string.IsNullOrEmpty(tName) || t.Name.ToString() == tName) && t.RoomName.ToString() == room && !t.IsDone);
@@ -523,7 +524,7 @@ public class EventHandler(Plugin plugin)
             plugin.Muted.Remove(ev.Player);
         }
 
-        else if (plugin.Impostors.Contains(ev.Player))
+        if (plugin.Impostors.Contains(ev.Player))
         {
             plugin.Impostors.Remove(ev.Player);
             plugin.KillCooldowns.Remove(ev.Player);

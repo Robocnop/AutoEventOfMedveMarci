@@ -9,7 +9,7 @@ namespace AutoEvent.Loader;
 
 public class EventManager
 {
-    private readonly Dictionary<string, Event> _events = new();
+    private readonly Dictionary<string, Event> _events = new(StringComparer.OrdinalIgnoreCase);
 
     public Event CurrentEvent { get; set; }
 
@@ -19,16 +19,14 @@ public class EventManager
 
     public void RegisterInternalEvents()
     {
-        IsMerLoaded = true;
-        if (!AppDomain.CurrentDomain.GetAssemblies().Any(x => x.FullName.ToLower().Contains("projectmer")))
-        {
-            LogManager.Error(
-                "ProjectMER was not detected. The mini-games may not be available until you install ProjectMER.");
-            IsMerLoaded = false;
-        }
+        IsMerLoaded = AppDomain.CurrentDomain.GetAssemblies()
+            .Any(x => x.FullName.ToLower().Contains("projectmer"));
 
-        var callingAssembly = Assembly.GetCallingAssembly();
-        var types = callingAssembly.GetTypes();
+        if (!IsMerLoaded)
+            LogManager.Error(
+                "ProjectMER was not detected. Map-based mini-games will not be available until you install ProjectMER.");
+
+        var types = Assembly.GetCallingAssembly().GetTypes();
 
         foreach (var type in types)
             try
@@ -37,8 +35,7 @@ public class EventManager
                     type.GetInterfaces().All(x => x != typeof(IEvent)))
                     continue;
 
-                var evBase = Activator.CreateInstance(type);
-                if (evBase is not Event ev)
+                if (Activator.CreateInstance(type) is not Event ev)
                     continue;
 
                 if (!ev.AutoLoad)
@@ -48,40 +45,51 @@ public class EventManager
                     continue;
 
                 ev.Id = _events.Count;
-                _events.Add(ev.Name, ev);
+                _events[ev.InternalName] = ev;
             }
             catch (MissingMethodException)
             {
+                // No parameterless constructor — skip silently.
             }
             catch (Exception ex)
             {
-                LogManager.Error($"[EventLoader] cannot register an event.\n{ex}");
+                LogManager.Error($"[EventLoader] Failed to register event from type '{type.FullName}'.\n{ex}");
             }
     }
 
+    /// <summary>Returns an event matching <paramref name="query" /> by numeric ID, command name, or display name.</summary>
+    public Event GetEvent(string query)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+            return null;
+
+        return TryGetEvent(query, out var ev) ? ev : null;
+    }
+
     /// <summary>
-    ///     Gets an event by it's name.
+    ///     Tries to find an event by numeric ID, command name, or display name.
     /// </summary>
-    /// <param name="type">The name of the event to search for.</param>
-    /// <returns>The first event found with the same name (Case-Insensitive).</returns>
-    public Event GetEvent(string type)
+    public bool TryGetEvent(string query, out Event ev)
     {
-        if (int.TryParse(type, out var id))
-            return GetEvent(id);
+        ev = null;
+        if (string.IsNullOrWhiteSpace(query))
+            return false;
 
-        return !TryGetEventByCName(type, out var ev)
-            ? _events.Values.FirstOrDefault(@event =>
-                string.Equals(@event.Name, type, StringComparison.CurrentCultureIgnoreCase))
-            : ev;
-    }
+        // 1. By ID
+        if (int.TryParse(query, out var id))
+        {
+            ev = _events.Values.FirstOrDefault(x => x.Id == id);
+            return ev != null;
+        }
 
-    private Event GetEvent(int id)
-    {
-        return _events.Values.FirstOrDefault(x => x.Id == id);
-    }
+        // 2. By command name (exact, case-insensitive)
+        ev = _events.Values.FirstOrDefault(x =>
+            string.Equals(x.CommandName, query, StringComparison.OrdinalIgnoreCase));
+        if (ev != null) return true;
 
-    private bool TryGetEventByCName(string type, out Event ev)
-    {
-        return (ev = _events.Values.FirstOrDefault(x => x.CommandName == type)) != null;
+        // 3. By display name (exact, case-insensitive)
+        ev = _events.Values.FirstOrDefault(x =>
+            string.Equals(x.Name, query, StringComparison.OrdinalIgnoreCase));
+        return ev != null;
     }
 }

@@ -1,122 +1,266 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
+            Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
     <PropertyGroup>
-        <TargetFramework>net48</TargetFramework>
-        <LangVersion>latest</LangVersion>
-        <AssemblyTitle>AutoEvent</AssemblyTitle>
-        <Product>AutoEvent</Product>
-        <Copyright>Copyright MedveMarci © 2025</Copyright>
-        <OutputPath>bin\$(Configuration)\</OutputPath>
-        <Configurations>Debug;Release</Configurations>
-        <Platforms>x64</Platforms>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{1E178EB3-10A5-4892-A352-AE695657287F}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>AutoEvent</RootNamespace>
         <AssemblyName>AutoEvent</AssemblyName>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-        <OutputPath>bin\x64\Debug</OutputPath>
-        <DefineConstants>TRACE;DEBUG</DefineConstants>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <Optimize>true</Optimize>
-        <PlatformTarget>x64</PlatformTarget>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
-        <Deterministic>true</Deterministic>
-        <LangVersion>default</LangVersion>
-        <TargetFrameworkProfile/>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>embedded</DebugType>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-        <OutputPath>bin\x64\LabApi</OutputPath>
-        <DefineConstants>TRACE;LABAPI</DefineConstants>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <Optimize>true</Optimize>
+      <DebugType>pdbonly</DebugType>
+      <Optimize>true</Optimize>
+      <DefineConstants>TRACE</DefineConstants>
+      <ErrorReport>prompt</ErrorReport>
+      <WarningLevel>4</WarningLevel>
+      <OutputPath>bin\x64\Release\</OutputPath>
         <PlatformTarget>x64</PlatformTarget>
-        <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-        <Deterministic>true</Deterministic>
-        <LangVersion>default</LangVersion>
-        <TargetFrameworkProfile/>
-        <DebugSymbols>false</DebugSymbols>
-        <DebugType>pdbonly</DebugType>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+      <OutputPath>bin\x64\Debug\</OutputPath>
+        <PlatformTarget>x64</PlatformTarget>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Lib.Harmony" Version="2.4.2"/>
-        <PackageReference Include="System.Buffers" Version="4.6.1"/>
-        <PackageReference Include="System.Net.Http" Version="4.3.4"/>
-        <PackageReference Include="System.Text.Json" Version="10.0.2"/>
-    </ItemGroup>
-    <ItemGroup>
-        <Reference Include="AudioPlayerApi" HintPath="$(LABAPI_DEPENDENCIES)\AudioPlayerApi.dll"/>
+        <Reference Include="System"/>
+        <Reference Include="System.Core"/>
+        <Reference Include="System.Data"/>
+        <Reference Include="System.Xml"/>
+        <Reference Include="ProjectMER" HintPath="$(LABAPI_PLUGINS)\ProjectMER.dll"/>
+        <Reference Include="SecretLabNAudio.Core" HintPath="$(LABAPI_PLUGINS)\SecretLabNAudio.Core.dll"/>
         <Reference Include="CedModV3" HintPath="$(LABAPI_PLUGINS)\CedModV3.dll"/>
         <Reference Include="LabApiExtensions" HintPath="$(LABAPI_DEPENDENCIES)\LabApiExtensions.dll"/>
-        <Reference Include="YamlDotNet" HintPath="$(SL_REFERENCES)\YamlDotNet.dll"/>
-        <Reference Include="ProjectMER" HintPath="$(LABAPI_PLUGINS)\ProjectMER.dll"/>
         <Reference Include="Assembly-CSharp" HintPath="$(SL_REFERENCES)\Assembly-CSharp-Publicized.dll"/>
-        <Reference Include="Mirror" HintPath="$(SL_REFERENCES)\Mirror.dll"/>
-        <Reference Include="System"/>
         <Reference Include="LabApi" HintPath="$(SL_REFERENCES)\LabApi.dll"/>
-        <Reference Include="System.ComponentModel.DataAnnotations" HintPath="$(SL_REFERENCES)\System.ComponentModel.DataAnnotations.dll"/>
-        <Reference Include="UnityEngine" HintPath="$(SL_REFERENCES)\UnityEngine.dll"/>
-        <Reference Include="UnityEngine.AssetBundleModule" HintPath="$(SL_REFERENCES)\UnityEngine.AssetBundleModule.dll"/>
-        <Reference Include="UnityEngine.ParticleSystem" HintPath="$(SL_REFERENCES)\UnityEngine.ParticleSystemModule.dll"/>
-        <Reference Include="UnityEngine.CoreModule" HintPath="$(SL_REFERENCES)\UnityEngine.CoreModule.dll"/>
-        <Reference Include="UnityEngine.UnityWebRequestModule" HintPath="$(SL_REFERENCES)\UnityEngine.UnityWebRequestModule.dll"/>
-        <Reference Include="UnityEngine.AnimationModule" HintPath="$(SL_REFERENCES)\UnityEngine.AnimationModule.dll"/>
-        <Reference Include="UnityEngine.PhysicsModule" HintPath="$(SL_REFERENCES)\UnityEngine.PhysicsModule.dll"/>
         <Reference Include="Assembly-CSharp-firstpass" HintPath="$(SL_REFERENCES)\Assembly-CSharp-firstpass.dll"/>
-        <Reference Include="UnityEngine.AudioModule" HintPath="$(SL_REFERENCES)\UnityEngine.AudioModule.dll"/>
+        <Reference Include="Mirror" HintPath="$(SL_REFERENCES)\Mirror.dll"/>
+        <Reference Include="UnityEngine.AnimationModule" HintPath="$(SL_REFERENCES)\UnityEngine.AnimationModule.dll"/>
         <Reference Include="CommandSystem.Core" HintPath="$(SL_REFERENCES)\CommandSystem.Core.dll"/>
+        <Reference Include="UnityEngine.CoreModule" HintPath="$(SL_REFERENCES)\UnityEngine.CoreModule.dll"/>
+        <Reference Include="UnityEngine.PhysicsModule" HintPath="$(SL_REFERENCES)\UnityEngine.PhysicsModule.dll"/>
         <Reference Include="NorthwoodLib" HintPath="$(SL_REFERENCES)\NorthwoodLib.dll"/>
-        <Reference Include="Pooling" HintPath="$(SL_REFERENCES)\Pooling.dll"/>
+        <Reference Include="YamlDotNet" HintPath="$(SL_REFERENCES)\YamlDotNet.dll"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Lib.Harmony" Version="2.4.2"/>
+        <PackageReference Include="System.Net.Http" Version="4.3.4"/>
+        <PackageReference Include="System.Text.Json" Version="10.0.5"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="ApiFeatures\ApiManager.cs" />
+        <Compile Include="ApiFeatures\BearmanLogsCommand.cs" />
+        <Compile Include="ApiFeatures\LogManager.cs" />
+        <Compile Include="API\ArtificialHealth.cs" />
+        <Compile Include="API\DifficultyItem.cs" />
+        <Compile Include="API\Enums\EventFlags.cs" />
+        <Compile Include="API\Enums\FriendlyFireSettings.cs" />
+        <Compile Include="API\Enums\LoadoutFlags.cs" />
+        <Compile Include="API\Enums\SeasonFlags.cs" />
+        <Compile Include="API\Extensions.cs" />
+        <Compile Include="API\FriendlyFireSystem.cs" />
+        <Compile Include="API\Loadout.cs" />
+        <Compile Include="API\MapObject.cs" />
+        <Compile Include="API\RoleCount.cs" />
+        <Compile Include="API\Season\SeasonMethod.cs" />
+        <Compile Include="API\Season\SeasonStyle.cs" />
+        <Compile Include="Commands\List.cs" />
+        <Compile Include="Commands\MainCommand.cs" />
+        <Compile Include="Commands\Reload.cs" />
+        <Compile Include="Commands\Run.cs" />
+        <Compile Include="Commands\Stop.cs" />
+        <Compile Include="Commands\Translations.cs" />
+        <Compile Include="Commands\Volume.cs" />
+        <Compile Include="Config.cs" />
+        <Compile Include="EventHandler.cs" />
+        <Compile Include="Events\EventArgs\Scp018BounceArgs.cs" />
+        <Compile Include="Events\EventArgs\Scp018UpdateArgs.cs" />
+        <Compile Include="Events\EventArgs\UsingStaminaArgs.cs" />
+        <Compile Include="Events\Handlers.cs" />
+        <Compile Include="Games\Airstrike\Configs\Config.cs" />
+        <Compile Include="Games\Airstrike\Configs\Translation.cs" />
+        <Compile Include="Games\Airstrike\EventHandler.cs" />
+        <Compile Include="Games\Airstrike\Plugin.cs" />
+        <Compile Include="Games\AllDeathmatch\Configs\Config.cs" />
+        <Compile Include="Games\AllDeathmatch\Configs\Translation.cs" />
+        <Compile Include="Games\AllDeathmatch\EventHandler.cs" />
+        <Compile Include="Games\AllDeathmatch\Plugin.cs" />
+        <Compile Include="Games\AmongUs\Commands\Vote.cs" />
+        <Compile Include="Games\AmongUs\Configs\Config.cs" />
+        <Compile Include="Games\AmongUs\Configs\Translation.cs" />
+        <Compile Include="Games\AmongUs\Enums\SabotageType.cs" />
+        <Compile Include="Games\AmongUs\Enums\Skeld.cs" />
+        <Compile Include="Games\AmongUs\Enums\TaskType.cs" />
+        <Compile Include="Games\AmongUs\EventHandler.cs" />
+        <Compile Include="Games\AmongUs\Features\Sabotage.cs" />
+        <Compile Include="Games\AmongUs\Features\ScanComponent.cs" />
+        <Compile Include="Games\AmongUs\Features\Task.cs" />
+        <Compile Include="Games\AmongUs\Features\TaskManager.cs" />
+        <Compile Include="Games\AmongUs\Plugin.cs" />
+        <Compile Include="Games\Battle\Configs\Config.cs" />
+        <Compile Include="Games\Battle\Configs\Translation.cs" />
+        <Compile Include="Games\Battle\Plugin.cs" />
+        <Compile Include="Games\CounterStrike\Configs\Config.cs" />
+        <Compile Include="Games\CounterStrike\Configs\Translation.cs" />
+        <Compile Include="Games\CounterStrike\EventHandler.cs" />
+        <Compile Include="Games\CounterStrike\Features\BombState.cs" />
+        <Compile Include="Games\CounterStrike\Plugin.cs" />
+        <Compile Include="Games\Deathmatch\Configs\Config.cs" />
+        <Compile Include="Games\Deathmatch\Configs\Translation.cs" />
+        <Compile Include="Games\Deathmatch\EventHandler.cs" />
+        <Compile Include="Games\Deathmatch\Features\RandomClass.cs" />
+        <Compile Include="Games\Deathmatch\Plugin.cs" />
+        <Compile Include="Games\Deathrun\Configs\Config.cs" />
+        <Compile Include="Games\Deathrun\Configs\Translation.cs" />
+        <Compile Include="Games\Deathrun\EventHandler.cs" />
+        <Compile Include="Games\Deathrun\Features\ColliderComponent.cs" />
+        <Compile Include="Games\Deathrun\Features\LavaComponent.cs" />
+        <Compile Include="Games\Deathrun\Features\PoisonComponent.cs" />
+        <Compile Include="Games\Deathrun\Features\WeaponComponent.cs" />
+        <Compile Include="Games\Deathrun\Plugin.cs" />
+        <Compile Include="Games\Dodgeball\Configs\Config.cs" />
+        <Compile Include="Games\Dodgeball\Configs\Translation.cs" />
+        <Compile Include="Games\Dodgeball\EventHandler.cs" />
+        <Compile Include="Games\Dodgeball\Plugin.cs" />
+        <Compile Include="Games\FallDown\Configs\Config.cs" />
+        <Compile Include="Games\FallDown\Configs\Translation.cs" />
+        <Compile Include="Games\FallDown\Features\LavaComponent.cs" />
+        <Compile Include="Games\FallDown\Plugin.cs" />
+        <Compile Include="Games\Football\Configs\Config.cs" />
+        <Compile Include="Games\Football\Configs\Translation.cs" />
+        <Compile Include="Games\Football\Features\BallComponent.cs" />
+        <Compile Include="Games\Football\Plugin.cs" />
+        <Compile Include="Games\Glass\Configs\Config.cs" />
+        <Compile Include="Games\Glass\Configs\Translation.cs" />
+        <Compile Include="Games\Glass\EventHandler.cs" />
+        <Compile Include="Games\Glass\Features\GlassComponent.cs" />
+        <Compile Include="Games\Glass\Features\LavaComponent.cs" />
+        <Compile Include="Games\Glass\Features\PlatformData.cs" />
+        <Compile Include="Games\Glass\Features\PlatformSelector.cs" />
+        <Compile Include="Games\Glass\Plugin.cs" />
+        <Compile Include="Games\GunGame\Configs\Config.cs" />
+        <Compile Include="Games\GunGame\Configs\Translation.cs" />
+        <Compile Include="Games\GunGame\EventHandler.cs" />
+        <Compile Include="Games\GunGame\Features\Stats.cs" />
+        <Compile Include="Games\GunGame\Plugin.cs" />
+        <Compile Include="Games\Infection\Configs\Config.cs" />
+        <Compile Include="Games\Infection\Configs\Translation.cs" />
+        <Compile Include="Games\Infection\EventHandler.cs" />
+        <Compile Include="Games\Infection\Plugin.cs" />
+        <Compile Include="Games\Jail\Configs\Config.cs" />
+        <Compile Include="Games\Jail\Configs\Translation.cs" />
+        <Compile Include="Games\Jail\EventHandler.cs" />
+        <Compile Include="Games\Jail\Features\DoorComponent.cs" />
+        <Compile Include="Games\Jail\Features\JailerComponent.cs" />
+        <Compile Include="Games\Jail\Plugin.cs" />
+        <Compile Include="Games\Knives\Configs\Config.cs" />
+        <Compile Include="Games\Knives\Configs\Translation.cs" />
+        <Compile Include="Games\Knives\EventHandler.cs" />
+        <Compile Include="Games\Knives\Plugin.cs" />
+        <Compile Include="Games\Lava\Configs\Config.cs" />
+        <Compile Include="Games\Lava\Configs\Translation.cs" />
+        <Compile Include="Games\Lava\EventHandler.cs" />
+        <Compile Include="Games\Lava\Features\LavaComponent.cs" />
+        <Compile Include="Games\Lava\Plugin.cs" />
+        <Compile Include="Games\Line\Configs\Config.cs" />
+        <Compile Include="Games\Line\Configs\Translation.cs" />
+        <Compile Include="Games\Line\Features\LineComponent.cs" />
+        <Compile Include="Games\Line\Plugin.cs" />
+        <Compile Include="Games\MusicalChairs\Configs\Config.cs" />
+        <Compile Include="Games\MusicalChairs\Configs\Translation.cs" />
+        <Compile Include="Games\MusicalChairs\EventHandler.cs" />
+        <Compile Include="Games\MusicalChairs\Features\EventState.cs" />
+        <Compile Include="Games\MusicalChairs\Features\Functions.cs" />
+        <Compile Include="Games\MusicalChairs\Features\PlayerClass.cs" />
+        <Compile Include="Games\MusicalChairs\Plugin.cs" />
+        <Compile Include="Games\NukeRun\Configs\Config.cs" />
+        <Compile Include="Games\NukeRun\Configs\Translation.cs" />
+        <Compile Include="Games\NukeRun\EventHandler.cs" />
+        <Compile Include="Games\NukeRun\Plugin.cs" />
+        <Compile Include="Games\Puzzle\Configs\Config.cs" />
+        <Compile Include="Games\Puzzle\Configs\Translation.cs" />
+        <Compile Include="Games\Puzzle\Features\EventState.cs" />
+        <Compile Include="Games\Puzzle\Features\LavaComponent.cs" />
+        <Compile Include="Games\Puzzle\Plugin.cs" />
+        <Compile Include="Games\Race\Configs\Config.cs" />
+        <Compile Include="Games\Race\Configs\Translation.cs" />
+        <Compile Include="Games\Race\Features\LavaComponent.cs" />
+        <Compile Include="Games\Race\Plugin.cs" />
+        <Compile Include="Games\RedGreenLight\Configs\Config.cs" />
+        <Compile Include="Games\RedGreenLight\Configs\Translation.cs" />
+        <Compile Include="Games\RedGreenLight\EventHandler.cs" />
+        <Compile Include="Games\RedGreenLight\Features\EventState.cs" />
+        <Compile Include="Games\RedGreenLight\Plugin.cs" />
+        <Compile Include="Games\Spleef\Configs\Config.cs" />
+        <Compile Include="Games\Spleef\Configs\Translation.cs" />
+        <Compile Include="Games\Spleef\EventHandler.cs" />
+        <Compile Include="Games\Spleef\Features\FallPlatformComponent.cs" />
+        <Compile Include="Games\Spleef\Features\LavaComponent.cs" />
+        <Compile Include="Games\Spleef\Plugin.cs" />
+        <Compile Include="Games\Survival\Configs\Config.cs" />
+        <Compile Include="Games\Survival\Configs\Translation.cs" />
+        <Compile Include="Games\Survival\EventHandler.cs" />
+        <Compile Include="Games\Survival\Plugin.cs" />
+        <Compile Include="Games\Tag\Configs\Config.cs" />
+        <Compile Include="Games\Tag\Configs\Translation.cs" />
+        <Compile Include="Games\Tag\EventHandler.cs" />
+        <Compile Include="Games\Tag\Features\EventState.cs" />
+        <Compile Include="Games\Tag\Plugin.cs" />
+        <Compile Include="Games\Versus\Configs\Config.cs" />
+        <Compile Include="Games\Versus\Configs\Translation.cs" />
+        <Compile Include="Games\Versus\EventHandler.cs" />
+        <Compile Include="Games\Versus\Features\EventState.cs" />
+        <Compile Include="Games\Versus\Plugin.cs" />
+        <Compile Include="Interfaces\Event.cs" />
+        <Compile Include="Interfaces\EventConfig.cs" />
+        <Compile Include="Interfaces\EventTranslation.cs" />
+        <Compile Include="Interfaces\IEvent.cs" />
+        <Compile Include="Interfaces\IEventMap.cs" />
+        <Compile Include="Interfaces\IEventSound.cs" />
+        <Compile Include="Interfaces\IPlayerCountLimited.cs" />
+        <Compile Include="Interfaces\MapInfo.cs" />
+        <Compile Include="Interfaces\SoundInfo.cs" />
+        <Compile Include="Intergrations\MERO.cs" />
+        <Compile Include="Loader\ConfigManager.cs" />
+        <Compile Include="Loader\EventManager.cs" />
+        <Compile Include="Patches\ClientDropItem.cs" />
+        <Compile Include="Patches\FakeInteractionDuration.cs" />
+        <Compile Include="Patches\PlayerList.cs" />
+        <Compile Include="Patches\SchematicMerPatch.cs" />
+        <Compile Include="Patches\Scp018ProjectilePatch.cs" />
+        <Compile Include="Patches\Scp1509Patch.cs" />
+        <Compile Include="Patches\StaminaUseage.cs" />
+        <Compile Include="Plugin.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs"/>
     </ItemGroup>
     <ItemGroup>
         <Content Include="..\Docs\*" Link="Docs\*"/>
         <Content Include="..\Docs\Translations\*" Link="Docs\Translations\*"/>
         <Content Include="..\README.md" Link="README.md"/>
-        <Content Update="..\Docs\HalloweenMiniGames.md">
-            <Link>Docs\HalloweenMiniGames.md</Link>
-        </Content>
-    </ItemGroup>
-    <ItemGroup>
-        <EmbeddedResource Include="Translations\chinese.yml">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <None Remove="Translations\italian.yml"/>
-        <EmbeddedResource Include="Translations\italian.yml">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <None Remove="Translations\portuguese.yml"/>
-        <EmbeddedResource Include="Translations\portuguese.yml">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <None Remove="Translations\polish.yml"/>
-        <EmbeddedResource Include="Translations\polish.yml">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <None Remove="Translations\german.yml"/>
-        <EmbeddedResource Include="Translations\german.yml">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <None Remove="Translations\turkish.yml"/>
-        <EmbeddedResource Include="Translations\turkish.yml">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <None Remove="Translations\thai.yml"/>
-        <EmbeddedResource Include="Translations\thai.yml">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <None Remove="Translations\russian.yml"/>
-        <EmbeddedResource Include="Translations\russian.yml">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <None Remove="Translations\french.yml"/>
-        <EmbeddedResource Include="Translations\french.yml">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <None Remove="Translations\spanish.yml"/>
-        <EmbeddedResource Include="Translations\spanish.yml">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </EmbeddedResource>
+        <Content Include="Translations\chinese.yml" />
+        <Content Include="Translations\english.yml" />
+        <Content Include="Translations\french.yml" />
+        <Content Include="Translations\german.yml" />
+        <Content Include="Translations\hungarian.yml" />
+        <Content Include="Translations\italian.yml" />
+        <Content Include="Translations\polish.yml" />
+        <Content Include="Translations\portuguese.yml" />
+        <Content Include="Translations\russian.yml" />
+        <Content Include="Translations\spanish.yml" />
+        <Content Include="Translations\thai.yml" />
+        <Content Include="Translations\turkish.yml" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
     <Target Name="AfterBuild">

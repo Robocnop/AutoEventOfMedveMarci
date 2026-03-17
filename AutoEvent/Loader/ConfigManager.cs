@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using AutoEvent.ApiFeatures;
 using AutoEvent.Interfaces;
+using LabApi.Features;
 using LabApi.Features.Wrappers;
 using LabApi.Loader.Features.Yaml;
 using LiteNetLib.Utils;
@@ -97,7 +97,7 @@ public static class ConfigManager
     }
 
 
-    internal static void LoadTranslations()
+    public static void LoadTranslations()
     {
         try
         {
@@ -108,11 +108,10 @@ public static class ConfigManager
                 var countryCode = "EN";
                 try
                 {
-                    using var client = new WebClient();
                     var url = $"http://ipinfo.io/{Server.IpAddress}/country";
-                    countryCode = client.DownloadString(url).Trim();
+                    countryCode = HttpQuery.Get(url).Trim();
                 }
-                catch (WebException)
+                catch (Exception)
                 {
                     LogManager.Warn("Couldn't verify the server country. Providing default translation.");
                 }

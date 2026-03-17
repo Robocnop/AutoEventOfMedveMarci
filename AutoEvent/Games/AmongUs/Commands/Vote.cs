@@ -16,7 +16,7 @@ internal class Vote : ICommand, IUsageProvider
 
     public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
     {
-        if (AutoEvent.EventManager.CurrentEvent.CommandName != "amongus")
+        if (AutoEvent.EventManager.CurrentEvent?.CommandName != "amongus")
         {
             response = "The Among Us event is not running.";
             return false;

@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -19,9 +21,11 @@ using ProjectMER.Features;
 using ProjectMER.Features.Objects;
 using ProjectMER.Features.Serializable;
 using ProjectMER.Features.Serializable.Schematics;
+using SecretLabNAudio.Core;
+using SecretLabNAudio.Core.Extensions;
 using UnityEngine;
 using Object = UnityEngine.Object;
-using PrimitiveObjectToy = AdminToys.PrimitiveObjectToy;
+using PrimitiveObjectToy = LabApi.Features.Wrappers.PrimitiveObjectToy;
 using Random = UnityEngine.Random;
 using ThrowableItem = InventorySystem.Items.ThrowableProjectiles.ThrowableItem;
 
@@ -243,7 +247,8 @@ public static class Extensions
             {
                 AutoEvent.EventManager.CurrentEvent.StopEvent();
 
-                foreach (var pl in Player.ReadyList) pl.SetRole(RoleTypeId.Spectator);
+                foreach (var pl in Player.ReadyList) 
+                    pl.SetRole(RoleTypeId.Spectator);
                 LogManager.Error(
                     $"The map {schematicName} could not be loaded because it was not found. Delete and re-download the schematics.");
                 return null;
@@ -273,10 +278,10 @@ public static class Extensions
         var prim = parent.GetComponent<PrimitiveObjectToy>();
         var obj = ObjectSpawner.SpawnPrimitive(new SerializablePrimitive
         {
-            PrimitiveType = prim.PrimitiveType,
+            PrimitiveType = prim.Type,
             Position = position,
             Scale = parent.transform.localScale,
-            Color = prim.MaterialColor.ToHex()
+            Color = prim.Color.ToHex()
         });
 
         NetworkServer.Spawn(obj.gameObject);
@@ -332,70 +337,49 @@ public static class Extensions
     public static AudioPlayer PlayAudio(string fileName, bool isLoop = false, bool isSpatial = false,
         float minDistance = 5f, float maxDistance = 5000f, Vector3 speakerPosition = default)
     {
-        if (!AudioClipStorage.AudioClips.ContainsKey(fileName))
+        var filePath = Path.Combine(AutoEvent.Singleton.Config.MusicDirectoryPath, fileName);
+        LogManager.Debug($"[PlayAudio] File path: {filePath}");
+        if (!File.Exists(filePath))
         {
-            var filePath = Path.Combine(AutoEvent.Singleton.Config.MusicDirectoryPath, fileName);
-            LogManager.Debug($"[PlayAudio] File path: {filePath}");
-            if (!File.Exists(filePath))
-            {
-                LogManager.Debug($"[PlayAudio] The music file {fileName} does not exist at path {filePath}");
-                return null;
-            }
-
-            if (!AudioClipStorage.LoadClip(filePath, fileName))
-            {
-                LogManager.Debug($"[PlayAudio] The music file {fileName} was not found for playback");
-                return null;
-            }
+            LogManager.Debug($"[PlayAudio] The music file {fileName} does not exist at path {filePath}");
+            return null;
         }
 
-        var audioPlayer = AudioPlayer.CreateOrGet($"AutoEvent-Global-{fileName}",
-            onIntialCreation: p =>
-            {
-                p.AddSpeaker($"AutoEvent-Main-{fileName}", speakerPosition,
-                    AutoEvent.MusicVolume / 100f,
-                    isSpatial, minDistance, maxDistance);
-            });
+        var settings = new SpeakerSettings
+        {
+            Volume = AutoEvent.MusicVolume / 100f,
+            IsSpatial = isSpatial,
+            MinDistance = minDistance,
+            MaxDistance = maxDistance
+        };
 
-        audioPlayer.SendSoundGlobally = true;
-        audioPlayer.AddClip(fileName, loop: isLoop);
-        audioPlayer.DestroyWhenAllClipsPlayed = true;
-
+        var audioPlayer = AudioPlayer.Create(100, settings, position: speakerPosition)
+            .UseFile(filePath, isLoop);
+        audioPlayer.DestroyOnEnd();
         return audioPlayer;
     }
 
     public static void PlayPlayerAudio(Player player, string fileName, bool isLoop = false)
     {
-        if (!AudioClipStorage.AudioClips.ContainsKey(fileName))
+        var filePath = Path.Combine(AutoEvent.Singleton.Config.MusicDirectoryPath, fileName);
+        LogManager.Debug($"[PlayAudio] File path: {filePath}");
+        if (!File.Exists(filePath))
         {
-            var filePath = Path.Combine(AutoEvent.Singleton.Config.MusicDirectoryPath, fileName);
-            LogManager.Debug($"[PlayAudio] File path: {filePath}");
-            if (!File.Exists(filePath))
-            {
-                LogManager.Debug($"[PlayAudio] The music file {fileName} does not exist at path {filePath}");
-                return;
-            }
-
-            if (!AudioClipStorage.LoadClip(filePath, fileName))
-            {
-                LogManager.Debug($"[PlayAudio] The music file {fileName} was not found for playback");
-                return;
-            }
+            LogManager.Debug($"[PlayAudio] The music file {fileName} does not exist at path {filePath}");
+            return;
         }
 
-        var audioPlayer = AudioPlayer.CreateOrGet($"AutoEvent-{player.NetworkId}-{fileName}",
-            condition: hub =>
-            {
-                var playerHub = Player.Get(hub);
-                return playerHub.NetworkId == player.NetworkId;
-            },
-            onIntialCreation: p =>
-            {
-                p.AddSpeaker("AutoEvent-Main-{player.NetworkId}-{fileName}", isSpatial: false, maxDistance: 5000f);
-            });
+        var settings = new SpeakerSettings
+        {
+            Volume = AutoEvent.MusicVolume / 100f,
+            IsSpatial = false,
+            MaxDistance = 5000f
+        };
 
-        audioPlayer.AddClip(fileName, loop: isLoop);
-        audioPlayer.DestroyWhenAllClipsPlayed = true;
+        AudioPlayer.Create(101, settings, position: player.Position)
+            .WithFilteredSendEngine(p => p.NetworkId == player.NetworkId)
+            .UseFile(filePath, isLoop)
+            .DestroyOnEnd();
     }
 
     public static void PauseAudio(this AudioPlayer audioPlayer)
@@ -406,20 +390,18 @@ public static class Extensions
             return;
         }
 
-        var clipId = audioPlayer.ClipsById.Keys.First();
-        if (audioPlayer.TryGetClip(clipId, out var clip)) clip.IsPaused = true;
+        audioPlayer.IsPaused = true;
     }
 
     public static void ResumeAudio(this AudioPlayer audioPlayer)
     {
         if (audioPlayer is null)
         {
-            LogManager.Debug("[PauseAudio] The AudioPlayer is null");
+            LogManager.Debug("[ResumeAudio] The AudioPlayer is null");
             return;
         }
 
-        var clipId = audioPlayer.ClipsById.Keys.First();
-        if (audioPlayer.TryGetClip(clipId, out var clip)) clip.IsPaused = false;
+        audioPlayer.IsPaused = false;
     }
 
     public static void StopAudio(this AudioPlayer audioPlayer)
@@ -430,7 +412,7 @@ public static class Extensions
             return;
         }
 
-        audioPlayer.RemoveAllClips();
+        audioPlayer.ClearBuffer();
         audioPlayer.Destroy();
     }
 

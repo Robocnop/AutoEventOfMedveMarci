@@ -9,7 +9,7 @@ namespace AutoEvent.Commands;
 internal class Stop : ICommand
 {
     public string Command => nameof(Stop);
-    public string Description => "Kills the running mini-game (just kills all the players)";
+    public string Description => "Force-stops the running mini-game.";
     public string[] Aliases => [];
 
     public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
@@ -22,15 +22,18 @@ internal class Stop : ICommand
 
         if (AutoEvent.EventManager.CurrentEvent == null)
         {
-            response = "The mini-game is not running!";
+            response = "No mini-game is currently running.";
             return false;
         }
 
+        var eventName = AutoEvent.EventManager.CurrentEvent.Name;
+
+        foreach (var player in Player.ReadyList)
+            player.SetRole(RoleTypeId.Spectator);
+
         AutoEvent.EventManager.CurrentEvent.StopEvent();
 
-        foreach (var pl in Player.ReadyList) pl.SetRole(RoleTypeId.Spectator);
-
-        response = "Killed all the players and the mini-game itself will end soon.";
+        response = $"The mini-game '{eventName}' has been stopped.";
         return true;
     }
 }

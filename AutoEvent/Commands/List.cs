@@ -26,9 +26,9 @@ internal class List : ICommand
 
         var isConsole = sender is ServerConsoleSender;
         if (!isConsole)
-            builder.AppendLine("\"<color=yellow><b>List of events</b></color>:");
+            builder.AppendLine("<color=yellow><b>List of events</b></color>:");
         else
-            builder.AppendLine("\"List of events:");
+            builder.AppendLine("List of events:");
 
         var style = SeasonMethod.GetSeasonStyle();
         var color = style.PrimaryColor;
@@ -36,7 +36,7 @@ internal class List : ICommand
         if (style.Text != null)
             builder.AppendLine(style.Text);
 
-        var eventList = AutoEvent.EventManager.Events.Where(ev => ev is not IHiddenCommand).OrderBy(x => x.Name)
+        var eventList = AutoEvent.EventManager.Events.OrderBy(x => x.Name)
             .ToList();
         foreach (IEvent ev in eventList)
             if (!isConsole)

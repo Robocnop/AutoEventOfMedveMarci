@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Linq;
 using AutoEvent.API;
+using AutoEvent.ApiFeatures;
 using AutoEvent.Interfaces;
 using CommandSystem;
-using LabApi.Features.Console;
 using LabApi.Features.Permissions;
 using LabApi.Features.Wrappers;
 using MEC;
@@ -13,7 +13,7 @@ namespace AutoEvent.Commands;
 internal class Run : ICommand, IUsageProvider
 {
     public string Command => nameof(Run);
-    public string Description => "Run the event, takes on 2 argument - the command name of the event, the name of the map (optional)";
+    public string Description => "Run the event. Arguments: <CommandName> [MapName]";
     public string[] Aliases => ["start", "play", "begin"];
 
     public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
@@ -39,62 +39,51 @@ internal class Run : ICommand, IUsageProvider
         var ev = AutoEvent.EventManager.GetEvent(arguments.At(0));
         if (ev == null)
         {
-            response = $"The mini-game {arguments.At(0)} is not found.";
+            response = $"The mini-game '{arguments.At(0)}' was not found.";
             return false;
         }
 
-        // Checking that MapEditorReborn has loaded on the server
-        if (!(ev is IEventMap map && !string.IsNullOrEmpty(map.MapInfo.MapName) &&
-              map.MapInfo.MapName.ToLower() != "none"))
-            Logger.Warn("No map has been specified for this event!");
-        else if (!Extensions.IsExistsMap(map.MapInfo.MapName, out response)) return false;
-
-        if (!Player.ReadyList.Any())
+        if (ev is IEventMap map && !string.IsNullOrEmpty(map.MapInfo.MapName) &&
+            !string.Equals(map.MapInfo.MapName, "none", StringComparison.OrdinalIgnoreCase))
         {
-            response = "There are no players in the server!";
-            return false;
-        }
-
-        if (ev.CommandName == "amongus")
-        {
-            var playerList = Player.ReadyList;
-
-            var ignored = AutoEvent.Singleton.Config?.IgnoredRoles;
-            if (ignored is { Count: > 0 })
-                playerList = playerList.Where(x => !ignored.Contains(x.Role));
-
-            if (playerList.Count() > Misc.AllowedColors.Count)
-            {
-                response = "There are too many players in the server! The max player count for Among Us is " +
-                           Misc.AllowedColors.Count;
+            if (!Extensions.IsExistsMap(map.MapInfo.MapName, out response))
                 return false;
-            }
         }
-        
-        //Get the map name from the arguments if it exists
-        var mapName = "";
-        if (arguments.Count >= 2)
-            mapName = arguments.At(1);
-        
-        
+
+        var readyPlayers = Player.ReadyList;
+        var ignoredRoles = AutoEvent.Singleton.Config?.IgnoredRoles;
+        if (ignoredRoles is { Count: > 0 })
+            readyPlayers = readyPlayers.Where(p => !ignoredRoles.Contains(p.Role));
+
+        var players = readyPlayers.ToList();
+        if (!players.Any())
+        {
+            response = "There are no eligible players on the server!";
+            return false;
+        }
+
+        if (ev is IPlayerCountLimited limited && players.Count > limited.MaxPlayers)
+        {
+            response = $"Too many players! The maximum for '{ev.Name}' is {limited.MaxPlayers}.";
+            return false;
+        }
+
+        var mapName = arguments.Count >= 2 ? arguments.At(1) : string.Empty;
+
         Round.IsLocked = true;
         if (!Round.IsRoundStarted)
         {
             Round.Start();
-
             Timing.CallDelayed(1f, () =>
             {
                 foreach (var player in Player.ReadyList)
                     player.ClearInventory();
-
                 ev.StartEvent(mapName);
-                AutoEvent.EventManager.CurrentEvent = ev;
             });
         }
         else
         {
             ev.StartEvent(mapName);
-            AutoEvent.EventManager.CurrentEvent = ev;
         }
 
         response = $"The mini-game {ev.Name} has started!";

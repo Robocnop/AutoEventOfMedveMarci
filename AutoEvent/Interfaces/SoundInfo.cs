@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using SecretLabNAudio.Core;
 using YamlDotNet.Serialization;
 
 namespace AutoEvent.Interfaces;
