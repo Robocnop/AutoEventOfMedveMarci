@@ -10,7 +10,8 @@
   ``LabAPI\dependencies\global``
 
 - ``ProjectMER.dll`` move to => ``LabApi/plugins/global/``
-    - You can find a fixed version of ProjectMER on my [Discord Server](https://discord.gg/KmpA8cfaSA). If it will be fixed, I will link that one here.
+    - You can find a fixed version of ProjectMER on my [Discord Server](https://discord.gg/KmpA8cfaSA). If it will be
+      fixed, I will link that one here.
 - [``Music.tar.gz``](https://github.com/MedveMarci/AutoEvent/releases/latest) unzip files to =>
   ``LabApi/configs/AutoEvent/Music``
 

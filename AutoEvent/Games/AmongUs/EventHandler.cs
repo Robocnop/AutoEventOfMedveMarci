@@ -56,6 +56,28 @@ public class EventHandler(Plugin plugin)
             $"[OnPlayerSearchingToy] Parsed room='{room}' taskName='{tName ?? "null"}' isSabotage='{isSabotage}' isTask='{isTask}' isTeleport='{isTeleport}'");
 
         if (isSabotage && plugin.CurrentSabotage == null)
+        {
+            ev.IsAllowed = false;
+            return;
+        }
+
+        if (!isTask) return;
+
+        if (!TaskManager.TryGet(ev.Player, out var tm))
+        {
+            ev.IsAllowed = false;
+            return;
+        }
+
+        var hasMainTask = tm.Tasks.Any(t =>
+            (string.IsNullOrEmpty(tName) || t.Name.ToString() == tName) &&
+            t.RoomName.ToString() == room && !t.IsDone);
+
+        var hasStageTask = TaskManager.GetPlayerStageTasks(ev.Player).Any(st =>
+            (string.IsNullOrEmpty(tName) || st.Name.ToString() == tName) &&
+            st.RoomName.ToString() == room && !st.IsDone);
+
+        if (!hasMainTask && !hasStageTask)
             ev.IsAllowed = false;
     }
 
@@ -497,13 +519,21 @@ public class EventHandler(Plugin plugin)
     {
         yield return Timing.WaitForSeconds(0.05f);
         player.EnableEffect<Ensnared>();
-        var initialClipName = animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+
+        var clips = animator.GetCurrentAnimatorClipInfo(0);
+        if (clips.Length == 0)
+        {
+            player.DisableEffect<Ensnared>();
+            yield break;
+        }
+
+        var initialClipName = clips[0].clip.name;
 
         while (true)
         {
             yield return Timing.WaitForOneFrame;
             var clipInfo = animator.GetCurrentAnimatorClipInfo(0);
-            if (clipInfo[0].clip.name != initialClipName)
+            if (clipInfo.Length == 0 || clipInfo[0].clip.name != initialClipName)
             {
                 player.DisableEffect<Ensnared>();
                 yield break;

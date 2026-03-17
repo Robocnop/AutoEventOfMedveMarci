@@ -171,7 +171,8 @@ namespace AutoEvent.Interfaces
                                                            $"{(m.MapInfo.SpawnAutomatically ? "true" : "false")}" : "false")}");
                 if (this is IEventMap map && !string.IsNullOrEmpty(map.MapInfo.MapName) &&
                     (!checkIfAutomatic || map.MapInfo.SpawnAutomatically))
-                    map.MapInfo.Map = Extensions.LoadMap(map.MapInfo.MapName, map.MapInfo.Position, map.MapInfo.MapRotation,
+                    map.MapInfo.Map = Extensions.LoadMap(map.MapInfo.MapName, map.MapInfo.Position,
+                        map.MapInfo.MapRotation,
                         map.MapInfo.Scale);
             }
             catch (Exception e)
@@ -304,14 +305,20 @@ namespace AutoEvent.Interfaces
             var seasonFlags = SeasonMethod.GetSeasonStyle().SeasonFlag;
 
             // If there are no seasonal maps, then choose the default maps
-            if (InternalConfig.AvailableMaps.Count(r => r.SeasonFlag == SeasonFlags.None) == 0) seasonFlags = SeasonFlags.None;
+            if (InternalConfig.AvailableMaps.Count(r => r.SeasonFlag == SeasonFlags.None) == 0)
+                seasonFlags = SeasonFlags.None;
 
             List<MapChance> maps = [];
-            maps.AddRange(InternalConfig.AvailableMaps.Where(map => map.SeasonFlag == seasonFlags || map.SeasonFlag == SeasonFlags.None));
+            maps.AddRange(InternalConfig.AvailableMaps.Where(map =>
+                map.SeasonFlag == seasonFlags || map.SeasonFlag == SeasonFlags.None));
 
             if (!string.IsNullOrEmpty(mapName))
-                maps = [InternalConfig.AvailableMaps.FirstOrDefault(x => x.Map.MapName.Contains(mapName, StringComparison.OrdinalIgnoreCase))];
-            
+                maps =
+                [
+                    InternalConfig.AvailableMaps.FirstOrDefault(x =>
+                        x.Map.MapName.Contains(mapName, StringComparison.OrdinalIgnoreCase))
+                ];
+
             if (this is not IEventMap eventMap) return;
             var spawnAutomatically = eventMap.MapInfo.SpawnAutomatically;
             if (maps.Count == 1)
@@ -395,7 +402,7 @@ namespace AutoEvent.Interfaces
             {
                 LogManager.Error($"Could not modify friendly fire / ff autoban settings.\n{e}");
             }
-            
+
             SetMap(mapName);
             SpawnMap(true);
 

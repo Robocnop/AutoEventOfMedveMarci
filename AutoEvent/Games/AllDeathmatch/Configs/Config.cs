@@ -18,7 +18,7 @@ public class Config : EventConfig
         AvailableMaps.Add(new MapChance(50, new MapInfo("sl_waterworld", new Vector3(0, 40f, 0f))));
         AvailableMaps.Add(new MapChance(50, new MapInfo("de_dust2", new Vector3(0, 40f, 0f))));
     }
-    
+
     [Description("How many minutes should we wait for the end of the round.")]
     public int TimeMinutesRound { get; set; } = 10;
 

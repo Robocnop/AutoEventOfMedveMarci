@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using AutoEvent.API;
-using AutoEvent.ApiFeatures;
 using AutoEvent.Interfaces;
 using CommandSystem;
 using LabApi.Features.Permissions;
@@ -45,10 +44,8 @@ internal class Run : ICommand, IUsageProvider
 
         if (ev is IEventMap map && !string.IsNullOrEmpty(map.MapInfo.MapName) &&
             !string.Equals(map.MapInfo.MapName, "none", StringComparison.OrdinalIgnoreCase))
-        {
             if (!Extensions.IsExistsMap(map.MapInfo.MapName, out response))
                 return false;
-        }
 
         var readyPlayers = Player.ReadyList;
         var ignoredRoles = AutoEvent.Singleton.Config?.IgnoredRoles;

@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -247,7 +245,7 @@ public static class Extensions
             {
                 AutoEvent.EventManager.CurrentEvent.StopEvent();
 
-                foreach (var pl in Player.ReadyList) 
+                foreach (var pl in Player.ReadyList)
                     pl.SetRole(RoleTypeId.Spectator);
                 LogManager.Error(
                     $"The map {schematicName} could not be loaded because it was not found. Delete and re-download the schematics.");

@@ -1,4 +1,3 @@
-using System;
 using AutoEvent.ApiFeatures;
 using CustomPlayerEffects;
 using UnityEngine;

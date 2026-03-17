@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using AutoEvent.ApiFeatures;
 using AutoEvent.Interfaces;
-using LabApi.Features;
 using LabApi.Features.Wrappers;
 using LabApi.Loader.Features.Yaml;
 using LiteNetLib.Utils;

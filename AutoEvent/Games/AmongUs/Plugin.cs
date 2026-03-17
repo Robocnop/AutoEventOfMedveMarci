@@ -75,13 +75,13 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
     private string Result { get; set; } = string.Empty;
     internal static Plugin Instance { get; private set; }
 
-    public int MaxPlayers => Misc.AcceptedColours.Length;
-
     public MapInfo MapInfo { get; set; } = new()
     {
         MapName = "Skeld",
         Position = new Vector3(0, 30, 30)
     };
+
+    public int MaxPlayers => Misc.AcceptedColours.Length;
 
     protected override void RegisterEvents()
     {
@@ -248,7 +248,8 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
                 ImpostorRadioItems.Add(radio.Serial);
             impostor.DestroyNetworkIdentity(VentObject.netIdentity);
             if (TaskToyList != null)
-                foreach (var invisibleInteractable in TaskToyList) invisibleInteractable.SetFakeIsLocked(impostor, true);
+                foreach (var invisibleInteractable in TaskToyList)
+                    invisibleInteractable.SetFakeIsLocked(impostor, true);
         }
 
 
@@ -665,17 +666,37 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
                 if (TaskToyList != null)
                     foreach (var taskToy in TaskToyList.Where(taskToy => !assignedToys.Contains(taskToy)))
                     {
-                        if (!EventHandler.TryParseToyName(taskToy.name, out var room, out var tName, out var isTask, out _,
+                        if (!EventHandler.TryParseToyName(taskToy.name, out var toyRoom, out var toyName,
+                                out var isToyTask, out _,
                                 out _)) continue;
-                        if (!isTask) continue;
-                        if ((!string.IsNullOrEmpty(tName) && task.Name.ToString() != tName) ||
-                            task.RoomName.ToString() != room)
+                        if (!isToyTask) continue;
+                        if ((!string.IsNullOrEmpty(toyName) && task.Name.ToString() != toyName) ||
+                            task.RoomName.ToString() != toyRoom)
                             continue;
                         LogManager.Debug(
                             $"Assigned toy {taskToy.name} to task {task.Name} for player {player.Nickname} lenght: {TaskManager.GetLength(task)}");
                         taskToy.SetFakeInteractionDuration(player, TaskManager.GetLength(task));
                         taskToy.SetInteractableToy(player, TaskManager.GetLength(task));
                         assignedToys.Add(taskToy);
+                    }
+
+                var addedTask = tm.Tasks[tm.Tasks.Count - 1];
+                if (TaskToyList != null && addedTask.StageTasks is { Count: > 0 })
+                    foreach (var st in addedTask.StageTasks)
+                    foreach (var stageToy in TaskToyList.Where(tt => !assignedToys.Contains(tt)))
+                    {
+                        if (!EventHandler.TryParseToyName(stageToy.name, out var stRoom, out var stName,
+                                out var stIsTask, out _,
+                                out _)) continue;
+                        if (!stIsTask) continue;
+                        if ((!string.IsNullOrEmpty(stName) && st.Name.ToString() != stName) ||
+                            st.RoomName.ToString() != stRoom)
+                            continue;
+                        LogManager.Debug(
+                            $"Assigned stage toy {stageToy.name} to stage task {st.Name} in {st.RoomName} for player {player.Nickname}");
+                        stageToy.SetFakeInteractionDuration(player, TaskManager.GetLength(st));
+                        stageToy.SetInteractableToy(player, TaskManager.GetLength(st));
+                        assignedToys.Add(stageToy);
                     }
 
                 availableTasks.Remove(task);
