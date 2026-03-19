@@ -65,6 +65,8 @@ internal class EventHandler : CustomEventsHandler
     public override void OnServerPickupCreated(PickupCreatedEventArgs ev)
     {
         if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
+        if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnoreDroppingItem))
+            ev.Pickup.Destroy();
         if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnoreDroppingAmmo) &&
             ev.Pickup.Type.GetName().Contains("Ammo"))
             ev.Pickup.Destroy();
