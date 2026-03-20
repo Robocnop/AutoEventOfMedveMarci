@@ -202,4 +202,12 @@ internal class EventHandler : CustomEventsHandler
             LogManager.Error($"An error occurred while applying credit tag to player {ev.Player.UserId}.\n{e}");
         }
     }
+
+    public override void OnPlayerPickingUpItem(PlayerPickingUpItemEventArgs ev)
+    {
+        if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
+        if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnorePickingUpItem))
+            ev.IsAllowed = false;
+        base.OnPlayerPickingUpItem(ev);
+    }
 }
