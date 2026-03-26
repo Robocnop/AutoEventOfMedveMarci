@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
+            Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{7D879ADC-57D0-4725-9A7D-5AAB62A31133}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>AutoEvent.Vote</RootNamespace>
+        <AssemblyName>AutoEvent.Vote</AssemblyName>
+        <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <PlatformTarget>x64</PlatformTarget>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>embedded</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <PlatformTarget>x64</PlatformTarget>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Release\</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="System"/>
+        <Reference Include="System.Core"/>
+        <Reference Include="System.Data"/>
+        <Reference Include="System.Xml"/>
+        <Reference Include="Assembly-CSharp" HintPath="$(SL_REFERENCES)\Assembly-CSharp-Publicized.dll"/>
+        <Reference Include="Assembly-CSharp-firstpass" HintPath="$(SL_REFERENCES)\Assembly-CSharp-firstpass.dll"/>
+        <Reference Include="Mirror" HintPath="$(SL_REFERENCES)\Mirror.dll"/>
+        <Reference Include="CommandSystem.Core" HintPath="$(SL_REFERENCES)\CommandSystem.Core.dll"/>
+        <Reference Include="UnityEngine.CoreModule" HintPath="$(SL_REFERENCES)\UnityEngine.CoreModule.dll"/>
+        <Reference Include="NorthwoodLib" HintPath="$(SL_REFERENCES)\NorthwoodLib.dll"/>
+        <Reference Include="AutoEvent" HintPath="$(LABAPI_PLUGINS)\AutoEvent.dll"/>
+        <Reference Include="RadioMenuAPI" HintPath="$(LABAPI_PLUGINS)\RadioMenuAPI.dll"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Northwood.LabAPI" Version="1.1.6.1"/>
+        <PackageReference Include="System.Net.Http" Version="4.3.4"/>
+        <PackageReference Include="System.Text.Json" Version="10.0.5"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="ApiFeatures\ApiManager.cs"/>
+        <Compile Include="ApiFeatures\BearmanLogsCommand.cs"/>
+        <Compile Include="ApiFeatures\LogManager.cs"/>
+        <Compile Include="Commands\MainCommand.cs"/>
+        <Compile Include="Commands\VoteCreate.cs"/>
+        <Compile Include="Commands\VoteEnd.cs"/>
+        <Compile Include="Config.cs"/>
+        <Compile Include="Plugin.cs"/>
+        <Compile Include="Properties\AssemblyInfo.cs"/>
+        <Compile Include="VoteManager.cs"/>
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
+    <Target Name="AfterBuild">
+        <Exec Command="xcopy &quot;$(TargetPath)&quot; &quot;%appdata%\SCP Secret Laboratory\LabAPI\plugins\global&quot; /y"/>
+    </Target>
+</Project>
