@@ -5,6 +5,5 @@ namespace AutoEvent.Updater.Models;
 
 internal class SchematicManifest
 {
-    [JsonPropertyName("schematics")]
-    public List<SchematicEntry> Schematics { get; set; } = new List<SchematicEntry>();
+    [JsonPropertyName("schematics")] public List<SchematicEntry> Schematics { get; set; } = new();
 }

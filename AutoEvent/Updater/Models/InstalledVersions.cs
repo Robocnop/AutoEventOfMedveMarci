@@ -8,8 +8,7 @@ namespace AutoEvent.Updater.Models;
 
 internal class InstalledVersions
 {
-    public Dictionary<string, string> Versions { get; } =
-        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, string> Versions { get; } = new(StringComparer.OrdinalIgnoreCase);
 
     public static InstalledVersions Load(string path)
     {
@@ -27,6 +26,7 @@ internal class InstalledVersions
         {
             LogManager.Warn($"[SchematicUpdater] installed.json is corrupt, treating as empty.\n{ex.Message}");
         }
+
         return result;
     }
 

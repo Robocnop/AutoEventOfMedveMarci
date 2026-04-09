@@ -4,8 +4,7 @@ using HarmonyLib;
 
 namespace AutoEvent.Patches;
 
-[HarmonyPatch(typeof(ProjectMER.ProjectMER), nameof(ProjectMER.ProjectMER.SchematicsDir), MethodType.Getter)]
-public class SchematicMerPatch
+public static class SchematicMerPatch
 {
     public static bool Prefix(ref string __result)
     {
@@ -17,11 +16,19 @@ public class SchematicMerPatch
 
             if (assemblyName.Contains("AutoEvent") && declaringType.Name == "Extensions")
             {
-                __result = Path.Combine(AutoEvent.BaseConfigPath, "Schematics");
+                __result = Path.Combine(AutoEvent.BaseConfigPath, "Schematics", "ProjectMER");
                 return false;
             }
         }
 
         return true;
+    }
+
+    internal static void ApplyPatch(Harmony harmony)
+    {
+        var targetMethod = AccessTools.PropertyGetter(
+            typeof(ProjectMER.ProjectMER), nameof(ProjectMER.ProjectMER.SchematicsDir));
+        var prefixMethod = AccessTools.Method(typeof(SchematicMerPatch), nameof(Prefix));
+        harmony.Patch(targetMethod, new HarmonyMethod(prefixMethod));
     }
 }

@@ -4,15 +4,13 @@ namespace AutoEvent.Updater.Models;
 
 internal class SchematicEntry
 {
-    [JsonPropertyName("name")]
-    public string Name { get; set; }
+    [JsonPropertyName("name")] public string Name { get; set; }
 
-    [JsonPropertyName("version")]
-    public string Version { get; set; }
+    [JsonPropertyName("version")] public string Version { get; set; }
 
-    [JsonPropertyName("file")]
-    public string File { get; set; }
+    [JsonPropertyName("projectmer_file")] public string ProjectMerFile { get; set; }
 
-    [JsonPropertyName("changelog")]
-    public string Changelog { get; set; }
+    [JsonPropertyName("tme_file")] public string TmeFile { get; set; }
+
+    [JsonPropertyName("changelog")] public string Changelog { get; set; }
 }
