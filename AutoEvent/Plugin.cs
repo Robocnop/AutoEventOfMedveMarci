@@ -2,13 +2,20 @@
 using System.IO;
 using AutoEvent.API;
 using AutoEvent.ApiFeatures;
+using AutoEvent.Commands;
+using AutoEvent.Integrations;
+using AutoEvent.Integrations.Audio;
+using AutoEvent.Integrations.MapEditor;
 using AutoEvent.Loader;
+using AutoEvent.Patches;
+using AutoEvent.Updater;
 using HarmonyLib;
 using LabApi.Events.CustomHandlers;
 using LabApi.Features;
 using LabApi.Features.Wrappers;
 using LabApi.Loader.Features.Paths;
 using LabApi.Loader.Features.Plugins;
+using EventManager = AutoEvent.Loader.EventManager;
 
 namespace AutoEvent;
 
@@ -16,9 +23,10 @@ public class AutoEvent : Plugin<Config>
 {
     public static AutoEvent Singleton;
     private static Harmony _harmonyPatch;
-    public static EventManager EventManager;
+    internal static EventManager InternalEventManager;
     private static EventHandler _eventHandler;
     internal static float MusicVolume;
+    public static readonly MainCommand MainCommand = new();
     public override string Name => "AutoEvent";
 
     public override string Author =>
@@ -27,7 +35,7 @@ public class AutoEvent : Plugin<Config>
     public override string Description =>
         "A plugin that allows you to play mini-games in SCP:SL. It includes a variety of games such as Spleef, Lava, Hide and Seek, Knives, and more. Each game has its own unique mechanics and rules, providing a fun and engaging experience for players.";
 
-    public override Version Version => new(9, 16, 0);
+    public override Version Version => new(10, 0, 0);
     public override Version RequiredApiVersion => new(LabApiProperties.CompiledVersion);
 
     public static string BaseConfigPath { get; private set; }
@@ -52,10 +60,17 @@ public class AutoEvent : Plugin<Config>
 
             FriendlyFireSystem.IsFriendlyFireEnabledByDefault = Server.FriendlyFire;
 
+            MapSystemIntegration.Detect();
+            AudioSystemIntegration.Detect();
+            RadioMenuIntegration.Detect();
+
             try
             {
                 _harmonyPatch = new Harmony("autoevent");
                 _harmonyPatch.PatchAll();
+
+                if (MapSystemIntegration.IsProjectMerLoaded)
+                    SchematicMerPatch.ApplyPatch(_harmonyPatch);
             }
             catch (Exception e)
             {
@@ -77,12 +92,13 @@ public class AutoEvent : Plugin<Config>
                 LogManager.Error($"An error has occured while trying to initialize directories.\n{e}");
             }
 
-            EventManager = new EventManager();
-            EventManager.RegisterInternalEvents();
+            InternalEventManager = new EventManager();
+            InternalEventManager.RegisterInternalEvents();
             _eventHandler = new EventHandler();
             CustomHandlersManager.RegisterEventsHandler(_eventHandler);
             ConfigManager.LoadConfigsAndTranslations();
             MusicVolume = Config.Volume;
+            SchematicUpdater.Check();
             LogManager.Info("The mini-games are loaded.");
         }
         catch (Exception e)
@@ -106,7 +122,7 @@ public class AutoEvent : Plugin<Config>
     public override void Disable()
     {
         _harmonyPatch.UnpatchAll();
-        EventManager = null;
+        InternalEventManager = null;
         Singleton = null;
         CustomHandlersManager.UnregisterEventsHandler(_eventHandler);
         _eventHandler = null;

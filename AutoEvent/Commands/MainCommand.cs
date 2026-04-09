@@ -27,6 +27,7 @@ public class MainCommand : ParentCommand
             RegisterCommand(new Volume());
             RegisterCommand(new Translations());
             RegisterCommand(new Reload());
+            RegisterCommand(new Update());
         }
         catch (Exception e)
         {
