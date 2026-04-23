@@ -98,7 +98,7 @@ includes **26 unique mini-games**.
 3. Place `0Harmony.dll` in `LabApi/dependencies/global/`
 4. Install the required dependencies listed above
 5. Extract `Music.zip` to `LabApi/configs/AutoEvent/Music/`
-6. Install [RadioMenuAPI](https://github.com/Axwabo/RadioMenuAPI)
+6. Install [RadioMenuAPI](https://github.com/MedveMarci/RadioMenuAPI)
    and [LabApiExtensions](https://github.com/KadavasKingdom/LabApiExtensions) if you want to play Among Us.
 7. Grant permissions in `LabApi/configs/permissions.yml`:
    ```yaml

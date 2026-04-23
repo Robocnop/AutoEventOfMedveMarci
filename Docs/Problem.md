@@ -97,7 +97,7 @@ Adjust the paths to match your server's directory structure.
 
 The Among Us event failed to start because RadioMenuAPI is not installed or not detected.
 
-**Fix:** Install [RadioMenuAPI](https://github.com/Axwabo/RadioMenuAPI):
+**Fix:** Install [RadioMenuAPI](https://github.com/MedveMarci/RadioMenuAPI):
 
 1. Download the latest release of RadioMenuAPI
 2. Place `RadioMenuAPI.dll` in `LabApi/plugins/global/`
