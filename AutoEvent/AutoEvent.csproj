@@ -12,6 +12,7 @@
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <Nullable>disable</Nullable>
+        <Configurations>Debug;Release;Debug_APAPI;Release_APAPI</Configurations>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
