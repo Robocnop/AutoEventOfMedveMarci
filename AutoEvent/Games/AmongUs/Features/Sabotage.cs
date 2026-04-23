@@ -1,4 +1,5 @@
 ﻿using System;
+using AutoEvent.ApiFeatures;
 using AutoEvent.Games.AmongUs.Enums;
 using CustomPlayerEffects;
 using LabApi.Features.Wrappers;
@@ -44,14 +45,15 @@ public class Sabotage
         plugin.CurrentSabotage = this;
         switch (Type)
         {
-            case SabotageType.OxygenDepleted:
+            /*case SabotageType.OxygenDepleted:
                 break;
             case SabotageType.ReactorMeltdown:
-                break;
+                break;*/
             case SabotageType.FixLights:
                 foreach (var crewmate in plugin.Crewmates) crewmate.GetEffect<FogControl>()!.Intensity = 5;
                 break;
             case SabotageType.DoorLockdown:
+                var deactivated = false;
                 foreach (var door in plugin.DoorList)
                 {
                     if (!door.TryGetComponent<Animator>(out var animator)) continue;
@@ -59,6 +61,8 @@ public class Sabotage
                     Timing.CallDelayed(10f, () =>
                     {
                         animator.Play("Door_Open");
+                        if (deactivated || plugin.CurrentSabotage != this) return;
+                        deactivated = true;
                         Deactivate(plugin);
                     });
                 }

@@ -1,4 +1,4 @@
-Airstrike Party:
+﻿Airstrike Party:
   cycle: |-
     <color=yellow>Esquiver les frappes aériennes </color>
     <color=green>{time} secondes se sont écoulées</color>
@@ -49,7 +49,6 @@ Among Us:
   crewmate_win: 'Les <color=#00FFFF>Crewmates</color> ont gagné !'
   killed_by_impostor: 'Tu as été tué(e) par un imposteur !'
   kill_cooldown: 'Tu ne peux pas tuer pendant {time} secondes!'
-  too_far: 'Tu es trop loin pour pouvoir tuer ! '
   voting_info: |-
     {reason}
     Vous pouvez voter en écrivant .vote <color/name/skip> dans la console en l'ouvrant via la touche m par défaut.
@@ -62,13 +61,12 @@ Among Us:
   death_body_reported: 'Le corps de <color=red>{deadPlayer}</color> a été trouvé par <color=yellow>{reportedPlayer}</color>!'
   emergency_meetings_reached: 'Vous ne pouvez plus lancer d''émergency meeting !'
   meeting_cooldown: 'Vous ne pouvez pas lancer un autre meeting pendant {time} secondes !'
+  cannot_call_meeting_during_sabotage: 'Vous ne pouvez pas lancer un meeting pendant ce sabotage !'
   calibrate_distributor: 'Calibrage du distributeur'
   chart_course: 'Traçage de l''itinéraire'
   clean_o2_filter: 'Nettoyer le filtre à Oxygène'
   empty_chute: 'Vider les ordures '
-  prime_shields: 'Armer les boucliers'
   start_reactor: 'Démarrer les réacteurs'
-  submit_scan: 'Démarrer un scan'
   fix_wiring: 'Réparer les fils'
   align_engine_output: 'Aligner les réacteurs'
   divert_power_to: 'Rediriger l''énergie vers {roomName}'
@@ -85,6 +83,8 @@ Among Us:
   didnt_vote: 'n''a pas voté'
   was_an_impostor: '{player} était un imposteur.'
   was_not_an_impostor: '{player} n''était pas un imposteur.'
+  comms_sabotaged: 'Comms Sabotaged!'
+  reactor_meltdown: 'Reactor Meltdown in {time} seconds!'
   name: 'Among Us'
   description: 'L''imposteur est parmi nous.'
   command_name: 'amongus'

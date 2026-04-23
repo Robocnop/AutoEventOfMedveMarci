@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoEvent.API;
+using AutoEvent.ApiFeatures;
 using AutoEvent.Games.AmongUs.Features;
+using AutoEvent.Integrations.MapEditor;
 using CustomPlayerEffects;
 using InventorySystem.Items.Scp1509;
 using LabApi.Events.Arguments.PlayerEvents;
@@ -55,6 +57,28 @@ public class EventHandler(Plugin plugin)
             $"[OnPlayerSearchingToy] Parsed room='{room}' taskName='{tName ?? "null"}' isSabotage='{isSabotage}' isTask='{isTask}' isTeleport='{isTeleport}'");
 
         if (isSabotage && plugin.CurrentSabotage == null)
+        {
+            ev.IsAllowed = false;
+            return;
+        }
+
+        if (!isTask) return;
+
+        if (!TaskManager.TryGet(ev.Player, out var tm))
+        {
+            ev.IsAllowed = false;
+            return;
+        }
+
+        var hasMainTask = tm.Tasks.Any(t =>
+            (string.IsNullOrEmpty(tName) || t.Name.ToString() == tName) &&
+            t.RoomName.ToString() == room && !t.IsDone);
+
+        var hasStageTask = TaskManager.GetPlayerStageTasks(ev.Player).Any(st =>
+            (string.IsNullOrEmpty(tName) || st.Name.ToString() == tName) &&
+            st.RoomName.ToString() == room && !st.IsDone);
+
+        if (!hasMainTask && !hasStageTask)
             ev.IsAllowed = false;
     }
 
@@ -77,10 +101,11 @@ public class EventHandler(Plugin plugin)
             {
                 case "Lights":
                     foreach (var crewmate in plugin.Crewmates) crewmate.GetEffect<FogControl>()!.Intensity = 2;
+                    plugin.CurrentSabotage?.Deactivate(plugin);
                     return;
                 default:
                     LogManager.Debug($"[OnPlayerSearchedToy] {room} sabotage resolved.");
-                    plugin.CurrentSabotage.Deactivate(plugin);
+                    plugin.CurrentSabotage?.Deactivate(plugin);
                     return;
             }
 
@@ -117,6 +142,21 @@ public class EventHandler(Plugin plugin)
                     animator.Play($"{task.Name}Task");
             }
 
+            if (task.StageTasks is { Count: > 0 } && plugin.TaskToyList != null)
+                foreach (var st in task.StageTasks)
+                foreach (var stageToy in plugin.TaskToyList)
+                {
+                    if (!TryParseToyName(stageToy.name, out var stRoom, out var stName, out var stIsTask, out _, out _))
+                        continue;
+                    if (!stIsTask) continue;
+                    if ((!string.IsNullOrEmpty(stName) && st.Name.ToString() != stName) ||
+                        st.RoomName.ToString() != stRoom)
+                        continue;
+                    LogManager.Debug(
+                        $"[OnPlayerSearchedToy] Unlocking stage toy '{stageToy.name}' for player '{ev.Player.Nickname}'");
+                    stageToy.SetFakeIsLocked(ev.Player, false);
+                }
+
             LogManager.Debug("[OnPlayerSearchedToy] Marked task done. Searching for next regular task...");
             var nextTask = taskManager.Tasks.FirstOrDefault(t =>
                 (string.IsNullOrEmpty(tName) || t.Name.ToString() == tName) && t.RoomName.ToString() == room &&
@@ -131,6 +171,7 @@ public class EventHandler(Plugin plugin)
             else
             {
                 LogManager.Debug("[OnPlayerSearchedToy] No more regular tasks for this room/name.");
+                ev.Interactable.Base.SetFakeIsLocked(ev.Player, true);
             }
 
             return;
@@ -149,6 +190,10 @@ public class EventHandler(Plugin plugin)
 
         LogManager.Debug(
             $"[OnPlayerSearchedToy] Found stage task '{stageTask.Name}' in '{stageTask.RoomName}' (isDone={stageTask.IsDone})");
+
+        stageTask.IsDone = true;
+        LogManager.Debug("[OnPlayerSearchedToy] Marked stage task done.");
+
         var nextStageTask = TaskManager.GetPlayerStageTasks(ev.Player).FirstOrDefault(st =>
             (string.IsNullOrEmpty(tName) || st.Name.ToString() == tName) && st.RoomName.ToString() == room &&
             !st.IsDone);
@@ -165,9 +210,6 @@ public class EventHandler(Plugin plugin)
             LogManager.Debug("[OnPlayerSearchedToy] No further stage tasks.");
         }
 
-        stageTask.IsDone = true;
-        LogManager.Debug("[OnPlayerSearchedToy] Marked stage task done.");
-
         var hasMoreRegularTasks = taskManager.Tasks.Any(t =>
             (string.IsNullOrEmpty(tName) || t.Name.ToString() == tName) && t.RoomName.ToString() == room && !t.IsDone);
         var hasMoreStageTasks = TaskManager.GetPlayerStageTasks(ev.Player, true).Any(st =>
@@ -183,28 +225,6 @@ public class EventHandler(Plugin plugin)
         if (Plugin.Instance.MeetingCalled)
         {
             ev.IsAllowed = false;
-            return;
-        }
-
-        LogManager.Debug("PlayerChangingItem: " + ev.Player.Nickname);
-        if (ev.NewItem != null && plugin.ImpostorRadioItems.Contains(ev.NewItem.Serial) &&
-            plugin.Impostors.Contains(ev.Player))
-        {
-            LogManager.Debug("Player switched to impostor radio item.");
-            if (!plugin.Radios.ContainsKey(ev.Player))
-                plugin.Radios[ev.Player] = 0;
-            if (!plugin.Radios.TryGetValue(ev.Player, out var index)) return;
-            var sabotage = plugin.CurrentSabotages[index % plugin.CurrentSabotages.Count];
-            LogManager.Debug("Current sabotage: " + (sabotage != null ? sabotage.Type.ToString() : "null"));
-            return;
-        }
-
-        if (ev.OldItem != null && plugin.ImpostorRadioItems.Contains(ev.OldItem.Serial) &&
-            plugin.Impostors.Contains(ev.Player))
-        {
-            LogManager.Debug("Player switched from impostor radio item.");
-            plugin.Radios.Remove(ev.Player);
-            ev.Player.SendHint("");
             return;
         }
 
@@ -232,12 +252,12 @@ public class EventHandler(Plugin plugin)
 
         if (plugin.PlayerSkins.TryGetValue(ev.Player.NetworkId, out var skin) && skin != null)
         {
-            var deathSkin = new SerializableSchematic
+            var deathSkin = ProjectMerIntegration.LoadSchematic(new SerializableSchematic
             {
                 SchematicName = "DeathSkin",
                 Position = ev.Player.Position,
                 Rotation = ev.Player.Rotation.eulerAngles + new Vector3(0, -90, 0)
-            }.LoadSchematic();
+            });
 
             foreach (var obj in deathSkin.AdminToyBases)
             {
@@ -286,16 +306,12 @@ public class EventHandler(Plugin plugin)
             if (vented)
             {
                 plugin.VentedPlayers.Remove(ev.Player);
-                ev.Player.DisableEffect<SilentWalk>();
-                ev.Player.DisableEffect<Lightweight>();
-                ev.Player.DisableEffect<MovementBoost>();
+                ev.Player.DisableEffect<Invisible>();
             }
             else
             {
                 plugin.VentedPlayers.Add(ev.Player);
-                ev.Player.EnableEffect<SilentWalk>(255);
-                ev.Player.EnableEffect<Lightweight>(100);
-                ev.Player.EnableEffect<MovementBoost>(50);
+                ev.Player.EnableEffect<Invisible>();
             }
 
             LogManager.Debug("PlayerPos_" + (vented ? "Exit" : "Enter"));
@@ -303,6 +319,7 @@ public class EventHandler(Plugin plugin)
             LogManager.Debug(posTf?.name ?? "null");
             if (posTf == null) return;
 
+            ev.Player.DisableEffect<Ensnared>();
             Timing.KillCoroutines(ev.Player.NetworkId.ToString());
             Timing.RunCoroutine(VentCoroutine(ev.Player, animator, posTf.gameObject), ev.Player.NetworkId.ToString());
             return;
@@ -406,6 +423,7 @@ public class EventHandler(Plugin plugin)
                 var meetingPos = Plugin.Instance.MeetingButton.transform.position;
 
                 if (!player.IsAlive)
+                {
                     if (plugin.PlayerSkins.TryGetValue(player.NetworkId, out var skin) && skin != null &&
                         skin.name.Contains("Death"))
                     {
@@ -413,8 +431,10 @@ public class EventHandler(Plugin plugin)
                         var skinDirection = meetingPos - skin.transform.position;
                         skin.transform.rotation =
                             Quaternion.LookRotation(new Vector3(skinDirection.x, 0, skinDirection.z));
-                        continue;
                     }
+
+                    continue;
+                }
 
                 player.ClearInventory();
                 player.Position = spawnPos;
@@ -450,58 +470,26 @@ public class EventHandler(Plugin plugin)
         }
     }
 
-    public void OnPlayerTogglingRadioEventArgs(PlayerTogglingRadioEventArgs ev)
-    {
-        LogManager.Debug("PlayerUsingRadio: " + ev.Player.Nickname);
-        if (!plugin.ImpostorRadioItems.Contains(ev.RadioItem.Serial)) return;
-        LogManager.Debug("Player is using impostor radio item.");
-        if (!plugin.Radios.TryGetValue(ev.Player, out var index)) return;
-        LogManager.Debug("Current radio index: " + index);
-        var sabotage = plugin.CurrentSabotages[index];
-        LogManager.Debug("Current sabotage: " + (sabotage != null ? sabotage.Type.ToString() : "null"));
-        if (sabotage == null)
-        {
-            LogManager.Debug("Sabotage is null, not activating.");
-            return;
-        }
-
-        var success = sabotage.TryActivate(ev.Player, plugin, out var reason);
-        if (!success)
-            ev.Player.SendBroadcast(reason, 2, shouldClearPrevious: true);
-        ev.IsAllowed = false;
-    }
-
-    public static void OnPlayerUsingRadioEventArgs(PlayerUsingRadioEventArgs ev)
-    {
-        ev.IsAllowed = false;
-    }
-
-    public void OnPlayerChangingRadioRange(PlayerChangingRadioRangeEventArgs ev)
-    {
-        LogManager.Debug("PlayerChangingRadioRange: " + ev.Player.Nickname);
-        if (!plugin.ImpostorRadioItems.Contains(ev.RadioItem.Serial)) return;
-        LogManager.Debug("Player is using impostor radio item.");
-        if (!plugin.Radios.TryGetValue(ev.Player, out var index)) return;
-        LogManager.Debug("Current radio index: " + index);
-        index = (index + 1) % plugin.CurrentSabotages.Count;
-        plugin.Radios[ev.Player] = index;
-        LogManager.Debug($"Changed radio index to {index} for player {ev.Player.Nickname}");
-        var sabotage = plugin.CurrentSabotages[index];
-        LogManager.Debug("Current sabotage: " + (sabotage != null ? sabotage.Type.ToString() : "null"));
-        ev.IsAllowed = false;
-    }
 
     private static IEnumerator<float> VentCoroutine(Player player, Animator animator, GameObject playerPos)
     {
         yield return Timing.WaitForSeconds(0.05f);
         player.EnableEffect<Ensnared>();
-        var initialClipName = animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+
+        var clips = animator.GetCurrentAnimatorClipInfo(0);
+        if (clips.Length == 0)
+        {
+            player.DisableEffect<Ensnared>();
+            yield break;
+        }
+
+        var initialClipName = clips[0].clip.name;
 
         while (true)
         {
             yield return Timing.WaitForOneFrame;
             var clipInfo = animator.GetCurrentAnimatorClipInfo(0);
-            if (clipInfo[0].clip.name != initialClipName)
+            if (clipInfo.Length == 0 || clipInfo[0].clip.name != initialClipName)
             {
                 player.DisableEffect<Ensnared>();
                 yield break;
@@ -522,7 +510,7 @@ public class EventHandler(Plugin plugin)
             plugin.Muted.Remove(ev.Player);
         }
 
-        else if (plugin.Impostors.Contains(ev.Player))
+        if (plugin.Impostors.Contains(ev.Player))
         {
             plugin.Impostors.Remove(ev.Player);
             plugin.KillCooldowns.Remove(ev.Player);
