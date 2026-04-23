@@ -8,10 +8,11 @@ using LabApi.Features.Permissions;
 
 namespace AutoEvent.Vote.Commands;
 
-internal class VoteCreate : ICommand, IUsageProvider
+[CommandHandler(typeof(VoteMainCommand))]
+public class VoteCreate : ICommand, IUsageProvider
 {
-    public string Command => "create";
-    public string Description => "Creates a vote for minigames.";
+    public string Command => "Create";
+    public string Description => "Creates a vote for minigames";
     public string[] Aliases => [];
 
     public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
@@ -34,7 +35,13 @@ internal class VoteCreate : ICommand, IUsageProvider
             return false;
         }
 
-        if (!int.TryParse(arguments.First(), out var duration))
+        if (arguments.Count < 2 || arguments.Array == null)
+        {
+            response = "Usage: vote create [duration] [eventnames...]";
+            return false;
+        }
+
+        if (!int.TryParse(arguments.Array[arguments.Offset], out var duration))
         {
             response = "The first argument must be the duration of the vote in seconds.";
             return false;
@@ -58,5 +65,5 @@ internal class VoteCreate : ICommand, IUsageProvider
         return true;
     }
 
-    public string[] Usage { get; } = ["eventnames"];
+    public string[] Usage { get; } = ["duration", "eventnames..."];
 }

@@ -14,74 +14,136 @@ public static class ApiManager
 
     internal static void CheckForUpdates()
     {
-        var name = AutoEvent.Singleton.Name;
-        var currentVersion = AutoEvent.Singleton.Version;
-
-        var resp = HttpQuery.Get($"{ApiBase}/api/v1/plugin/{Uri.EscapeDataString(name)}/latest");
-        var (statusCode, message) = ParseApiResponse(resp);
-
-        if (statusCode != HttpStatusCode.OK)
+        try
         {
-            LogManager.Error($"Version check failed: {statusCode} - {message ?? "(no message)"}");
-            return;
-        }
+            var name = AutoEvent.Singleton.Name;
+            var currentVersion = AutoEvent.Singleton.Version;
 
-        var root = JsonDocument.Parse(resp).RootElement;
+            string resp;
+            try
+            {
+                resp = HttpQuery.Get($"{ApiBase}/api/v1/plugin/{Uri.EscapeDataString(name)}/latest");
+            }
+            catch (Exception)
+            {
+                LogManager.Warn("Could not reach BearmanAPI. Skipping update check.");
+                return;
+            }
 
-        if (!root.TryGetProperty("version", out var versionProp) || versionProp.ValueKind != JsonValueKind.String)
-        {
-            LogManager.Error("Version check failed: 'version' field missing or invalid.");
-            return;
-        }
+            var (statusCode, message) = ParseApiResponse(resp);
 
-        var version = versionProp.GetString();
+            if (statusCode != HttpStatusCode.OK)
+            {
+                LogManager.Debug($"Version check failed: {statusCode} - {message ?? "(no message)"}");
+                return;
+            }
 
-        if (version == null || !Version.TryParse(version, out var latestRemoteVersion))
-        {
-            LogManager.Error("Version check failed: Invalid version format.");
-            return;
-        }
+            var root = JsonDocument.Parse(resp).RootElement;
 
-        var outdated = latestRemoteVersion > currentVersion;
-        var currentIsNewerThanRemote = currentVersion > latestRemoteVersion;
+            if (!root.TryGetProperty("version", out var versionProp) || versionProp.ValueKind != JsonValueKind.String)
+            {
+                LogManager.Debug("Version check failed: 'version' field missing or invalid.");
+                return;
+            }
 
-        var currentVersionResp =
-            HttpQuery.Get(
-                $"{ApiBase}/api/v1/plugin/{Uri.EscapeDataString(name)}/version/{Uri.EscapeDataString(currentVersion.ToString())}");
-        var (currentStatusCode, currentMessage) = ParseApiResponse(currentVersionResp);
-        if (currentStatusCode != HttpStatusCode.OK)
-            LogManager.Debug($"Recall check failed: {currentStatusCode} - {currentMessage}");
+            var version = versionProp.GetString();
 
+            if (version == null || !Version.TryParse(version, out var latestRemoteVersion))
+            {
+                LogManager.Debug("Version check failed: Invalid version format.");
+                return;
+            }
 
-        var recallRoot = JsonDocument.Parse(currentVersionResp).RootElement;
+            var outdated = latestRemoteVersion > currentVersion;
+            var currentIsNewerThanRemote = currentVersion > latestRemoteVersion;
 
-        if (recallRoot.TryGetProperty("is_recalled", out var isRecalledProp) &&
-            isRecalledProp.ValueKind == JsonValueKind.True)
-        {
-            var recallReason = recallRoot.TryGetProperty("recall_reason", out var reasonProp) &&
-                               reasonProp.ValueKind == JsonValueKind.String
-                ? reasonProp.GetString()
-                : "No reason provided.";
-            LogManager.Error(
-                $"This version of {name} has been recalled.\nPlease update to {latestRemoteVersion} version as soon as possible.\nReason: {recallReason}",
-                ConsoleColor.DarkRed);
-            return;
-        }
+            string currentVersionResp;
+            try
+            {
+                currentVersionResp = HttpQuery.Get(
+                    $"{ApiBase}/api/v1/plugin/{Uri.EscapeDataString(name)}/version/{Uri.EscapeDataString(currentVersion.ToString())}");
+            }
+            catch (Exception)
+            {
+                LogManager.Debug("Could not reach BearmanAPI for recall check. Skipping.");
+                currentVersionResp = null;
+            }
 
-        if (outdated)
+            if (currentVersionResp != null)
+            {
+                var (currentStatusCode, currentMessage) = ParseApiResponse(currentVersionResp);
+                if (currentStatusCode != HttpStatusCode.OK)
+                {
+                    LogManager.Debug($"Recall check failed: {currentStatusCode} - {currentMessage}");
+                }
+                else
+                {
+                    var recallRoot = JsonDocument.Parse(currentVersionResp).RootElement;
+                    if (recallRoot.TryGetProperty("is_recalled", out var isRecalledProp) &&
+                        isRecalledProp.ValueKind == JsonValueKind.True)
+                    {
+                        var recallReason = recallRoot.TryGetProperty("recall_reason", out var reasonProp) &&
+                                           reasonProp.ValueKind == JsonValueKind.String
+                            ? reasonProp.GetString()
+                            : "No reason provided.";
+                        LogManager.Error(
+                            $"This version of {name} has been recalled.\nPlease update to {latestRemoteVersion} version as soon as possible.\nReason: {recallReason}",
+                            ConsoleColor.DarkRed);
+                        return;
+                    }
+                }
+            }
+
+            if (outdated)
+            {
+                var updateMsg =
+                    $"A new version of {name} is available: {version} (current {currentVersion}). {GetDownloadUrl(root)}";
+                LogManager.Info(updateMsg, ConsoleColor.DarkRed);
+            }
+            else
+            {
+                LogManager.Info(
+                    $"Thanks for using {name} v{currentVersion}. To get support and latest news, join to my Discord Server: https://discord.gg/KmpA8cfaSA",
+                    ConsoleColor.Blue);
+            }
+
+            CheckSchematicUpdates();
+
+            if (!currentIsNewerThanRemote) return;
             LogManager.Info(
-                $"A new of {name} version is available: {version} (current {currentVersion}). {GetDownloadUrl(root)}",
-                ConsoleColor.DarkRed);
-        else
-            LogManager.Info(
-                $"Thanks for using {name} v{currentVersion}. To get support and latest news, join to my Discord Server: https://discord.gg/KmpA8cfaSA",
-                ConsoleColor.Blue);
+                $"You are running a newer version of {name} ({currentVersion}) than {latestRemoteVersion}. This is a development/pre-release build and it can contain errors or bugs.",
+                ConsoleColor.DarkMagenta);
+        }
+        catch (Exception e)
+        {
+            LogManager.Error("An error occurred while checking for updates. Turn on debug for details.");
+            LogManager.Debug($"CheckForUpdates failed: {e.Message}");
+        }
+    }
 
+    private static void CheckSchematicUpdates()
+    {
+        try
+        {
+            SchematicUpdater.TryAutoMigrate();
+            var pending = SchematicUpdater.GetPendingUpdates();
+            if (pending.Count == 0) return;
 
-        if (!currentIsNewerThanRemote) return;
-        LogManager.Info(
-            $"You are running a newer version of {name} ({currentVersion}) than {latestRemoteVersion}. This is a development/pre-release build and it can contain errors or bugs.",
-            ConsoleColor.DarkMagenta);
+            LogManager.Info($"{pending.Count} schematic(s) need updating:", ConsoleColor.Yellow);
+            foreach (var (schematicName, localVersion, remoteVersion, changelog) in pending)
+            {
+                var line = $"  - {schematicName}: {localVersion} -> {remoteVersion}";
+                if (!string.IsNullOrEmpty(changelog))
+                    line += $"  |  {changelog}";
+                LogManager.Info(line, ConsoleColor.Yellow);
+            }
+
+            LogManager.Info("Use 'ev update' to update schematics.", ConsoleColor.DarkRed);
+        }
+        catch (Exception ex)
+        {
+            LogManager.Debug($"Schematic update check failed: {ex.Message}");
+        }
     }
 
     private static string GetDownloadUrl(JsonElement root)

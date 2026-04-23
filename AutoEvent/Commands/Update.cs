@@ -1,15 +1,16 @@
 using System;
-using AutoEvent.Updater;
+using AutoEvent.ApiFeatures;
 using CommandSystem;
 using LabApi.Features.Permissions;
 
 namespace AutoEvent.Commands;
 
+[CommandHandler(typeof(MainCommand))]
 internal class Update : ICommand
 {
-    public string Command    => nameof(Update);
+    public string Command => nameof(Update);
     public string Description => "Checks and updates schematics to the latest versions.";
-    public string[] Aliases  => [];
+    public string[] Aliases => [];
 
     public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
     {

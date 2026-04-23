@@ -14,74 +14,105 @@ public static class ApiManager
 
     internal static void CheckForUpdates()
     {
-        var name = AutoEventVote.Singleton.Name;
-        var currentVersion = AutoEventVote.Singleton.Version;
-
-        var resp = HttpQuery.Get($"{ApiBase}/api/v1/plugin/{Uri.EscapeDataString(name)}/latest");
-        var (statusCode, message) = ParseApiResponse(resp);
-
-        if (statusCode != HttpStatusCode.OK)
+        try
         {
-            LogManager.Error($"Version check failed: {statusCode} - {message ?? "(no message)"}");
-            return;
-        }
+            var name = AutoEventVote.Singleton.Name;
+            var currentVersion = AutoEventVote.Singleton.Version;
 
-        var root = JsonDocument.Parse(resp).RootElement;
+            string resp;
+            try
+            {
+                resp = HttpQuery.Get($"{ApiBase}/api/v1/plugin/{Uri.EscapeDataString(name)}/latest");
+            }
+            catch (Exception ex)
+            {
+                LogManager.Warn("Could not reach BearmanAPI. Skipping update check.");
+                LogManager.Debug($"CheckForUpdates HTTP request failed: {ex.Message}");
+                return;
+            }
 
-        if (!root.TryGetProperty("version", out var versionProp) || versionProp.ValueKind != JsonValueKind.String)
-        {
-            LogManager.Error("Version check failed: 'version' field missing or invalid.");
-            return;
-        }
+            var (statusCode, message) = ParseApiResponse(resp);
 
-        var version = versionProp.GetString();
+            if (statusCode != HttpStatusCode.OK)
+            {
+                LogManager.Debug($"Version check failed: {statusCode} - {message ?? "(no message)"}");
+                return;
+            }
 
-        if (version == null || !Version.TryParse(version, out var latestRemoteVersion))
-        {
-            LogManager.Error("Version check failed: Invalid version format.");
-            return;
-        }
+            var root = JsonDocument.Parse(resp).RootElement;
 
-        var outdated = latestRemoteVersion > currentVersion;
-        var currentIsNewerThanRemote = currentVersion > latestRemoteVersion;
+            if (!root.TryGetProperty("version", out var versionProp) || versionProp.ValueKind != JsonValueKind.String)
+            {
+                LogManager.Debug("Version check failed: 'version' field missing or invalid.");
+                return;
+            }
 
-        var currentVersionResp =
-            HttpQuery.Get(
-                $"{ApiBase}/api/v1/plugin/{Uri.EscapeDataString(name)}/version/{Uri.EscapeDataString(currentVersion.ToString())}");
-        var (currentStatusCode, currentMessage) = ParseApiResponse(currentVersionResp);
-        if (currentStatusCode != HttpStatusCode.OK)
-            LogManager.Debug($"Recall check failed: {currentStatusCode} - {currentMessage}");
+            var version = versionProp.GetString();
 
+            if (version == null || !Version.TryParse(version, out var latestRemoteVersion))
+            {
+                LogManager.Debug("Version check failed: Invalid version format.");
+                return;
+            }
 
-        var recallRoot = JsonDocument.Parse(currentVersionResp).RootElement;
+            var outdated = latestRemoteVersion > currentVersion;
+            var currentIsNewerThanRemote = currentVersion > latestRemoteVersion;
 
-        if (recallRoot.TryGetProperty("is_recalled", out var isRecalledProp) &&
-            isRecalledProp.ValueKind == JsonValueKind.True)
-        {
-            var recallReason = recallRoot.TryGetProperty("recall_reason", out var reasonProp) &&
-                               reasonProp.ValueKind == JsonValueKind.String
-                ? reasonProp.GetString()
-                : "No reason provided.";
-            LogManager.Error(
-                $"This version of {name} has been recalled.\nPlease update to {latestRemoteVersion} version as soon as possible.\nReason: {recallReason}",
-                ConsoleColor.DarkRed);
-            return;
-        }
+            string currentVersionResp;
+            try
+            {
+                currentVersionResp = HttpQuery.Get(
+                    $"{ApiBase}/api/v1/plugin/{Uri.EscapeDataString(name)}/version/{Uri.EscapeDataString(currentVersion.ToString())}");
+            }
+            catch (Exception)
+            {
+                LogManager.Debug("Could not reach BearmanAPI for recall check. Skipping.");
+                currentVersionResp = null;
+            }
 
-        if (outdated)
+            if (currentVersionResp != null)
+            {
+                var (currentStatusCode, currentMessage) = ParseApiResponse(currentVersionResp);
+                if (currentStatusCode != HttpStatusCode.OK)
+                {
+                    LogManager.Debug($"Recall check failed: {currentStatusCode} - {currentMessage}");
+                }
+                else
+                {
+                    var recallRoot = JsonDocument.Parse(currentVersionResp).RootElement;
+                    if (recallRoot.TryGetProperty("is_recalled", out var isRecalledProp) &&
+                        isRecalledProp.ValueKind == JsonValueKind.True)
+                    {
+                        var recallReason = recallRoot.TryGetProperty("recall_reason", out var reasonProp) &&
+                                           reasonProp.ValueKind == JsonValueKind.String
+                            ? reasonProp.GetString()
+                            : "No reason provided.";
+                        LogManager.Error(
+                            $"This version of {name} has been recalled.\nPlease update to {latestRemoteVersion} version as soon as possible.\nReason: {recallReason}",
+                            ConsoleColor.DarkRed);
+                        return;
+                    }
+                }
+            }
+
+            if (outdated)
+                LogManager.Info(
+                    $"A new version of {name} is available: {version} (current {currentVersion}). {GetDownloadUrl(root)}",
+                    ConsoleColor.DarkRed);
+            else
+                LogManager.Info(
+                    $"Thanks for using {name} v{currentVersion}. To get support and latest news, join to my Discord Server: https://discord.gg/KmpA8cfaSA",
+                    ConsoleColor.Blue);
+
+            if (!currentIsNewerThanRemote) return;
             LogManager.Info(
-                $"A new of {name} version is available: {version} (current {currentVersion}). {GetDownloadUrl(root)}",
-                ConsoleColor.DarkRed);
-        else
-            LogManager.Info(
-                $"Thanks for using {name} v{currentVersion}. To get support and latest news, join to my Discord Server: https://discord.gg/KmpA8cfaSA",
-                ConsoleColor.Blue);
-
-
-        if (!currentIsNewerThanRemote) return;
-        LogManager.Info(
-            $"You are running a newer version of {name} ({currentVersion}) than {latestRemoteVersion}. This is a development/pre-release build and it can contain errors or bugs.",
-            ConsoleColor.DarkMagenta);
+                $"You are running a newer version of {name} ({currentVersion}) than {latestRemoteVersion}. This is a development/pre-release build and it can contain errors or bugs.",
+                ConsoleColor.DarkMagenta);
+        }
+        catch (Exception e)
+        {
+            LogManager.Debug($"CheckForUpdates failed: {e.Message}");
+        }
     }
 
     private static string GetDownloadUrl(JsonElement root)
@@ -125,7 +156,7 @@ public static class ApiManager
         }
         catch (Exception e)
         {
-            LogManager.Error($"Sending logs failed.\n{e}");
+            LogManager.Warn($"Sending logs failed: {e.Message}");
             return null;
         }
     }
@@ -158,23 +189,17 @@ public static class ApiManager
             }
             catch (Exception ex)
             {
-                LogManager.Error($"[CreditTag] HTTP request failed: {ex}");
+                LogManager.Debug($"[CreditTag] HTTP request failed: {ex.Message}");
                 return;
             }
 
             var (statusCode, message) = ParseApiResponse(resp);
 
             if (statusCode != HttpStatusCode.OK)
-                switch (statusCode)
-                {
-                    case HttpStatusCode.InternalServerError:
-                        LogManager.Error("[CreditTag] Server error (500) while getting CreditTags.");
-                        return;
-                    default:
-                        LogManager.Debug(
-                            $"[CreditTag] Unexpected status code: {statusCode} - {message ?? "(no message)"}");
-                        return;
-                }
+            {
+                LogManager.Debug($"[CreditTag] Unexpected status code: {statusCode} - {message ?? "(no message)"}");
+                return;
+            }
 
             using var doc = JsonDocument.Parse(resp);
             var root = doc.RootElement;
@@ -211,7 +236,7 @@ public static class ApiManager
         }
         catch (Exception e)
         {
-            LogManager.Error($"[CreditTag] Failed to load credit tag.\n{e}");
+            LogManager.Debug($"[CreditTag] Failed to load credit tags: {e.Message}");
         }
     }
 
@@ -235,8 +260,7 @@ public static class ApiManager
         }
         catch (Exception e)
         {
-            LogManager.Error("Failed to parse API response.");
-            LogManager.Debug($"ParseApiResponse failed.\n{e}");
+            LogManager.Debug($"ParseApiResponse failed: {e.Message}");
             return (HttpStatusCode.InternalServerError, null);
         }
     }

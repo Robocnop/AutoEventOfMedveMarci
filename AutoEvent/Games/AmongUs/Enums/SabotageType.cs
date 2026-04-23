@@ -3,9 +3,10 @@
 public enum SabotageType
 {
     None,
+
     //Critical
-    OxygenDepleted,
-    ReactorMeltdown,
+    //OxygenDepleted,
+    //ReactorMeltdown,
     //Non-Critical
     CommsSabotage,
     FixLights,

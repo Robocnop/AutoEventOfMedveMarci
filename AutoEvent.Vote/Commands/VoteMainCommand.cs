@@ -1,30 +1,18 @@
-﻿using System;
-using AutoEvent.Vote.ApiFeatures;
+using System;
+using AutoEvent.Commands;
 using CommandSystem;
 
 namespace AutoEvent.Vote.Commands;
 
-[CommandHandler(typeof(RemoteAdminCommandHandler))]
-public class MainCommand : ParentCommand
+[CommandHandler(typeof(MainCommand))]
+public class VoteMainCommand : ParentCommand
 {
-    public MainCommand()
-    {
-        LoadGeneratedCommands();
-    }
-
-    public override string Command => "vote";
-    public override string Description => "Main command for AutoEvent Vote Module";
+    public override string Command => "Vote";
+    public override string Description => "Vote commands for AutoEvent";
     public override string[] Aliases => [];
 
     public sealed override void LoadGeneratedCommands()
     {
-        try
-        {
-        }
-        catch (Exception e)
-        {
-            LogManager.Error($"Caught an exception while registering commands.\n{e}");
-        }
     }
 
     protected override bool ExecuteParent(ArraySegment<string> arguments, ICommandSender sender, out string response)
@@ -32,7 +20,7 @@ public class MainCommand : ParentCommand
         response = "Please enter a valid subcommand: \n";
         foreach (var x in Commands)
         {
-            var args = "";
+            var args = string.Empty;
             if (x.Value is IUsageProvider usage)
                 foreach (var arg in usage.Usage)
                     args += $"[{arg}] ";

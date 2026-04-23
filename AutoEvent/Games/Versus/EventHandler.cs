@@ -18,6 +18,7 @@ public class EventHandler(Plugin plugin)
                 plugin.Scientist.CurrentItem = null;
                 plugin.Scientist.RemoveItem(ItemType.Jailbird);
             }
+
             plugin.ScientistLifespan += 1;
         }
         else if (ev.Player == plugin.Scientist)
@@ -29,6 +30,7 @@ public class EventHandler(Plugin plugin)
                 plugin.ClassD.CurrentItem = null;
                 plugin.ClassD.RemoveItem(ItemType.Jailbird);
             }
+
             plugin.ClassDLifespan += 1;
         }
 

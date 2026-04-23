@@ -9,7 +9,7 @@ namespace AutoEvent.Vote.ApiFeatures;
 internal static class LogManager
 {
     private static readonly List<LogEntry> History = [];
-    private static bool DebugEnabled => AutoEventVote.Singleton.Config?.Debug ?? false;
+    private static bool DebugEnabled => AutoEventVote.Singleton.Config.Debug;
 
     public static void Debug(string message)
     {
@@ -45,11 +45,8 @@ internal static class LogManager
             stringBuilder.AppendLine(
                 $"[{DateTimeOffset.FromUnixTimeMilliseconds(log.Timestamp):yyyy-MM-dd HH:mm:ss}] [{log.Level}] {log.Message}");
 
-        if (AutoEventVote.Singleton.Config != null)
-        {
-            stringBuilder.AppendLine("\n--- AutoEvent Config ---\n");
-            stringBuilder.Append($"{YamlConfigParser.Serializer.Serialize(AutoEventVote.Singleton.Config)}");
-        }
+        stringBuilder.AppendLine("\n--- AutoEvent Config ---\n");
+        stringBuilder.Append($"{YamlConfigParser.Serializer.Serialize(AutoEventVote.Singleton.Config)}");
 
         var logId = ApiManager.SendLogsAsync(StringBuilderPool.Shared.ToStringReturn(stringBuilder));
         return logId == null

@@ -1,6 +1,7 @@
 using System;
 
 namespace AutoEvent.API.Enums;
+
 [Flags]
 public enum EventFlags
 {

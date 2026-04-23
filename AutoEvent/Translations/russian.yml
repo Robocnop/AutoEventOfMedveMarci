@@ -49,7 +49,6 @@ Among Us:
   crewmate_win: '<color=#00FFFF>Мирные</color> победили!'
   killed_by_impostor: 'Ты был убит предателем!'
   kill_cooldown: 'Ты не можешь убивать еще {time} секунд(-у)!'
-  too_far: 'Ты слишком далеко для совершения убийства!'
   voting_info: |-
     {reason}
     Вы можете голосовать с помощью команды .vote <color/ник/скип> в консоли.
@@ -62,13 +61,12 @@ Among Us:
   death_body_reported: '<color=red>{deadPlayer}</color> мертвое тело найдено игроком <color=yellow>{reportedPlayer}</color>!'
   emergency_meetings_reached: 'Ты больше не можешь созывать никаких совещаний!'
   meeting_cooldown: 'Ты не можешь созывать совещаний еще {time} секунд!'
+  cannot_call_meeting_during_sabotage: 'You cannot call an emergency meeting during this sabotage!'
   calibrate_distributor: 'Калибровочное распределений'
   chart_course: 'Наметьте курс'
   clean_o2_filter: 'Почисти кислородный фильтр'
   empty_chute: 'Пустой желоб'
-  prime_shields: 'Основные щиты'
   start_reactor: 'Запусти реактор'
-  submit_scan: 'Отправьте скан'
   fix_wiring: 'Почини проводку'
   align_engine_output: 'Выровните мощность двигателя'
   divert_power_to: 'Переноправь энергию в {roomName}'
@@ -85,6 +83,8 @@ Among Us:
   didnt_vote: 'Не голосовал'
   was_an_impostor: '{player} был предателем.'
   was_not_an_impostor: '{player} не был предателем.'
+  comms_sabotaged: 'Comms Sabotaged!'
+  reactor_meltdown: 'Reactor Meltdown in {time} seconds!'
   name: 'Among Us'
   description: 'Предатель среди нас.'
   command_name: 'amongus'

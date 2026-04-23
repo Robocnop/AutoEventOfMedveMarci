@@ -45,10 +45,10 @@ public class Sabotage
         plugin.CurrentSabotage = this;
         switch (Type)
         {
-            case SabotageType.OxygenDepleted:
+            /*case SabotageType.OxygenDepleted:
                 break;
             case SabotageType.ReactorMeltdown:
-                break;
+                break;*/
             case SabotageType.FixLights:
                 foreach (var crewmate in plugin.Crewmates) crewmate.GetEffect<FogControl>()!.Intensity = 5;
                 break;

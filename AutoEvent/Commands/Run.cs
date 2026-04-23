@@ -5,14 +5,16 @@ using AutoEvent.Interfaces;
 using CommandSystem;
 using LabApi.Features.Permissions;
 using LabApi.Features.Wrappers;
+using LabApi.Loader;
 using MEC;
 
 namespace AutoEvent.Commands;
 
+[CommandHandler(typeof(MainCommand))]
 internal class Run : ICommand, IUsageProvider
 {
     public string Command => nameof(Run);
-    public string Description => "Run the event. Arguments: <CommandName> [MapName]";
+    public string Description => "Runs the specified event";
     public string[] Aliases => ["start", "play", "begin"];
 
     public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
@@ -23,9 +25,9 @@ internal class Run : ICommand, IUsageProvider
             return false;
         }
 
-        if (AutoEvent.EventManager.CurrentEvent != null)
+        if (AutoEvent.InternalEventManager.CurrentEvent != null)
         {
-            response = $"The mini-game {AutoEvent.EventManager.CurrentEvent.Name} is already running!";
+            response = $"The mini-game {AutoEvent.InternalEventManager.CurrentEvent.Name} is already running!";
             return false;
         }
 
@@ -35,7 +37,7 @@ internal class Run : ICommand, IUsageProvider
             return false;
         }
 
-        var ev = AutoEvent.EventManager.GetEvent(arguments.At(0));
+        var ev = AutoEvent.InternalEventManager.GetEvent(arguments.At(0));
         if (ev == null)
         {
             response = $"The mini-game '{arguments.At(0)}' was not found.";
@@ -65,7 +67,61 @@ internal class Run : ICommand, IUsageProvider
             return false;
         }
 
-        var mapName = arguments.Count >= 2 ? arguments.At(1) : string.Empty;
+        if (ev is IRequiresPlugins req)
+        {
+            var missingPlugins = req.RequiredPlugins
+                .Where(name => !PluginLoader.Plugins.Any(p => p.Key.Name.ToLower().Contains(name.ToLower())))
+                .ToList();
+            var missingDependencies = req.RequiredDependencies
+                .Where(name => !PluginLoader.Dependencies.Any(a => a.GetName().Name.ToLower().Contains(name.ToLower())))
+                .ToList();
+
+            var allMissing = missingPlugins.Concat(missingDependencies).ToList();
+            if (allMissing.Count > 0)
+            {
+                response =
+                    $"The mini-game '{ev.Name}' requires the following missing components: {string.Join(", ", allMissing)}";
+                return false;
+            }
+        }
+
+        var mapName = string.Empty;
+        if (arguments.Count >= 2)
+        {
+            var input = arguments.At(1);
+
+            if (ev is IEventMap && ev.InternalConfig?.AvailableMaps is { Count: > 0 } availableMaps)
+            {
+                var matches = availableMaps
+                    .Where(m => m.MapName.Contains(input, StringComparison.OrdinalIgnoreCase))
+                    .Select(m => m.MapName)
+                    .Distinct()
+                    .ToList();
+
+                switch (matches.Count)
+                {
+                    case 0:
+                    {
+                        var allNames = string.Join(", ", availableMaps.Select(m => m.MapName).Distinct());
+                        response = $"No map matching '{input}' was found.\nAvailable maps: {allNames}";
+                        return false;
+                    }
+                    case > 1:
+                        response =
+                            $"Multiple maps match '{input}': {string.Join(", ", matches)}\nPlease be more specific.";
+                        return false;
+                }
+
+                mapName = matches[0];
+
+                if (!Extensions.IsExistsMap(mapName, out response))
+                    return false;
+            }
+            else
+            {
+                mapName = input;
+            }
+        }
 
         Round.IsLocked = true;
         if (!Round.IsRoundStarted)

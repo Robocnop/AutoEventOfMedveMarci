@@ -20,11 +20,12 @@ public class LineComponent : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (AutoEvent.EventManager.CurrentEvent is IEventMap map && map.MapInfo.Map is not null)
+        if (AutoEvent.InternalEventManager.CurrentEvent is IEventMap map && map.MapInfo.Map is not null)
             if (Player.Get(other.gameObject) is { } player)
             {
                 player.GiveLoadout(_plugin.Config.FailureLoadouts);
-                player.Position = map.MapInfo.Map.AttachedBlocks.First(x => x.name == "SpawnPoint_spec").transform.position;
+                player.Position = map.MapInfo.Map.AttachedBlocks.First(x => x.name == "SpawnPoint_spec").transform
+                    .position;
             }
     }
 

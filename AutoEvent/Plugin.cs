@@ -1,20 +1,19 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using AutoEvent.API;
 using AutoEvent.ApiFeatures;
-using AutoEvent.Commands;
-using AutoEvent.Integrations;
-using AutoEvent.Integrations.Audio;
 using AutoEvent.Integrations.MapEditor;
 using AutoEvent.Loader;
 using AutoEvent.Patches;
-using AutoEvent.Updater;
 using HarmonyLib;
 using LabApi.Events.CustomHandlers;
 using LabApi.Features;
 using LabApi.Features.Wrappers;
+using LabApi.Loader;
 using LabApi.Loader.Features.Paths;
 using LabApi.Loader.Features.Plugins;
+using LabApi.Loader.Features.Plugins.Enums;
 using EventManager = AutoEvent.Loader.EventManager;
 
 namespace AutoEvent;
@@ -26,7 +25,6 @@ public class AutoEvent : Plugin<Config>
     internal static EventManager InternalEventManager;
     private static EventHandler _eventHandler;
     internal static float MusicVolume;
-    public static readonly MainCommand MainCommand = new();
     public override string Name => "AutoEvent";
 
     public override string Author =>
@@ -37,15 +35,44 @@ public class AutoEvent : Plugin<Config>
 
     public override Version Version => new(10, 0, 0);
     public override Version RequiredApiVersion => new(LabApiProperties.CompiledVersion);
+    public override LoadPriority Priority => LoadPriority.High;
 
     public static string BaseConfigPath { get; private set; }
 
     public override void Enable()
     {
         BaseConfigPath = Path.Combine(PathManager.Configs.FullName, "AutoEvent");
+        Singleton = this;
+
         try
         {
-            Singleton = this;
+            if (PluginLoader.Plugins.Any(p => p.Key != this && p.Key.Name == "AutoEvent"))
+            {
+                LogManager.Error("AutoEvent is already loaded! Remove the duplicate AutoEvent DLL from plugins.");
+                Singleton = null;
+                return;
+            }
+
+#if APAPI
+            if (!PluginLoader.Dependencies.Any(p => p.FullName.Contains("AudioPlayerApi", StringComparison.OrdinalIgnoreCase)))
+            {
+                LogManager.Error("AudioPlayerApi is not loaded! Please install AudioPlayerApi to use AutoEvent. The plugin will not load without it.");
+                Singleton = null;
+                return;
+            }
+            LogManager.Info("AutoEvent built with AudioPlayerAPI audio backend.");
+#else
+            if (!PluginLoader.Plugins.Any(p =>
+                    p.Key != this && p.Key.Name.Contains("SecretLabNAudio", StringComparison.OrdinalIgnoreCase)))
+            {
+                LogManager.Error(
+                    "SecretLabNAudio is not loaded! Please install SecretLabNAudio to use AutoEvent. The plugin will not load without it.");
+                Singleton = null;
+                return;
+            }
+
+            LogManager.Info("AutoEvent built with SecretLabNAudio audio backend.");
+#endif
 
             if (Singleton.Config.CreditTagSystem)
                 ApiManager.LoadCreditTags();
@@ -61,8 +88,6 @@ public class AutoEvent : Plugin<Config>
             FriendlyFireSystem.IsFriendlyFireEnabledByDefault = Server.FriendlyFire;
 
             MapSystemIntegration.Detect();
-            AudioSystemIntegration.Detect();
-            RadioMenuIntegration.Detect();
 
             try
             {
@@ -98,7 +123,6 @@ public class AutoEvent : Plugin<Config>
             CustomHandlersManager.RegisterEventsHandler(_eventHandler);
             ConfigManager.LoadConfigsAndTranslations();
             MusicVolume = Config.Volume;
-            SchematicUpdater.Check();
             LogManager.Info("The mini-games are loaded.");
         }
         catch (Exception e)

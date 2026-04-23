@@ -13,9 +13,9 @@ namespace AutoEvent.Loader;
 
 public static class ConfigManager
 {
-    internal static string ConfigPath { get; } = Path.Combine(AutoEvent.BaseConfigPath, "configs.yml");
+    private static string ConfigPath { get; } = Path.Combine(AutoEvent.BaseConfigPath, "configs.yml");
 
-    internal static string TranslationPath { get; } = Path.Combine(AutoEvent.BaseConfigPath, "translation.yml");
+    private static string TranslationPath { get; } = Path.Combine(AutoEvent.BaseConfigPath, "translation.yml");
 
     internal static Dictionary<string, string> LanguageByCountryCodeDictionary { get; } = new()
     {
@@ -53,7 +53,7 @@ public static class ConfigManager
             if (!File.Exists(ConfigPath))
             {
                 configs = new Dictionary<string, object>();
-                foreach (var ev in AutoEvent.EventManager.Events.OrderBy(r => r.InternalName))
+                foreach (var ev in AutoEvent.InternalEventManager.Events.OrderBy(r => r.InternalName))
                     configs[ev.InternalName] = ev.InternalConfig;
                 File.WriteAllText(ConfigPath, YamlConfigParser.Serializer.Serialize(configs));
                 return;
@@ -63,7 +63,7 @@ public static class ConfigManager
                 YamlConfigParser.Deserializer.Deserialize<Dictionary<string, object>>(
                     File.ReadAllText(ConfigPath));
 
-            foreach (var ev in AutoEvent.EventManager.Events)
+            foreach (var ev in AutoEvent.InternalEventManager.Events)
             {
                 if (configs is null)
                     continue;
@@ -78,11 +78,24 @@ public static class ConfigManager
                     YamlConfigParser.Serializer.Serialize(rawDeserializedConfig),
                     ev.InternalConfig.GetType());
 
+                var originalMaps = ev.InternalConfig.AvailableMaps?.ToList();
                 ev.InternalConfig.CopyProperties(loadedConfig);
+
+                // If the YAML had only empty map_name entries (old/corrupt config),
+                // restore the code-defined defaults so the event can actually start.
+                if (ev.InternalConfig.AvailableMaps is { Count: > 0 } &&
+                    ev.InternalConfig.AvailableMaps.All(m => string.IsNullOrEmpty(m.MapName)) &&
+                    originalMaps is { Count: > 0 } &&
+                    originalMaps.Any(m => !string.IsNullOrEmpty(m.MapName)))
+                {
+                    ev.InternalConfig.AvailableMaps = originalMaps;
+                    LogManager.Warn(
+                        $"[ConfigManager] {ev.InternalName}: AvailableMaps had empty names in config, restored defaults.");
+                }
             }
 
             var updatedConfigs = new Dictionary<string, object>();
-            foreach (var ev in AutoEvent.EventManager.Events.OrderBy(r => r.InternalName))
+            foreach (var ev in AutoEvent.InternalEventManager.Events.OrderBy(r => r.InternalName))
                 updatedConfigs[ev.InternalName] = ev.InternalConfig;
 
             File.WriteAllText(ConfigPath, YamlConfigParser.Serializer.Serialize(updatedConfigs));
@@ -128,7 +141,7 @@ public static class ConfigManager
             }
 
             // Move translations to each mini-games
-            foreach (var ev in AutoEvent.EventManager.Events.Where(_ => translations is not null))
+            foreach (var ev in AutoEvent.InternalEventManager.Events.Where(_ => translations is not null))
             {
                 if (!translations.TryGetValue(ev.InternalName, out var rawDeserializedTranslation))
                 {
@@ -174,7 +187,7 @@ public static class ConfigManager
         // Otherwise, create default translations from all mini-games.
         var translations = new Dictionary<string, object>();
 
-        foreach (var ev in AutoEvent.EventManager.Events.OrderBy(r => r.Name))
+        foreach (var ev in AutoEvent.InternalEventManager.Events.OrderBy(r => r.Name))
         {
             ev.InternalTranslation.Name = ev.Name;
             ev.InternalTranslation.Description = ev.Description;
@@ -232,6 +245,9 @@ public static class ConfigManager
         if (type != source.GetType())
             throw new InvalidTypeException("Target and source type mismatch!");
         foreach (var property in type.GetProperties())
+        {
+            if (!property.CanRead || !property.CanWrite) continue;
             type.GetProperty(property.Name)?.SetValue(target, property.GetValue(source, null), null);
+        }
     }
 }

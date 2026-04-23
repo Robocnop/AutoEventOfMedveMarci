@@ -46,7 +46,6 @@ Among Us:
   crewmate_win: '<color=#00FFFF>Besatzungsmitglieder</color> haben gewonnen!'
   killed_by_impostor: 'Du wurdest von einem Verräter getötet!'
   kill_cooldown: 'Du kannst noch nicht für {time} Sekunden töten!'
-  too_far: 'Du bist viel zu weit weck um jemanden zu töten!'
   voting_info: |-
     {reason}
     Du kannst abstimmen in dem du .vote <color/name/skip> in die Konsole eingibst, was du mit ö öffnen kannst.
@@ -59,13 +58,12 @@ Among Us:
   death_body_reported: '<color=red>{deadPlayer}</color>''s Leiche wurde von <color=yellow>{reportedPlayer}</color> gefunden!'
   emergency_meetings_reached: 'Du kannst keine weitere Notfall-Sitzungen anfordern!'
   meeting_cooldown: 'Du kannst keine Sitzung für {time} Sekunden anfordern!'
+  cannot_call_meeting_during_sabotage: 'You cannot call an emergency meeting during this sabotage!'
   calibrate_distributor: 'Verteiler kalibrieren'
   chart_course: 'Kurs legen'
   clean_o2_filter: 'O2 Filter reinigen'
   empty_chute: 'Schacht leeren'
-  prime_shields: 'Primär schilde'
   start_reactor: 'Reaktor starten'
-  submit_scan: 'Scannen absenden'
   fix_wiring: 'Kabel reparieren'
   align_engine_output: 'Motor ausrichten'
   divert_power_to: 'Strom umleiten zu {roomName}'
@@ -82,6 +80,8 @@ Among Us:
   didnt_vote: 'Nicht gewählt'
   was_an_impostor: '{player} war der Verräter.'
   was_not_an_impostor: '{player} war nicht der Verräter.'
+  comms_sabotaged: 'Comms Sabotaged!'
+  reactor_meltdown: 'Reactor Meltdown in {time} seconds!'
   name: 'Among Us'
   description: 'among us aber in SCP:SL'
   command_name: 'amongus'

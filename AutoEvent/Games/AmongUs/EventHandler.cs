@@ -4,6 +4,7 @@ using System.Linq;
 using AutoEvent.API;
 using AutoEvent.ApiFeatures;
 using AutoEvent.Games.AmongUs.Features;
+using AutoEvent.Integrations.MapEditor;
 using CustomPlayerEffects;
 using InventorySystem.Items.Scp1509;
 using LabApi.Events.Arguments.PlayerEvents;
@@ -142,22 +143,19 @@ public class EventHandler(Plugin plugin)
             }
 
             if (task.StageTasks is { Count: > 0 } && plugin.TaskToyList != null)
-            {
                 foreach (var st in task.StageTasks)
+                foreach (var stageToy in plugin.TaskToyList)
                 {
-                    foreach (var stageToy in plugin.TaskToyList)
-                    {
-                        if (!TryParseToyName(stageToy.name, out var stRoom, out var stName, out var stIsTask, out _, out _))
-                            continue;
-                        if (!stIsTask) continue;
-                        if ((!string.IsNullOrEmpty(stName) && st.Name.ToString() != stName) ||
-                            st.RoomName.ToString() != stRoom)
-                            continue;
-                        LogManager.Debug($"[OnPlayerSearchedToy] Unlocking stage toy '{stageToy.name}' for player '{ev.Player.Nickname}'");
-                        stageToy.SetFakeIsLocked(ev.Player, false);
-                    }
+                    if (!TryParseToyName(stageToy.name, out var stRoom, out var stName, out var stIsTask, out _, out _))
+                        continue;
+                    if (!stIsTask) continue;
+                    if ((!string.IsNullOrEmpty(stName) && st.Name.ToString() != stName) ||
+                        st.RoomName.ToString() != stRoom)
+                        continue;
+                    LogManager.Debug(
+                        $"[OnPlayerSearchedToy] Unlocking stage toy '{stageToy.name}' for player '{ev.Player.Nickname}'");
+                    stageToy.SetFakeIsLocked(ev.Player, false);
                 }
-            }
 
             LogManager.Debug("[OnPlayerSearchedToy] Marked task done. Searching for next regular task...");
             var nextTask = taskManager.Tasks.FirstOrDefault(t =>
@@ -230,28 +228,6 @@ public class EventHandler(Plugin plugin)
             return;
         }
 
-        LogManager.Debug("PlayerChangingItem: " + ev.Player.Nickname);
-        if (ev.NewItem != null && plugin.ImpostorRadioItems.Contains(ev.NewItem.Serial) &&
-            plugin.Impostors.Contains(ev.Player))
-        {
-            LogManager.Debug("Player switched to impostor radio item.");
-            if (!plugin.Radios.ContainsKey(ev.Player))
-                plugin.Radios[ev.Player] = 0;
-            if (!plugin.Radios.TryGetValue(ev.Player, out var index)) return;
-            var sabotage = plugin.CurrentSabotages[index % plugin.CurrentSabotages.Count];
-            LogManager.Debug("Current sabotage: " + (sabotage != null ? sabotage.Type.ToString() : "null"));
-            return;
-        }
-
-        if (ev.OldItem != null && plugin.ImpostorRadioItems.Contains(ev.OldItem.Serial) &&
-            plugin.Impostors.Contains(ev.Player))
-        {
-            LogManager.Debug("Player switched from impostor radio item.");
-            plugin.Radios.Remove(ev.Player);
-            ev.Player.SendHint("");
-            return;
-        }
-
         if (!plugin.KillCooldowns.TryGetValue(ev.Player, out var time)) return;
         if (time <= DateTime.UtcNow) return;
         ev.Player.SendHint(
@@ -276,12 +252,12 @@ public class EventHandler(Plugin plugin)
 
         if (plugin.PlayerSkins.TryGetValue(ev.Player.NetworkId, out var skin) && skin != null)
         {
-            var deathSkin = new SerializableSchematic
+            var deathSkin = ProjectMerIntegration.LoadSchematic(new SerializableSchematic
             {
                 SchematicName = "DeathSkin",
                 Position = ev.Player.Position,
                 Rotation = ev.Player.Rotation.eulerAngles + new Vector3(0, -90, 0)
-            }.LoadSchematic();
+            });
 
             foreach (var obj in deathSkin.AdminToyBases)
             {
@@ -330,16 +306,12 @@ public class EventHandler(Plugin plugin)
             if (vented)
             {
                 plugin.VentedPlayers.Remove(ev.Player);
-                ev.Player.DisableEffect<SilentWalk>();
-                ev.Player.DisableEffect<Lightweight>();
-                ev.Player.DisableEffect<MovementBoost>();
+                ev.Player.DisableEffect<Invisible>();
             }
             else
             {
                 plugin.VentedPlayers.Add(ev.Player);
-                ev.Player.EnableEffect<SilentWalk>(255);
-                ev.Player.EnableEffect<Lightweight>(100);
-                ev.Player.EnableEffect<MovementBoost>(50);
+                ev.Player.EnableEffect<Invisible>();
             }
 
             LogManager.Debug("PlayerPos_" + (vented ? "Exit" : "Enter"));
@@ -347,6 +319,7 @@ public class EventHandler(Plugin plugin)
             LogManager.Debug(posTf?.name ?? "null");
             if (posTf == null) return;
 
+            ev.Player.DisableEffect<Ensnared>();
             Timing.KillCoroutines(ev.Player.NetworkId.ToString());
             Timing.RunCoroutine(VentCoroutine(ev.Player, animator, posTf.gameObject), ev.Player.NetworkId.ToString());
             return;
@@ -497,46 +470,6 @@ public class EventHandler(Plugin plugin)
         }
     }
 
-    public void OnPlayerTogglingRadioEventArgs(PlayerTogglingRadioEventArgs ev)
-    {
-        LogManager.Debug("PlayerUsingRadio: " + ev.Player.Nickname);
-        if (!plugin.ImpostorRadioItems.Contains(ev.RadioItem.Serial)) return;
-        LogManager.Debug("Player is using impostor radio item.");
-        if (!plugin.Radios.TryGetValue(ev.Player, out var index)) return;
-        LogManager.Debug("Current radio index: " + index);
-        var sabotage = plugin.CurrentSabotages[index % plugin.CurrentSabotages.Count];
-        LogManager.Debug("Current sabotage: " + (sabotage != null ? sabotage.Type.ToString() : "null"));
-        if (sabotage == null)
-        {
-            LogManager.Debug("Sabotage is null, not activating.");
-            return;
-        }
-
-        var success = sabotage.TryActivate(ev.Player, plugin, out var reason);
-        if (!success)
-            ev.Player.SendBroadcast(reason, 2, shouldClearPrevious: true);
-        ev.IsAllowed = false;
-    }
-
-    public static void OnPlayerUsingRadioEventArgs(PlayerUsingRadioEventArgs ev)
-    {
-        ev.IsAllowed = false;
-    }
-
-    public void OnPlayerChangingRadioRange(PlayerChangingRadioRangeEventArgs ev)
-    {
-        LogManager.Debug("PlayerChangingRadioRange: " + ev.Player.Nickname);
-        if (!plugin.ImpostorRadioItems.Contains(ev.RadioItem.Serial)) return;
-        LogManager.Debug("Player is using impostor radio item.");
-        if (!plugin.Radios.TryGetValue(ev.Player, out var index)) return;
-        LogManager.Debug("Current radio index: " + index);
-        index = (index + 1) % plugin.CurrentSabotages.Count;
-        plugin.Radios[ev.Player] = index;
-        LogManager.Debug($"Changed radio index to {index} for player {ev.Player.Nickname}");
-        var sabotage = plugin.CurrentSabotages[index];
-        LogManager.Debug("Current sabotage: " + (sabotage != null ? sabotage.Type.ToString() : "null"));
-        ev.IsAllowed = false;
-    }
 
     private static IEnumerator<float> VentCoroutine(Player player, Animator animator, GameObject playerPos)
     {

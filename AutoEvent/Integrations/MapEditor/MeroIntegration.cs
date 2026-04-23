@@ -4,9 +4,9 @@ using System.Reflection;
 using AutoEvent.ApiFeatures;
 using LabApi.Loader;
 
-namespace AutoEvent.Intergrations;
+namespace AutoEvent.Integrations.MapEditor;
 
-internal static class Mero
+internal static class MeroIntegration
 {
     private static Assembly Assembly => PluginLoader.Plugins.FirstOrDefault(p => p.Key.Name is "MEROptimizer").Value;
 

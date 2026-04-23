@@ -6,7 +6,6 @@ using CustomPlayerEffects;
 using LabApi.Events.Arguments.PlayerEvents;
 using LabApi.Features.Wrappers;
 using Mirror;
-using SecretLabNAudio.Core;
 using UnityEngine;
 using Extensions = AutoEvent.API.Extensions;
 
@@ -18,9 +17,9 @@ public class EventHandler(Plugin plugin)
     internal static Bounds ASiteBounds;
     internal static InteractableToy Button;
     internal static Scp1576Item Bomb;
-    private static AudioPlayer _bombAudio;
-    private static AudioPlayer _plantAudio;
-    private static AudioPlayer _defuseAudio;
+    private static IAudioHandle _bombAudio;
+    private static IAudioHandle _plantAudio;
+    private static IAudioHandle _defuseAudio;
 
     public void OnSearchedToy(PlayerSearchedToyEventArgs ev)
     {
@@ -32,7 +31,7 @@ public class EventHandler(Plugin plugin)
         ev.Player.SendHint(plugin.Translation.YouDefused);
         ev.Player.DisableEffect<Ensnared>();
         ev.Player.DisableEffect<HeavyFooted>();
-        _bombAudio?.Destroy();
+        _bombAudio?.Stop();
         if (plugin.BombObject == null) return;
         var lightSource = plugin.BombObject.transform.Find("Bomb_Source/LightSource");
         if (lightSource != null)

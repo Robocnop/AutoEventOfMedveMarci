@@ -156,9 +156,6 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         Extensions.ServerBroadcast(text.Replace("{name}", Name).Replace("{remain}", $"{_countdown.TotalSeconds}"), 1);
     }
 
-    /// <summary>
-    ///     Updating variables before starting the game
-    /// </summary>
     protected void UpdateWaitingState()
     {
         _countdown = new TimeSpan(0, 0, Config.AutoSelectDelayInSeconds);
@@ -182,9 +179,6 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         _eventState = EventState.Playing;
     }
 
-    /// <summary>
-    ///     Choosing a new player
-    /// </summary>
     protected Player UpdateChoosePlayerState(bool isScientist)
     {
         ushort value = 0;
@@ -228,9 +222,6 @@ public class Plugin : Event<Config, Translation>, IEventSound, IEventMap
         return chosenPlayer;
     }
 
-    /// <summary>
-    ///     Game in process
-    /// </summary>
     protected void UpdatePlayingState()
     {
         if (ClassD is null || Scientist is null)

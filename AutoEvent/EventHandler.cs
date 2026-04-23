@@ -16,7 +16,7 @@ internal class EventHandler : CustomEventsHandler
 {
     public override void OnServerWaveRespawning(WaveRespawningEventArgs ev)
     {
-        if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
+        if (AutoEvent.InternalEventManager.CurrentEvent is not { } activeEvent) return;
         if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.Default))
             ev.IsAllowed = false;
         base.OnServerWaveRespawning(ev);
@@ -24,7 +24,7 @@ internal class EventHandler : CustomEventsHandler
 
     public override void OnServerWaveTeamSelecting(WaveTeamSelectingEventArgs ev)
     {
-        if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
+        if (AutoEvent.InternalEventManager.CurrentEvent is not { } activeEvent) return;
         if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.Default))
             ev.IsAllowed = false;
         base.OnServerWaveTeamSelecting(ev);
@@ -32,7 +32,7 @@ internal class EventHandler : CustomEventsHandler
 
     public override void OnServerLczDecontaminationStarting(LczDecontaminationStartingEventArgs ev)
     {
-        if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
+        if (AutoEvent.InternalEventManager.CurrentEvent is not { } activeEvent) return;
         if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.Default))
             ev.IsAllowed = false;
         base.OnServerLczDecontaminationStarting(ev);
@@ -40,7 +40,7 @@ internal class EventHandler : CustomEventsHandler
 
     public override void OnPlayerPlacingBulletHole(PlayerPlacingBulletHoleEventArgs ev)
     {
-        if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
+        if (AutoEvent.InternalEventManager.CurrentEvent is not { } activeEvent) return;
         if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnoreBulletHole))
             ev.IsAllowed = false;
         base.OnPlayerPlacingBulletHole(ev);
@@ -48,7 +48,7 @@ internal class EventHandler : CustomEventsHandler
 
     public override void OnPlayerSpawningRagdoll(PlayerSpawningRagdollEventArgs ev)
     {
-        if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
+        if (AutoEvent.InternalEventManager.CurrentEvent is not { } activeEvent) return;
         if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnoreRagdoll))
             ev.IsAllowed = false;
         base.OnPlayerSpawningRagdoll(ev);
@@ -56,7 +56,7 @@ internal class EventHandler : CustomEventsHandler
 
     public override void OnPlayerPlacingBlood(PlayerPlacingBloodEventArgs ev)
     {
-        if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
+        if (AutoEvent.InternalEventManager.CurrentEvent is not { } activeEvent) return;
         if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnoreBloodDecal))
             ev.IsAllowed = false;
         base.OnPlayerPlacingBlood(ev);
@@ -64,7 +64,7 @@ internal class EventHandler : CustomEventsHandler
 
     public override void OnServerPickupCreated(PickupCreatedEventArgs ev)
     {
-        if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
+        if (AutoEvent.InternalEventManager.CurrentEvent is not { } activeEvent) return;
         if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnoreDroppingItem))
             ev.Pickup.Destroy();
         if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnoreDroppingAmmo) &&
@@ -75,7 +75,7 @@ internal class EventHandler : CustomEventsHandler
 
     public override void OnPlayerShootingWeapon(PlayerShootingWeaponEventArgs ev)
     {
-        if (AutoEvent.EventManager.CurrentEvent is null) return;
+        if (AutoEvent.InternalEventManager.CurrentEvent is null) return;
 
         if (!Extensions.InfiniteAmmoList.TryGetValue(ev.Player.NetworkId, out var ammoMode))
             return;
@@ -109,7 +109,7 @@ internal class EventHandler : CustomEventsHandler
 
     public override void OnPlayerDroppingAmmo(PlayerDroppingAmmoEventArgs ev)
     {
-        if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
+        if (AutoEvent.InternalEventManager.CurrentEvent is not { } activeEvent) return;
         if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnoreDroppingAmmo))
             ev.IsAllowed = false;
         base.OnPlayerDroppingAmmo(ev);
@@ -118,7 +118,7 @@ internal class EventHandler : CustomEventsHandler
     public override void OnPlayerDroppingItem(PlayerDroppingItemEventArgs ev)
 
     {
-        if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
+        if (AutoEvent.InternalEventManager.CurrentEvent is not { } activeEvent) return;
         if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnoreDroppingItem))
             ev.IsAllowed = false;
         base.OnPlayerDroppingItem(ev);
@@ -126,7 +126,7 @@ internal class EventHandler : CustomEventsHandler
 
     public override void OnPlayerCuffing(PlayerCuffingEventArgs ev)
     {
-        if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
+        if (AutoEvent.InternalEventManager.CurrentEvent is not { } activeEvent) return;
         if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnoreHandcuffing))
             ev.IsAllowed = false;
         base.OnPlayerCuffing(ev);
@@ -134,7 +134,7 @@ internal class EventHandler : CustomEventsHandler
 
     public override void OnPlayerDeath(PlayerDeathEventArgs ev)
     {
-        if (AutoEvent.EventManager.CurrentEvent is null)
+        if (AutoEvent.InternalEventManager.CurrentEvent is null)
             return;
 
         LogManager.Debug(
@@ -146,7 +146,7 @@ internal class EventHandler : CustomEventsHandler
 
     public override void OnPlayerChangedSpectator(PlayerChangedSpectatorEventArgs ev)
     {
-        if (AutoEvent.EventManager.CurrentEvent is null) return;
+        if (AutoEvent.InternalEventManager.CurrentEvent is null) return;
         if (ev.NewTarget is null)
         {
             ev.Player.DisableEffect<FogControl>();
@@ -177,8 +177,8 @@ internal class EventHandler : CustomEventsHandler
 
     public override void OnServerRoundRestarted()
     {
-        if (AutoEvent.EventManager.CurrentEvent is null) return;
-        AutoEvent.EventManager.CurrentEvent.StopEvent();
+        if (AutoEvent.InternalEventManager.CurrentEvent is null) return;
+        AutoEvent.InternalEventManager.CurrentEvent.StopEvent();
         base.OnServerRoundRestarted();
     }
 
@@ -205,7 +205,7 @@ internal class EventHandler : CustomEventsHandler
 
     public override void OnPlayerPickingUpItem(PlayerPickingUpItemEventArgs ev)
     {
-        if (AutoEvent.EventManager.CurrentEvent is not { } activeEvent) return;
+        if (AutoEvent.InternalEventManager.CurrentEvent is not { } activeEvent) return;
         if (activeEvent.EventHandlerSettings.HasFlag(EventFlags.IgnorePickingUpItem))
             ev.IsAllowed = false;
         base.OnPlayerPickingUpItem(ev);

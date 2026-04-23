@@ -11,6 +11,7 @@ using AutoEvent.Games.AmongUs.Configs;
 using AutoEvent.Games.AmongUs.Enums;
 using AutoEvent.Games.AmongUs.Features;
 using AutoEvent.Games.AmongUs.Skeld;
+using AutoEvent.Integrations.MapEditor;
 using AutoEvent.Interfaces;
 using CustomPlayerEffects;
 using LabApi.Events.Handlers;
@@ -21,6 +22,7 @@ using Mirror;
 using NorthwoodLib.Pools;
 using ProjectMER.Features.Extensions;
 using ProjectMER.Features.Serializable.Schematics;
+using RadioMenuAPI;
 using UnityEngine;
 using Extensions = AutoEvent.API.Extensions;
 using LightSourceToy = AdminToys.LightSourceToy;
@@ -30,10 +32,9 @@ using TextToy = LabApi.Features.Wrappers.TextToy;
 
 namespace AutoEvent.Games.AmongUs;
 
-public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCountLimited
+public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCountLimited, IRequiresPlugins
 {
     internal readonly List<Player> Muted = [];
-    internal readonly Dictionary<Player, int> Radios = [];
     private EventHandler _eventHandler;
     internal List<Player> Crewmates = [];
     internal List<Player> Impostors = [];
@@ -65,10 +66,9 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
 
     private Dictionary<string, List<Task>> GeneratedTasks { get; set; }
     private Dictionary<string, List<Sabotage>> GeneratedSabotages { get; set; }
-    internal List<Sabotage> CurrentSabotages { get; private set; }
+    private List<Sabotage> CurrentSabotages { get; set; }
     internal Dictionary<Player, DateTime> KillCooldowns { get; private set; } = new();
     internal Dictionary<Player, int> PlayerMeetings { get; private set; } = new();
-    internal List<ushort> ImpostorRadioItems { get; private set; } = [];
     internal Sabotage CurrentSabotage { get; set; }
     internal DateTime LastActivated { get; set; }
 
@@ -83,6 +83,9 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
 
     public int MaxPlayers => Misc.AcceptedColours.Length;
 
+    public IReadOnlyList<string> RequiredPlugins { get; } = ["radiomenuapi"];
+    public IReadOnlyList<string> RequiredDependencies { get; } = ["labapiextensions"];
+
     protected override void RegisterEvents()
     {
         _eventHandler = new EventHandler(this);
@@ -91,9 +94,6 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
         PlayerEvents.ChangingItem += _eventHandler.OnPlayerChangingItem;
         PlayerEvents.InteractedToy += _eventHandler.OnPlayerInteractedToy;
         PlayerEvents.Left += _eventHandler.OnPlayerLeft;
-        PlayerEvents.ChangingRadioRange += _eventHandler.OnPlayerChangingRadioRange;
-        PlayerEvents.TogglingRadio += _eventHandler.OnPlayerTogglingRadioEventArgs;
-        PlayerEvents.UsingRadio += EventHandler.OnPlayerUsingRadioEventArgs;
         PlayerEvents.SearchingToy += _eventHandler.OnPlayerSearchingToy;
     }
 
@@ -104,9 +104,6 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
         PlayerEvents.ChangingItem -= _eventHandler.OnPlayerChangingItem;
         PlayerEvents.InteractedToy -= _eventHandler.OnPlayerInteractedToy;
         PlayerEvents.Left -= _eventHandler.OnPlayerLeft;
-        PlayerEvents.ChangingRadioRange -= _eventHandler.OnPlayerChangingRadioRange;
-        PlayerEvents.TogglingRadio -= _eventHandler.OnPlayerTogglingRadioEventArgs;
-        PlayerEvents.UsingRadio -= EventHandler.OnPlayerUsingRadioEventArgs;
         PlayerEvents.SearchingToy -= _eventHandler.OnPlayerSearchingToy;
         _eventHandler = null;
     }
@@ -121,7 +118,6 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
         TaskManager.ClearForPlayers(Player.ReadyList);
         KillCooldowns = new Dictionary<Player, DateTime>();
         PlayerMeetings = new Dictionary<Player, int>();
-        ImpostorRadioItems = [];
         SpawnList = [];
         DoorList = [];
         PlayerSkins = new Dictionary<uint, GameObject>();
@@ -191,12 +187,12 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
             player.EnableEffect<Ensnared>(255);
             player.Position = SpawnList[i % spawnCount].transform.position;
 
-            var skin = new SerializableSchematic
+            var skin = ProjectMerIntegration.LoadSchematic(new SerializableSchematic
             {
                 SchematicName = "PlayerSkin",
                 Position = player.Position,
                 Scale = Vector3.one
-            }.LoadSchematic();
+            });
             player.DestroySchematic(skin);
 
             foreach (var obj in skin.AdminToyBases)
@@ -243,13 +239,12 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
             impostor.DisableEffect<HeavyFooted>();
             impostor.GetEffect<FogControl>()!.Intensity = 3;
             impostor.AddItem(ItemType.SCP1509);
-            var radio = impostor.AddItem(ItemType.Radio);
-            if (radio != null)
-                ImpostorRadioItems.Add(radio.Serial);
+            GiveSabotageMenu(impostor);
             impostor.DestroyNetworkIdentity(VentObject.netIdentity);
-            if (TaskToyList != null)
-                foreach (var invisibleInteractable in TaskToyList)
-                    invisibleInteractable.SetFakeIsLocked(impostor, true);
+            if (TaskToyList == null)
+                continue;
+            foreach (var invisibleInteractable in TaskToyList)
+                invisibleInteractable.SetFakeIsLocked(impostor, true);
         }
 
 
@@ -261,7 +256,10 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
         }
 
         CreateTasksForPlayers(Crewmates);
+        LogManager.Debug($"Generated tasks for players. Impostors: {Impostors.Count}, Crewmates: {Crewmates.Count}");
         CurrentSabotages = GeneratedSabotages[MapInfo.MapName];
+        LogManager.Debug(
+            $"Loaded sabotages for map {MapInfo.MapName}: {string.Join(", ", CurrentSabotages.Select(s => s.Name))}");
     }
 
     internal IEnumerator<float> BroadcastVotingCountdown(string reason = "", Player starter = null)
@@ -275,7 +273,10 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
             if (player == starter)
                 continue;
 
-            if (Muted.Contains(player)) continue;
+            if (Muted.Contains(player))
+                continue;
+            if (player.IsMuted)
+                continue;
             Muted.Add(player);
             player.Mute();
         }
@@ -303,6 +304,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
                 }
 
                 Muted.Clear();
+                GiveVotingMenus();
                 discussionTime--;
             }
 
@@ -387,15 +389,13 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
             textToy.Destroy();
         PlayerTextToys.Clear();
         LogManager.Debug("Voting ended, cleared votes and text toys");
-        ImpostorRadioItems.Clear();
+        RadioMenuManager.ClearAll();
         foreach (var player in Player.ReadyList)
         {
-            if (Impostors.Contains(player))
+            if (Impostors.Contains(player) && player.IsAlive)
             {
                 player.AddItem(ItemType.SCP1509);
-                var radio = player.AddItem(ItemType.Radio);
-                if (radio != null)
-                    ImpostorRadioItems.Add(radio.Serial);
+                GiveSabotageMenu(player);
             }
 
             player.DisableEffect<Ensnared>();
@@ -523,14 +523,11 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
             }
             else if (Impostors.Contains(player))
             {
-                if (!Radios.TryGetValue(player, out var index)) continue;
-                var sabotage = CurrentSabotages[index % CurrentSabotages.Count];
-                sb.AppendLine($"Sabotage: <color=red>{sabotage.Name}</color>");
                 var cooldown = Math.Max(0, Config.SabotageCooldown - (DateTime.UtcNow - LastActivated).TotalSeconds);
                 if (cooldown > 0)
-                    sb.AppendLine($"Cooldown: {cooldown:0} sec");
-                sb.AppendLine(
-                    $"Currently Active: {(CurrentSabotage != null ? "<color=red>" + CurrentSabotage.Name + "</color>" : "None")}");
+                    sb.AppendLine($"Sabotage cooldown: <color=red>{cooldown:0}s</color>");
+                if (CurrentSabotage != null)
+                    sb.AppendLine($"Active sabotage: <color=red>{CurrentSabotage.Name}</color>");
                 player.SendHint(sb.ToString(), 1.25f);
             }
         }
@@ -592,7 +589,7 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
         KillCooldowns.Clear();
         PlayerMeetings.Clear();
         GeneratedTasks.Clear();
-        ImpostorRadioItems.Clear();
+        RadioMenuManager.ClearAll();
         GeneratedSabotages.Clear();
         VentedPlayers.Clear();
         CurrentSabotage = null;
@@ -611,6 +608,51 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
         Instance = null;
     }
 
+    private void GiveSabotageMenu(Player impostor)
+    {
+        var menu = RadioMenuManager.GiveRadioMenu(impostor, "Sabotage");
+        if (menu == null) return;
+        menu.Tag = "sabotage";
+        menu.DisplayMode = MenuDisplayMode.List;
+        foreach (var sabotage in CurrentSabotages)
+        {
+            var sab = sabotage;
+            menu.AddItem(sab.Name, (player, _) =>
+            {
+                var success = sab.TryActivate(player, this, out var reason);
+                if (!success) player.SendBroadcast(reason, 2, shouldClearPrevious: true);
+            }, sab.Type.ToString());
+        }
+    }
+
+    private void GiveVotingMenus()
+    {
+        var alive = Impostors.Concat(Crewmates).Where(p => p.IsAlive).ToList();
+        foreach (var voter in alive)
+        {
+            var menu = RadioMenuManager.GiveRadioMenu(voter, "Vote");
+            if (menu == null) continue;
+            menu.Tag = "voting";
+            menu.DisplayMode = MenuDisplayMode.List;
+            foreach (var target in alive)
+            {
+                var t = target;
+                var hex = PlayerColors.TryGetValue(t.NetworkId, out var h) ? h : "#FFFFFF";
+                menu.AddItem($"<color={hex}>{t.DisplayName}</color>", (v, _) =>
+                {
+                    PlayerVotes[v.NetworkId] = t.NetworkId;
+                    v.SendHint($"<color={hex}>{t.DisplayName}</color> {Translation.Vote}", 2f);
+                });
+            }
+
+            menu.AddItem(Translation.NoOneVotedOut, (v, _) =>
+            {
+                PlayerVotes[v.NetworkId] = 0;
+                v.SendHint(Translation.NoOneVotedOut, 2f);
+            });
+        }
+    }
+
     private void CreateTasksForPlayers(List<Player> players)
     {
         var maxShort = Config.ShortTasks;
@@ -620,27 +662,35 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
         var tasks = GeneratedTasks[MapInfo.MapName];
         if (tasks == null || tasks.Count == 0) return;
 
+        var random = new Random();
+
+        var allCommon = tasks.Where(t => t.Type == TaskType.Common).OrderBy(_ => random.Next()).ToList();
+        var sharedCommonTasks = allCommon.Take(maxCommon).ToList();
+
         foreach (var player in players)
         {
-            var availableTasks = tasks.OrderBy(_ => Guid.NewGuid()).ToList();
+            var nonCommonTasks = tasks.Where(t => t.Type != TaskType.Common).ToList();
             if (!isVisual)
-                availableTasks = tasks.Where(t => !t.IsVisual).ToList();
-            if (availableTasks.Count == 0) continue;
-            var random = new Random();
+                nonCommonTasks = nonCommonTasks.Where(t => !t.IsVisual).ToList();
+            var availableTasks = nonCommonTasks.OrderBy(_ => random.Next()).ToList();
             var tm = new TaskManager(player)
             {
                 Tasks = []
             };
             var playerShortTask = TaskManager.CountByType(player, TaskType.Short);
-            var playerCommonTask = TaskManager.CountByType(player, TaskType.Common);
             var playerLongTask = TaskManager.CountByType(player, TaskType.Long);
 
+            foreach (var commonTask in sharedCommonTasks)
+            {
+                TaskManager.AddTask(tm, commonTask);
+                LogManager.Debug($"Added common task {commonTask.Name} to {player.Nickname}");
+            }
+
             var assignedToys = new HashSet<InvisibleInteractableToy>();
-            while (playerShortTask < maxShort || playerCommonTask < maxCommon || playerLongTask < maxLong)
+            while (playerShortTask < maxShort || playerLongTask < maxLong)
             {
                 var eligible = availableTasks.Where(t =>
                     (t.Type == TaskType.Short && playerShortTask < maxShort) ||
-                    (t.Type == TaskType.Common && playerCommonTask < maxCommon) ||
                     (t.Type == TaskType.Long && playerLongTask < maxLong)).ToList();
                 if (eligible.Count == 0) break;
 
@@ -651,11 +701,6 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
                         TaskManager.AddTask(tm, task);
                         LogManager.Debug($"Added short task {task.Name} to {player.Nickname}");
                         playerShortTask++;
-                        break;
-                    case TaskType.Common when playerCommonTask < maxCommon:
-                        TaskManager.AddTask(tm, task);
-                        LogManager.Debug($"Added common task {task.Name} to {player.Nickname}");
-                        playerCommonTask++;
                         break;
                     case TaskType.Long when playerLongTask < maxLong:
                         TaskManager.AddTask(tm, task);
@@ -705,28 +750,25 @@ public class Plugin : Event<Configs.Config, Translation>, IEventMap, IPlayerCoun
             }
 
             if (TaskToyList == null) continue;
-            
-                foreach (var toy in TaskToyList)
-                {
-                    if (!EventHandler.TryParseToyName(toy.name, out var toyRoom, out var toyName, out var isToyTask, out _, out _))
-                        continue;
-                    if (!isToyTask) continue;
 
-                    var isMainTask = assignedToys.Contains(toy) && tm.Tasks.Any(t =>
-                        (string.IsNullOrEmpty(toyName) || t.Name.ToString() == toyName) &&
-                        t.RoomName.ToString() == toyRoom);
+            foreach (var toy in TaskToyList)
+            {
+                if (!EventHandler.TryParseToyName(toy.name, out var toyRoom, out var toyName, out var isToyTask, out _,
+                        out _))
+                    continue;
+                if (!isToyTask) continue;
 
-                    var isStageTask = assignedToys.Contains(toy) && tm.Tasks.Any(t =>
-                        t.StageTasks.Any(st =>
-                            (string.IsNullOrEmpty(toyName) || st.Name.ToString() == toyName) &&
-                            st.RoomName.ToString() == toyRoom));
+                var isMainTask = assignedToys.Contains(toy) && tm.Tasks.Any(t =>
+                    (string.IsNullOrEmpty(toyName) || t.Name.ToString() == toyName) &&
+                    t.RoomName.ToString() == toyRoom);
 
-                    if (!isMainTask && !isStageTask || isStageTask && !isMainTask)
-                    {
-                        toy.SetFakeIsLocked(player, true);
-                    }
-                }
-            
+                var isStageTask = assignedToys.Contains(toy) && tm.Tasks.Any(t =>
+                    t.StageTasks.Any(st =>
+                        (string.IsNullOrEmpty(toyName) || st.Name.ToString() == toyName) &&
+                        st.RoomName.ToString() == toyRoom));
+
+                if ((!isMainTask && !isStageTask) || (isStageTask && !isMainTask)) toy.SetFakeIsLocked(player, true);
+            }
         }
     }
 
